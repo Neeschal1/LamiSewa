@@ -13,7 +13,7 @@ SECRET_KEY = Config.SECRET_KEY
 
 
 # Allowed hosts to access this backend system
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [Config.DOMAIN_NAME_1, Config.DOMAIN_NAME_2, Config.DOMAIN_NAME_3]
 
 
 # Root URL to hit, i. e. url of project of an entire application
