@@ -23,7 +23,11 @@ INSTALLED_APPS = [
     
     # installed apps
     'apps.accounts',
-    'apps.details'
+    'apps.details',
+    'apps.conversations',
+    'apps.privacy',
+    'apps.userprofile',
+    'apps.identifications'
 ]
 
 
