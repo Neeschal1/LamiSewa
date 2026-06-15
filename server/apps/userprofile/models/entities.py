@@ -126,16 +126,8 @@ class PartnerPreference(models.Model):
     
 class Stories(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='stories')
-    story1 = models.URLField(blank=True)
-    story1views = models.IntegerField(default=0)
-    story2 = models.URLField(blank=True)
-    story2views = models.IntegerField(default=0)
-    story3 = models.URLField(blank=True)
-    story3views = models.IntegerField(default=0)
-    story4 = models.URLField(blank=True)
-    story4views = models.IntegerField(default=0)
-    story5 = models.URLField(blank=True)
-    story5views = models.IntegerField(default=0)
+    story = models.URLField(blank=True)
+    storyviews = models.IntegerField(default=0)
     
     def __str__(self):
         return f"Story kept by: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"

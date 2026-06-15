@@ -18,3 +18,13 @@ REPORT_REASONS = [
     ('BLACKMAIL', 'Blackmail or Extortion'),
     ('OTHER', 'Other'),
 ]
+
+STATUS_CHOICES = [
+    ('Pending', 'PENDING'),
+    ('Verified', 'VERIFIED'),
+    ('Cancelled', 'CANCELLED'),
+    ('Rejected', 'REJECTED'),
+    ('Under Review', 'UNDER REVIEW'),
+    ('Completed', 'COMPLETED'),
+    ('Failed', 'FAILED'),
+]

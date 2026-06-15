@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from apps.userprofile.models.entities import UserProfile
-from .choices import REPORT_REASONS
+from .choices import *
 
 
 class UserPrivacy(models.Model):
@@ -67,7 +67,7 @@ class ReportUser(models.Model):
     reported_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='reported_user') 
     reason = models.CharField(max_length=30, choices=REPORT_REASONS)
     description = models.TextField(blank=True,   default="The reported user used abusive language or inappropriate behavior.")
-    status = models.CharField(max_length=30, default="Pending")
+    status = models.CharField(max_length=30, default="Pending", choices=STATUS_CHOICES)
     created_date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
