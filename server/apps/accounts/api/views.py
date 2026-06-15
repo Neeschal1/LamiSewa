@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from ..services.auth import UserAuth
 
-# Signup
+
 class UserAccountSignupSerializersView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     
@@ -18,8 +18,7 @@ class UserAccountSignupSerializersView(viewsets.ViewSet):
             Password = signup_serializers.validated_data["password"]
             return UserAuth()._signup(FirstName, Email, Username, Password, number_of_users)
 
-
-# Login         
+   
 class UserAccountLoginSerializerView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     

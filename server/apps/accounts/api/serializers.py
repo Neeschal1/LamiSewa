@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-# Account signup serializer
 class UserAccountSignupSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -16,7 +15,6 @@ class UserAccountSignupSerializers(serializers.ModelSerializer):
         }
         
         
-# Account login serializer
 class UserAccountLoginSerializers(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'})

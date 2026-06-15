@@ -4,8 +4,8 @@ from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 
+
 class UserAuth:
-    # Login an account
     def _login(self, email: str, password: str) -> Response:
         if not User.objects.filter(email = email).exists():
             return Response({"Message":"User didn't found with the email provided. So sorry for your inconvenience :("})
@@ -24,8 +24,7 @@ class UserAuth:
         return Response({"Message":"Invalid Credentials. So Sorry :("})
     
     
-    
-    # Signing up a new account
+
     def _signup(self, firstname: str, email: str, username: str, password: str, number_of_users: int) -> Response:
         if (User.objects.filter(email=email).exists()):
             return Response({"Message":"An account is already signed up with the entered email. Please choose another account. Thank you :)"})
