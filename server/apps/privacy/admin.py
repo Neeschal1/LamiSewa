@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models.entities import *
 
-# Register your models here.
+admin.site.register(UserPrivacy)
+admin.site.register(BlockDetail)
+admin.site.register(FavouriteDetail)
