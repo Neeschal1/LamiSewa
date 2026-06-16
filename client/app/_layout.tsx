@@ -11,5 +11,5 @@ export default function RootLayout() {
     return null;
   }
 
-  return <StackNavigation />;
+  return (<StackNavigation />);
 }

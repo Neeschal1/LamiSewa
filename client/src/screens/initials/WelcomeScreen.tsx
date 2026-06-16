@@ -7,13 +7,12 @@ import {
   Dimensions,
 } from "react-native";
 import {
-    Description,
+  Description,
   PrimaryButton,
   SubTitle,
   TextualButton,
 } from "@/src/components/systemComponentsLayout";
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { FC } from "react";
 
 const Welcomecontents = require("@/src/assets/images/welcomeBanner.png");
 const logo = require("@/src/assets/images/mainLogo.png");
@@ -21,15 +20,8 @@ const logo = require("@/src/assets/images/mainLogo.png");
 const screenheight = Dimensions.get("window").height;
 const screenwidth = Dimensions.get("window").width;
 
-const PrimaryButtonAction = () => {
-  console.log("Primary Button Pressed!");
-};
-
-const TextualButtonAction = () => {
-  console.log("Signup Button Pressed!");
-};
-
-const Welcome = () => {
+const Welcome: FC = () => {
+    
   return (
     <View className="flex-1">
       <StatusBar hidden translucent />
@@ -42,10 +34,10 @@ const Welcome = () => {
             style={{ width: screenwidth * 0.7, height: screenheight * 0.143 }}
             source={logo}
           />
-          <PrimaryButton text="Let's Begin" action={PrimaryButtonAction} />
+          <PrimaryButton screen="Login" text="Let's Begin" />
           <View className="flex flex-row gap-2 justify-center items-center">
             <SubTitle text="Already have an account?" />
-            <TextualButton text="Login" action={TextualButtonAction} />
+            <TextualButton text="Login" screen="Login" />
           </View>
         </View>
         <Description text="Bihebari © 2026. All rights reserved." />

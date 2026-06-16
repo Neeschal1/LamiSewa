@@ -22,7 +22,7 @@ const Splash:FC = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#E54963" }}>
-      <StatusBar hidden translucent />
+      
 
       <View className="flex-1 bg-[#E54963] justify-center items-center">
         <Image

@@ -1,14 +1,28 @@
 import { TouchableOpacity, Dimensions, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { FC } from "react";
+import { act, FC } from "react";
 import { ButtonProps } from "./componentsType";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { RootStackParamList } from "./componentsType";
 
 const screenheight = Dimensions.get("window").height;
 const screenwidth = Dimensions.get("window").width;
 
-export const PrimaryButton: FC<ButtonProps> = ({ text, action }) => {
+export const PrimaryButton: FC<ButtonProps> = ({ text, action, screen }) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const handleButtonPress = () => {
+    if (action) {
+      console.log(action);
+      return;
+    }
+    if (screen) {
+      navigation.navigate(screen as keyof RootStackParamList);
+    }
+  };
+
   return (
-    <TouchableOpacity onPress={action}>
+    <TouchableOpacity onPress={handleButtonPress}>
       <LinearGradient
         colors={["#FC404E", "#4987F6"]}
         start={{ x: 0, y: 0 }}
@@ -30,11 +44,24 @@ export const PrimaryButton: FC<ButtonProps> = ({ text, action }) => {
   );
 };
 
-export const TextualButton: FC<ButtonProps> = ({ text, action }) => {
+export const TextualButton: FC<ButtonProps> = ({ text, action, screen }) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const handleButtonPress = () => {
+    if (action) {
+      console.log(action);
+      return;
+    }
+    if (screen) {
+      navigation.navigate(screen as keyof RootStackParamList);
+    }
+  };
+  
   return (
-    <TouchableOpacity onPress={action}>
-      <Text className="font-Poppinsbold text-primaryblue text-heading">{text}</Text>
+    <TouchableOpacity onPress={handleButtonPress}>
+      <Text className="font-Poppinsbold text-primaryblue text-heading">
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };
-
