@@ -22,13 +22,58 @@ const StackNavigation = () => {
     >
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Welcome" component={Welcome} />
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
-      <Stack.Screen name="OtpVerification" component={OtpVerification} />
-      <Stack.Screen name="Password" component={Password} />
-      <Stack.Screen name="SetNewPassword" component={SetNewPassword} />
       <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen name="SignupVerification" component={SignupVerification} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen
+        name="ForgetPassword"
+        component={ForgetPassword}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: " ",
+          headerTintColor: "#000000",
+        }}
+      />
+      <Stack.Screen
+        name="OtpVerification"
+        component={OtpVerification}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: " ",
+          headerTintColor: "#000000",
+        }}
+      />
+      <Stack.Screen
+        name="Password"
+        component={Password}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: " ",
+          headerTintColor: "#000000",
+        }}
+      />
+      <Stack.Screen
+        name="SetNewPassword"
+        component={SetNewPassword}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: " ",
+          headerTintColor: "#000000",
+        }}
+      />
+      <Stack.Screen
+        name="SignupVerification"
+        component={SignupVerification}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: " ",
+          headerTintColor: "#000000",
+        }}
+      />
     </Stack.Navigator>
   );
 };

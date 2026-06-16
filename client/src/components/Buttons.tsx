@@ -15,12 +15,12 @@ export const PrimaryButton: FC<ButtonProps> = ({ text, action, screen }) => {
   const navigation = useNavigation<NavigationProps>();
 
   const handleButtonPress = () => {
+    if (screen) {
+      navigation.navigate(screen);
+    }
     if (action) {
       action();
       return;
-    }
-    if (screen) {
-      navigation.navigate(screen);
     }
   };
 

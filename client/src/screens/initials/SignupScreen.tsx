@@ -116,7 +116,7 @@ const Signup = () => {
               {checkFilledState ? <ErrorText text={showMessage} /> : null}
             </View>
           </View>
-          <PrimaryButton action={handleButtonPress} text="Proceed" />
+          <PrimaryButton action={handleButtonPress} text="Proceed" screen="SignupVerification"/>
         </View>
 
         <View className="flex w-full items-center justify-center">
@@ -153,7 +153,7 @@ const Signup = () => {
           <Description text="Bihebari © 2026. All rights reserved." />
         </View>
       </View>
-    </SafeAreaView>
+    // </SafeAreaView>
   );
 };
 

@@ -30,6 +30,12 @@ export const Description: FC<TextProps> = ({ text }) => {
   );
 };
 
+export const SubText: FC<TextProps> = ({ text }) => {
+  return (
+    <Text className="font-Poppinslight text-darkvariant text-center text-description">{text}</Text>
+  );
+};
+
 export const ErrorText: FC<TextProps> = ({ text }) => {
   return (
     <Text className="font-Poppinsmedium w-full text-primaryred text-subtitle text-center">{text}</Text>

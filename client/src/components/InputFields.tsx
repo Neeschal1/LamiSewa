@@ -1,7 +1,7 @@
 import { View, TextInput, Dimensions } from "react-native";
-import React, { FC } from "react";
+import React, { FC, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { InputFieldProps, GradientInputWrapperProps } from "./componentsType";
+import { InputFieldProps, GradientInputWrapperProps, OTPInputProps } from "./componentsType";
 
 const gradientActiveColors = ["#FC404E", "#4987F6", "#192f6a"] as const;
 const gradientInactiveColor = ["#CBCBCB", "#CBCBCB"] as const;
@@ -52,5 +52,70 @@ export const InputFields: FC<InputFieldProps> = ({
         autoCorrect={false}
       />
     </GradientInputWrapper>
+  );
+};
+
+
+export const OTPInputFields: FC<OTPInputProps> = ({
+  otp,
+  setOtp,
+}) => {
+  const refs = useRef<(TextInput | null)[]>([]);
+
+  const handleChange = (text: string, index: number) => {
+    const value = text.replace(/[^0-9]/g, "");
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < 5) {
+      refs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleBackspace = (
+    text: string,
+    index: number
+  ) => {
+    if (!text && index > 0) {
+      refs.current[index - 1]?.focus();
+    }
+  };
+
+  return (
+    <View className="flex-row justify-between w-full">
+      {otp.map((digit, index) => (
+        <TextInput
+          key={index}
+          ref={(ref) => {
+            refs.current[index] = ref;
+          }}
+          value={digit}
+          onChangeText={(text) =>
+            handleChange(text, index)
+          }
+          onKeyPress={({ nativeEvent }) => {
+            if (nativeEvent.key === "Backspace") {
+              handleBackspace(digit, index);
+            }
+          }}
+          keyboardType="number-pad"
+          maxLength={1}
+          textAlign="center"
+          className="font-Poppinsmedium text-dark text-lg"
+          style={{
+            width: screenwidth * 0.13,
+            height: screenheight * 0.06,
+            borderWidth: 1,
+            borderColor: digit
+              ? "#FC404E"
+              : "#CBCBCB",
+            borderRadius: 10,
+            backgroundColor: "#F6F5FF",
+          }}
+        />
+      ))}
+    </View>
   );
 };

@@ -44,8 +44,13 @@ export interface GradientInputWrapperProps {
 }
 
 export interface InputFieldProps {
-  plchldr: string;
+  plchldr: string | undefined;
   state: string;
   setState: (text: string ) => void;
   board?: KeyboardTypeOptions;
+}
+
+export interface OTPInputProps {
+  otp: string[];
+  setOtp: React.Dispatch<React.SetStateAction<string[]>>;
 }

@@ -1,6 +1,6 @@
-import { MainScreenName, Title, SubTitle, Description, ErrorText } from "./Texts";
+import { MainScreenName, Title, SubTitle, Description, ErrorText, SubText } from "./Texts";
 import { PrimaryButton, TextualButton, SocialButton } from "./Buttons"
-import { InputFields } from './InputFields'
+import { InputFields, OTPInputFields } from './InputFields'
 
 export {
     // Texts
@@ -10,11 +10,13 @@ export {
     Description,
     ErrorText,
     SocialButton,
+    SubText,
 
     //Buttons
     PrimaryButton,
     TextualButton,
 
     //InputFields
-    InputFields
+    InputFields,
+    OTPInputFields
 }
