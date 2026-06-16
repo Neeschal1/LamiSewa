@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "client",
-    "slug": "client",
+    "name": "LamiSewa",
+    "slug": "LamiSewa",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./src/assets/images/vectorLogo.png",
     "scheme": "client",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
