@@ -5,7 +5,7 @@ const Login: FC = () => {
   return (
     <View className="flex-1">
       <StatusBar hidden translucent />
-
+      <Text>Login</Text>
     </View>
   );
 };

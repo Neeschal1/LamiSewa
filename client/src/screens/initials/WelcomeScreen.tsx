@@ -21,7 +21,7 @@ const screenheight = Dimensions.get("window").height;
 const screenwidth = Dimensions.get("window").width;
 
 const Welcome: FC = () => {
-    
+
   return (
     <View className="flex-1">
       <StatusBar hidden translucent />
@@ -34,7 +34,7 @@ const Welcome: FC = () => {
             style={{ width: screenwidth * 0.7, height: screenheight * 0.143 }}
             source={logo}
           />
-          <PrimaryButton screen="Login" text="Let's Begin" />
+          <PrimaryButton screen="Signup" text="Let's Begin" />
           <View className="flex flex-row gap-2 justify-center items-center">
             <SubTitle text="Already have an account?" />
             <TextualButton text="Login" screen="Login" />
