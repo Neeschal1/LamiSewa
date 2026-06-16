@@ -5,21 +5,7 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 
 const logo = require("@/src/assets/images/splashLogo.png");
 
-type RootStackParamList = {
-  Welcome: undefined;
-};
-
 const Splash:FC = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.navigate("Welcome");
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [navigation]);
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#E54963" }}>
       <View className="flex-1 bg-[#E54963] justify-center items-center">
