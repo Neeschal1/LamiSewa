@@ -39,6 +39,10 @@
           "dark": {
             "backgroundColor": "#000000"
           }
+        },
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
         }
       ],
       "expo-secure-store"

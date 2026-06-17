@@ -15,8 +15,19 @@ export type RootStackParamList = {
   SignupVerification: undefined;  
   
   // mains
-  
+  Chats: undefined;
+  Home: undefined;
+  Notification: undefined;
+  Profile: undefined;
+  Search: undefined; 
+
   // profile
+  BasicInfo: undefined;
+  AdditionalInfo: undefined;
+  CareerInfo: undefined;
+  LastVerification: undefined;
+  HobbiesInfo: undefined;
+  PersonalInfo: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;

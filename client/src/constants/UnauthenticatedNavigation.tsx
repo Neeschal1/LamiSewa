@@ -11,7 +11,27 @@ import {
   Password,
   SetNewPassword,
   SignupVerification,
-} from "../screens/initials/initialScreensLayout";
+} from "@/src/screens/initials/initialScreensLayout";
+
+// For Testing
+import {
+  BasicInfo,
+  AdditionalInfo,
+  CareerInfo,
+  LastVerification,
+  HobbiesInfo,
+  PersonalInfo,
+} from "@/src/screens/profile/profileScreenLayout";
+
+// For Testing
+import {
+  Chats,
+  Home,
+  Notification,
+  Profile,
+  Search,
+} from "@/src/screens/main/mainScreenLayouts";
+
 import { RootStackParamList } from "@/src/components/componentsType";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -52,12 +72,16 @@ const UnauthenticatedNavigation = () => {
         component={SignupVerification}
         options={optionsScreens}
       />
+      <Stack.Screen
+        name="BasicInfo"
+        component={BasicInfo}
+        options={optionsScreens}
+      />
     </Stack.Navigator>
   );
 };
 
 export default UnauthenticatedNavigation;
-
 
 // For testing
 const optionsScreens = {
