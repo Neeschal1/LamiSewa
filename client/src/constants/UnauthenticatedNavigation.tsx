@@ -38,45 +38,29 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const UnauthenticatedNavigation = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="Welcome"
-      screenOptions={{ headerShown: false }}
-    >
+    <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }} >
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Login" component={Login} />
 
       {/* For testing */}
-      <Stack.Screen
-        name="ForgotPassword"
-        component={ForgotPassword}
-        options={optionsScreens}
-      />
-      <Stack.Screen
-        name="OtpVerification"
-        component={OtpVerification}
-        options={optionsScreens}
-      />
-      <Stack.Screen
-        name="Password"
-        component={Password}
-        options={optionsScreens}
-      />
-      <Stack.Screen
-        name="SetNewPassword"
-        component={SetNewPassword}
-        options={optionsScreens}
-      />
-      <Stack.Screen
-        name="SignupVerification"
-        component={SignupVerification}
-        options={optionsScreens}
-      />
-      <Stack.Screen
-        name="BasicInfo"
-        component={BasicInfo}
-        options={optionsScreens}
-      />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={optionsScreens} />
+      <Stack.Screen name="OtpVerification" component={OtpVerification} options={optionsScreens} />
+      <Stack.Screen name="Password" component={Password} options={optionsScreens} />
+      <Stack.Screen name="SetNewPassword" component={SetNewPassword} options={optionsScreens} />
+      <Stack.Screen name="SignupVerification" component={SignupVerification} options={optionsScreens} />
+      <Stack.Screen name="BasicInfo" component={BasicInfo} options={optionsScreens} />
+      <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} options={optionsScreens} />
+      <Stack.Screen name="CareerInfo" component={CareerInfo} options={optionsScreens} />
+      <Stack.Screen name="HobbiesInfo" component={HobbiesInfo} options={optionsScreens} />
+      <Stack.Screen name="LastVerification" component={LastVerification} options={optionsScreens} />
+      <Stack.Screen name="PersonalInfo" component={PersonalInfo} options={optionsScreens} />
+      <Stack.Screen name="Chats" component={Chats} options={optionsScreens} />
+      <Stack.Screen name="Home" component={Home} options={optionsScreens} />
+      <Stack.Screen name="Notification" component={Notification} options={optionsScreens} />
+      <Stack.Screen name="Profile" component={Profile} options={optionsScreens} />
+      <Stack.Screen name="Search" component={Search} options={optionsScreens} />
+
     </Stack.Navigator>
   );
 };
