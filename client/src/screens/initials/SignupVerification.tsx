@@ -49,12 +49,6 @@ const SignupVerification = () => {
     }
   };
 
-  const handleOtpChange = (value: string, index: number) => {
-    const updatedOtp = [...otp];
-    updatedOtp[index] = value;
-    setOtp(updatedOtp);
-  };
-
   const formattedTime = `00:${timer.toString().padStart(2, "0")}`;
 
   return (

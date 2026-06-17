@@ -129,7 +129,7 @@ const ForgotPassword = () => {
             />
           )}
         </Animated.View>
-        <PrimaryButton action={handleContinue} text="Continue" />
+        <PrimaryButton screen="OtpVerification" action={handleContinue} text="Continue" />
         <Animated.View
           style={{
             transform: [{ translateX: slideAnim }],
