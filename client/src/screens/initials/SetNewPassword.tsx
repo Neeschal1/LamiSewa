@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, Modal, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Description,
   InputFields,
@@ -27,22 +27,33 @@ const SetNewPassword = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleContinue = () => {
-    console.log(
-      "\nPassword: ",
-      password,
-      "\nConfirm Password: ",
-      confirmPassword,
-    );
-    if (password != confirmPassword){
-      setUnMatched(true)
-      setShowMessage("Your password and confirm password doesn't matches. Please check them again and try again!")
+    const pass = password.trim();
+    const confirmpass = confirmPassword.trim();
+
+    if (!pass || !confirmpass) {
+      setUnMatched(true);
+      setShowMessage("Please fill in both password fields.");
+      return;
+    } else if (pass.length < 8) {
+      setUnMatched(true);
+      setShowMessage("Password must be at least 8 characters long!");
+      return;
+    } else if (pass != confirmpass) {
+      setUnMatched(true);
+      setShowMessage(
+        "Your password and confirm password doesn't \nmatch. Please check them again and try again!",
+      );
+      return;
+    } else {
+      setUnMatched(false);
+      setShowMessage("");
+      setShowSuccessModal(true);
     }
-    setShowSuccessModal(true);
   };
 
   const handleOkay = () => {
     setShowSuccessModal(false);
-  }
+  };
 
   return (
     <View className="flex-1 items-start justify-center bg-background p-screen pt-[-10px]">
@@ -51,7 +62,11 @@ const SetNewPassword = () => {
         <View>
           <MainScreenName text="Set a New Password" />
           <View className="mt-[-10px]">
-            <Description text="Choose a stronger password to stay secure." />
+            {unMatched ? (
+              <View className="flex align-center">
+              <ErrorText text={`${showMessage}`} />
+            </View>
+            ) : <Description text="Choose a stronger password to stay secure." />}
           </View>
         </View>
         <View className="flex gap-mid">
@@ -89,7 +104,7 @@ const SetNewPassword = () => {
         <View
           className="flex-1 items-center justify-center"
           style={{
-            backgroundColor: "rgba(0,0,0,0.5)",
+            backgroundColor: "rgba(0,0,0,0.8)",
             padding: 10,
           }}
         >
@@ -99,11 +114,11 @@ const SetNewPassword = () => {
               <View className="mt-[-30px] w-full flex items-center">
                 <MainScreenName text="Success!" />
                 <View className="mt-[-10px]">
-                  <Description text="Your password has been successfully reset." />
+                  <Description text="Your password has been successfully reset" />
                 </View>
               </View>
             </View>
-            <PrimaryButton text="Okay :)" action={handleOkay} />
+            <PrimaryButton text="Okay :)" action={handleOkay} screen="Login"/>
           </View>
         </View>
       </Modal>
