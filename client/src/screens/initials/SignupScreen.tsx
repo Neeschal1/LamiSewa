@@ -155,8 +155,8 @@ const Signup = () => {
               />
             </View>
             <View className="flex flex-row gap-2 justify-center items-center">
-              <SubTitle text="New to LamiSewa?" />
-              <TextualButton text="Signup" screen="Signup" />
+              <SubTitle text="Already have an account?" />
+              <TextualButton text="Login" screen="Login" />
             </View>
           </View>
           <View className="flex items-center w-full">

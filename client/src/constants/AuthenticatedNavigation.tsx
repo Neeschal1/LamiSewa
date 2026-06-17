@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
-  ForgetPassword,
+  ForgotPassword,
   OtpVerification,
   Password,
   SetNewPassword,
@@ -15,8 +15,8 @@ const AuthenticatedNavigation = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="ForgetPassword"
-        component={ForgetPassword}
+        name="ForgotPassword"
+        component={ForgotPassword}
         options={optionsScreens}
       />
       <Stack.Screen

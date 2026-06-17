@@ -1,7 +1,7 @@
 import Splash from "./SplashScreen";
 import Welcome from "./WelcomeScreen";
 import Login from "./LoginScreen"
-import ForgetPassword from './ForgetPassword'
+import ForgotPassword from './ForgotPassword'
 import OtpVerification from "./OtpVerification";
 import Password from "./Password";
 import SetNewPassword from "./SetNewPassword";
@@ -12,7 +12,7 @@ export {
     Splash,
     Welcome,
     Login,
-    ForgetPassword,
+    ForgotPassword,
     OtpVerification,
     Password,
     SetNewPassword,

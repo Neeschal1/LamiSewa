@@ -76,7 +76,7 @@ const Login: FC = () => {
               </View>
             </View>
             <View className="flex flex-end">
-              <TextualButton text="Forgot Password" />
+              <TextualButton screen="ForgotPassword" text="Forgot Password" />
             </View>
           </View>
         </View>

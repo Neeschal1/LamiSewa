@@ -8,7 +8,7 @@ export type RootStackParamList = {
   Splash: undefined;
   Welcome: undefined;
   Signup: undefined;
-  ForgetPassword: undefined;
+  ForgotPassword: undefined;
   OtpVerification: undefined;
   Password: undefined;
   SetNewPassword: undefined;
