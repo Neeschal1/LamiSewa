@@ -74,3 +74,18 @@ export interface OTPInputProps {
   otp: string[];
   setOtp: React.Dispatch<React.SetStateAction<string[]>>;
 }
+
+export interface DOBInputProps {
+  dob: {
+    day: string;
+    month: string;
+    year: string;
+  };
+  setDob: React.Dispatch<
+    React.SetStateAction<{
+      day: string;
+      month: string;
+      year: string;
+    }>
+  >;
+}

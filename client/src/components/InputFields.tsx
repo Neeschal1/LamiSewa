@@ -6,6 +6,7 @@ import {
   GradientInputWrapperProps,
   OTPInputProps,
   InputPasswordProps,
+  DOBInputProps,
 } from "./componentsType";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -67,9 +68,8 @@ export const InputPassword: FC<InputPasswordProps> = ({
   setState,
   board,
   visibility,
-  setVisibility
+  setVisibility,
 }) => {
-
   return (
     <GradientInputWrapper hasText={state.length > 0}>
       <View className="flex-row w-full items-center justify-between">
@@ -155,6 +155,96 @@ export const OTPInputFields: FC<OTPInputProps> = ({ otp, setOtp }) => {
           }}
         />
       ))}
+    </View>
+  );
+};
+
+export const DOBInput: FC<DOBInputProps> = ({ dob, setDob }) => {
+  const refs = useRef<(TextInput | null)[]>([]);
+
+  const handleChange = (
+    text: string,
+    field: "day" | "month" | "year",
+    index: number,
+  ) => {
+    const value = text.replace(/[^0-9]/g, "");
+
+    setDob((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    const maxLength = field === "year" ? 4 : 2;
+
+    if (value.length === maxLength && index < 2) {
+      refs.current[index + 1]?.focus();
+    }
+  };
+
+  return (
+    <View className="flex-row gap-3">
+      <TextInput
+        ref={(ref) => {
+          refs.current[0] = ref;
+        }}
+        value={dob.day}
+        onChangeText={(text) => handleChange(text, "day", 0)}
+        placeholder="DD"
+        keyboardType="number-pad"
+        maxLength={2}
+        textAlign="center"
+        className="font-Poppinsmedium text-dark"
+        style={{
+          width: 60,
+          height: 50,
+          borderWidth: 1,
+          borderColor: dob.day ? "#FC404E" : "#CBCBCB",
+          borderRadius: 10,
+          backgroundColor: "#F6F5FF",
+        }}
+      />
+
+      <TextInput
+        ref={(ref) => {
+          refs.current[0] = ref;
+        }}
+        value={dob.month}
+        onChangeText={(text) => handleChange(text, "month", 1)}
+        placeholder="MM"
+        keyboardType="number-pad"
+        maxLength={2}
+        textAlign="center"
+        className="font-Poppinsmedium text-dark"
+        style={{
+          width: 60,
+          height: 50,
+          borderWidth: 1,
+          borderColor: dob.month ? "#FC404E" : "#CBCBCB",
+          borderRadius: 10,
+          backgroundColor: "#F6F5FF",
+        }}
+      />
+
+      <TextInput
+        ref={(ref) => {
+          refs.current[0] = ref;
+        }}
+        value={dob.year}
+        onChangeText={(text) => handleChange(text, "year", 2)}
+        placeholder="YYYY"
+        keyboardType="number-pad"
+        maxLength={4}
+        textAlign="center"
+        className="font-Poppinsmedium text-dark"
+        style={{
+          width: 90,
+          height: 50,
+          borderWidth: 1,
+          borderColor: dob.year ? "#FC404E" : "#CBCBCB",
+          borderRadius: 10,
+          backgroundColor: "#F6F5FF",
+        }}
+      />
     </View>
   );
 };

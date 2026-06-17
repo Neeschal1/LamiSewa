@@ -1,4 +1,4 @@
-import { View, StatusBar } from "react-native";
+import { View, StatusBar, Modal, Image } from "react-native";
 import React, { useState } from "react";
 import {
   Description,
@@ -9,6 +9,8 @@ import {
   InputPassword,
 } from "@/src/components/systemComponentsLayout";
 
+const logo = require("@/src/assets/images/mainLogo.png");
+
 const Password = () => {
   const [password, setPassword] = useState<string>("");
   const [seePassword, setSeePassword] = useState<boolean>(false);
@@ -17,6 +19,12 @@ const Password = () => {
 
   const [unMatched, setUnMatched] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<string>("");
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const handleOkay = () => {
+    setShowSuccessModal(false)
+  }
 
   const handleContinue = () => {
     const pass = password.trim();
@@ -37,7 +45,9 @@ const Password = () => {
       );
       return;
     } else {
-      console.log("Successfully set up the password!")
+      setUnMatched(false);
+      setShowMessage("");
+      setShowSuccessModal(true);
     }
   };
 
@@ -81,6 +91,33 @@ const Password = () => {
         </View>
         <PrimaryButton action={handleContinue} text="Continue" />
       </View>
+      <Modal
+        visible={showSuccessModal}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+      >
+        <View
+          className="flex-1 items-center justify-center"
+          style={{
+            backgroundColor: "rgba(0,0,0,0.8)",
+            padding: 10,
+          }}
+        >
+          <View className="bg-white py-4 mx-screen rounded-3xl w-full p-screen items-center gap-large">
+            <View className="flex items-center">
+              <Image className="h-40 w-40" source={logo} />
+              <View className="mt-[-30px] w-full flex items-center">
+                <MainScreenName text="Success!" />
+                <View className="mt-[-10px]">
+                  <Description text="Your Account has been Created Successfully" />
+                </View>
+              </View>
+            </View>
+            <PrimaryButton text="Okay :)" action={handleOkay} screen="BasicInfo"/>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
