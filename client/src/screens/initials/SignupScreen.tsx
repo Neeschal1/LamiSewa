@@ -60,8 +60,8 @@ const Signup = () => {
           </View>
         </View>
 
-        <View className="flex flex-1 gap-mid">
-          <View className="items-start w-full">
+        <View className="flex items-start">
+          <View className="flex items-start w-full">
             <Title text="Full Name" />
             <InputFields
               plchldr="Enter your Full Name"
@@ -153,7 +153,7 @@ const Signup = () => {
           <Description text="Bihebari © 2026. All rights reserved." />
         </View>
       </View>
-    // </SafeAreaView>
+    </SafeAreaView>
   );
 };
 

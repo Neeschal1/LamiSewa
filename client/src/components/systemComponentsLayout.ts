@@ -1,6 +1,6 @@
 import { MainScreenName, Title, SubTitle, Description, ErrorText, SubText } from "./Texts";
 import { PrimaryButton, TextualButton, SocialButton } from "./Buttons"
-import { InputFields, OTPInputFields } from './InputFields'
+import { InputFields, InputPassword, OTPInputFields } from './InputFields'
 
 export {
     // Texts
@@ -18,5 +18,6 @@ export {
 
     //InputFields
     InputFields,
-    OTPInputFields
+    OTPInputFields,
+    InputPassword
 }

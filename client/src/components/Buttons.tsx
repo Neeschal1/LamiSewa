@@ -15,12 +15,12 @@ export const PrimaryButton: FC<ButtonProps> = ({ text, action, screen }) => {
   const navigation = useNavigation<NavigationProps>();
 
   const handleButtonPress = () => {
-    if (screen) {
-      navigation.navigate(screen);
-    }
     if (action) {
       action();
       return;
+    }
+    if (screen) {
+      navigation.navigate(screen);
     }
   };
 
@@ -62,7 +62,7 @@ export const TextualButton: FC<ButtonProps> = ({ text, action, screen }) => {
 
   return (
     <TouchableOpacity onPress={handleButtonPress}>
-      <Text className="font-Poppinsbold text-primaryblue text-heading">
+      <Text className="font-Poppinsmedium text-primaryblue text-subheading">
         {text}
       </Text>
     </TouchableOpacity>

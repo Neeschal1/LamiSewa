@@ -35,7 +35,7 @@ export interface SocialButtonProps {
   btnname: string;
   text: string | number;
   action?: () => void;
-  logo?: undefined
+  logo?: undefined;
 }
 
 export interface GradientInputWrapperProps {
@@ -48,6 +48,15 @@ export interface InputFieldProps {
   state: string;
   setState: (text: string ) => void;
   board?: KeyboardTypeOptions;
+}
+
+export interface InputPasswordProps {
+  plchldr: string | undefined;
+  state: string;
+  setState: (text: string ) => void;
+  board?: KeyboardTypeOptions;
+  visibility: boolean;
+  setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface OTPInputProps {
