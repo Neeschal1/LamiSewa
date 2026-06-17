@@ -44,7 +44,7 @@ const Login: FC = () => {
       >
         <View></View>
       </ImageBackground>
-      <View className="flex w-full p-screen rounded-3xl gap-extralarge items-center mt-[-80px] bg-background">
+      <View className="flex w-full p-screen rounded-3xl gap-extralarge items-center mt-[-100px] bg-background">
         <View className="flex gap-large">
           <View>
             <MainScreenName text="Login" />
