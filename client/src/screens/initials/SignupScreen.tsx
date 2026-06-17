@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import {
   Description,
@@ -42,10 +42,14 @@ const Signup = () => {
       const mobile = country["callingCode"][0] + "" + phone;
       const phoneNumber = Number(mobile);
       console.log(
-        "\nName: ", name,
-        "\nEmail: ", email,
-        "\nPhone Number: ", phoneNumber,
-        "\nisChecked?: ", isSelected,
+        "\nName: ",
+        name,
+        "\nEmail: ",
+        email,
+        "\nPhone Number: ",
+        phoneNumber,
+        "\nisChecked?: ",
+        isSelected,
       );
     }
   };
@@ -53,73 +57,81 @@ const Signup = () => {
   return (
     <SafeAreaView className="flex flex-1 bg-background">
       <View className="flex-1 bg-background w-full items-start p-screen justify-center gap-extralarge">
-        <View className="flex items-start">
-          <MainScreenName text="Signup" />
-          <View className="mt-[-10px]">
-            <Description text="New to LamiSewa? Create a new account." />
-          </View>
-        </View>
-
-        <View className="flex items-start">
-          <View className="flex items-start w-full">
-            <Title text="Full Name" />
-            <InputFields
-              plchldr="Enter your Full Name"
-              state={name}
-              setState={setName}
-              board="default"
-            />
-          </View>
-          <View className="items-start w-full">
-            <Title text="Email" />
-            <InputFields
-              plchldr="Enter your Email"
-              state={email}
-              setState={setEmail}
-              board="email-address"
-            />
-          </View>
-          <View className="items-start w-full">
-            <Title text="Phone Number" />
-
-            <View className="flex-row items-start w-full border-gray-300 rounded-xl py-2">
-              <View className="flex-row border p-4 rounded-xl justify-center border-[#CBCBCB] items-center">
-                <CountryPicker
-                  countryCode={country.cca2}
-                  withCallingCode
-                  withFlag
-                  withFilter
-                  onSelect={(c) => setCountry(c)}
-                />
-                <Description text={`+${country.callingCode[0]}`} />
-              </View>
-              <View className="flex-1 ml-2">
-                <InputFields
-                  plchldr="Enter your Phone Number"
-                  state={phone}
-                  setState={setPhone}
-                  board="number-pad"
-                />
-              </View>
+        <View className="flex gap-large">
+          <View className="flex items-start">
+            <MainScreenName text="Signup" />
+            <View className="mt-[-10px]">
+              <Description text="New to LamiSewa? Create a new account." />
             </View>
-            <View className="flex-row items-center gap-5">
-              <Checkbox
-                value={isSelected}
-                onValueChange={setIsSelection}
-                color={isSelected ? "#FC404E" : "#CBCBCB"}
+          </View>
+
+          <View className="flex items-start gap-mid">
+            <View className="flex items-start w-full">
+              <Title text="Full Name" />
+              <InputFields
+                plchldr="eg: Neeschal Pokharel"
+                state={name}
+                setState={setName}
+                board="default"
               />
-              <Description text="I agree to the Terms & Conditions and Privacy Policy of LamiSewa." />
             </View>
-          </View>
-          <View>
-            <View className="ml-[-20px] flex items-center text-center justify-center w-full">
-              {checkFilledState ? <ErrorText text={showMessage} /> : null}
+            <View className="items-start w-full">
+              <Title text="Email" />
+              <InputFields
+                plchldr="eg: example@gmail.com"
+                state={email}
+                setState={setEmail}
+                board="email-address"
+              />
             </View>
-          </View>
-          <PrimaryButton action={handleButtonPress} text="Proceed" screen="SignupVerification"/>
-        </View>
+            <View className="items-start w-full">
+              <Title text="Phone Number" />
 
-        <View className="flex w-full items-center justify-center">
+              <View className="flex-row items-start border-gray-300 rounded-xl">
+                <View className="flex-row border p-4 rounded-xl justify-center border-[#CBCBCB] items-center align-center">
+                  <CountryPicker
+                    countryCode={country.cca2}
+                    withCallingCode
+                    withFlag
+                    withFilter
+                    onSelect={(c) => setCountry(c)}
+                  />
+                  <View className="flex ml-[-5px] items-center justify-center">
+                    <Description text={`+${country.callingCode[0]}`} />
+                  </View>
+                </View>
+                <View className="flex-1 ml-4">
+                  <InputFields
+                    plchldr="eg: 9800000000"
+                    state={phone}
+                    setState={setPhone}
+                    board="number-pad"
+                  />
+                </View>
+              </View>
+              <View className="flex-row items-center w-11/12 gap-5 mt-small">
+                <Checkbox
+                  value={isSelected}
+                  onValueChange={setIsSelection}
+                  color={isSelected ? "#FC404E" : "#CBCBCB"}
+                />
+                <Description text="I agree to the Terms & Conditions and Privacy Policy of LamiSewa." />
+              </View>
+            </View>
+            <View className="flex w-full">
+              <View className="ml-[-10px] flex items-center text-center justify-center w-full">
+                {checkFilledState ? <ErrorText text={showMessage} /> : null}
+              </View>
+            </View>
+          </View>
+        </View>
+        <PrimaryButton
+          action={handleButtonPress}
+          text="Proceed"
+          screen="SignupVerification"
+        />
+
+        <View className="flex w-full items-center justify-center gap-mid">
           <View className="flex items-center justify-center flex-row gap-2">
             <View
               style={{ height: 1, width: "40%", backgroundColor: "black" }}
@@ -143,14 +155,13 @@ const Signup = () => {
               />
             </View>
             <View className="flex flex-row gap-2 justify-center items-center">
-              <SubTitle text="Already have an account?" />
-              <TextualButton text="Login" screen="Login" />
+              <SubTitle text="New to LamiSewa?" />
+              <TextualButton text="Signup" screen="Signup" />
             </View>
           </View>
-        </View>
-
-        <View className="flex items-center w-full">
-          <Description text="Bihebari © 2026. All rights reserved." />
+          <View className="flex items-center w-full">
+            <Description text="Bihebari © 2026. All rights reserved." />
+          </View>
         </View>
       </View>
     </SafeAreaView>
