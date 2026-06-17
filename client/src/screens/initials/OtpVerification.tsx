@@ -73,7 +73,7 @@ const OtpVerification = () => {
         <View className="ml-[-20px] flex items-center text-center justify-center w-full">
           {checkOTPState ? <ErrorText text={showMessage} /> : null}
         </View>
-        <PrimaryButton action={handleOTPAction} text="Continue" />
+        <PrimaryButton screen="SetNewPassword" action={handleOTPAction} text="Continue" />
         {timer === 0 && (
           <View className="flex flex-row items-center gap-2">
             <SubTitle text="Didn't receive the code?" />

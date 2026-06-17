@@ -49,7 +49,7 @@ const Login: FC = () => {
           <View>
             <MainScreenName text="Login" />
             <View className="mt-[-10px]">
-              <Description text="Login to find your perfect match through Bihebari." />
+              <Description text="Login to find your perfect match through LamiSewa." />
             </View>
           </View>
           <View className="flex w-full items-end gap-small">
