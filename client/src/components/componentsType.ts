@@ -89,3 +89,18 @@ export interface DOBInputProps {
     }>
   >;
 }
+
+export interface DropdownItem {
+  label: string;
+  value: string;
+}
+
+export interface CustomDropdownProps {
+  open: boolean;
+  value: string | null;
+  items: DropdownItem[];
+
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setValue: React.Dispatch<React.SetStateAction<any>>;
+  setItems: React.Dispatch<React.SetStateAction<DropdownItem[]>>;
+}

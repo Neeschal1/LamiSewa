@@ -1,6 +1,6 @@
 import { MainScreenName, Title, SubTitle, Description, ErrorText, SubText } from "./Texts";
 import { PrimaryButton, TextualButton, SocialButton } from "./Buttons"
-import { InputFields, InputPassword, OTPInputFields, DOBInput } from './InputFields'
+import { InputFields, InputPassword, OTPInputFields, DOBInput, CustomDropdown } from './InputFields'
 
 export {
     // Texts
@@ -20,5 +20,6 @@ export {
     InputFields,
     OTPInputFields,
     InputPassword,
-    DOBInput
+    DOBInput,
+    CustomDropdown
 }

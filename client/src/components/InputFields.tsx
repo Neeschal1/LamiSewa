@@ -7,8 +7,16 @@ import {
   OTPInputProps,
   InputPasswordProps,
   DOBInputProps,
+  DropdownItem,
+  CustomDropdownProps,
 } from "./componentsType";
 import { Ionicons } from "@expo/vector-icons";
+import DropDownPicker from "react-native-dropdown-picker";
+import {
+  useFonts,
+  Poppins_400Regular,
+  Poppins_500Medium,
+} from "@expo-google-fonts/poppins";
 
 const gradientActiveColors = ["#FC404E", "#4987F6", "#192f6a"] as const;
 const gradientInactiveColor = ["#CBCBCB", "#CBCBCB"] as const;
@@ -246,5 +254,58 @@ export const DOBInput: FC<DOBInputProps> = ({ dob, setDob }) => {
         }}
       />
     </View>
+  );
+};
+
+export const CustomDropdown: FC<CustomDropdownProps> = ({
+  open,
+  value,
+  items,
+  setOpen,
+  setValue,
+  setItems,
+}: CustomDropdownProps) => {
+  const hasValue = value !== null && value !== "";
+  const [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_500Medium,
+  });
+
+  if (!fontsLoaded) return null;
+
+  return (
+    <LinearGradient
+      colors={hasValue ? gradientActiveColors : gradientInactiveColor}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={{ borderRadius: 10, padding: 1 }}
+    >
+      <View className="bg-background rounded-xl">
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          style={{
+            borderWidth: 0,
+            backgroundColor: "transparent",
+          }}
+          textStyle={{
+            fontFamily: "Poppins_400Regular",
+          }}
+          placeholderStyle={{
+            fontFamily: "Poppins_400Regular",
+          }}
+          listItemLabelStyle={{
+            fontFamily: "Poppins_400Regular",
+          }}
+          dropDownContainerStyle={{
+            borderColor: "#CBCBCB",
+          }}
+        />
+      </View>
+    </LinearGradient>
   );
 };
