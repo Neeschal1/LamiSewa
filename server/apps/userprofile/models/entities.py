@@ -19,7 +19,7 @@ class UsersBasicInfo(models.Model):
     nickname = models.CharField(max_length=50, blank=True)
     profile_picture = models.URLField(default=Config.DEFAULTUSERPROFILE)
     cover_picture = models.URLField(default=Config.DEFAULTUSERCOVER)
-    bio = models.TextField(default="Bihebari user")
+    bio = models.TextField(default="LamiSewa user")
     profile_handler = models.CharField(max_length=30)
     gender = models.CharField(max_length=10, choices=GENDERS)
     date_of_birth = models.DateField()

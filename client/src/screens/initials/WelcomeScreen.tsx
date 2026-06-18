@@ -40,7 +40,7 @@ const Welcome: FC = () => {
             <TextualButton text="Login" screen="Login" />
           </View>
         </View>
-        <Description text="Bihebari © 2026. All rights reserved." />
+        <Description text="LamiSewa © 2026. All rights reserved." />
       </ImageBackground>
     </View>
   );

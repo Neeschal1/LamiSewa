@@ -121,7 +121,7 @@ const PersonalInfo: FC = () => {
         />
       </View>
       <View className="flex items-center w-full">
-        <Description text="Bihebari © 2026. All rights reserved." />
+        <Description text="LamiSewa © 2026. All rights reserved." />
       </View>
     </SafeAreaView>
   );

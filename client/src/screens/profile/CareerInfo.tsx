@@ -99,7 +99,7 @@ const CareerInfo: FC = () => {
         <PrimaryButton screen="HobbiesInfo" action={handleProceed} text="Proceed" />
       </View>
       <View className="flex items-center w-full">
-        <Description text="Bihebari © 2026. All rights reserved." />
+        <Description text="LamiSewa © 2026. All rights reserved." />
       </View>
     </SafeAreaView>
   );

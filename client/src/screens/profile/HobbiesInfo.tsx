@@ -59,12 +59,12 @@ const HobbiesInfo: FC = () => {
   return (
     <SafeAreaView className="bg-background flex flex-1">
       <StatusBar hidden translucent />
-      <View className="flex items-center">
+      <View className="flex items-center gap-mid mb-[-20px]">
         <Title text="Hobbies (5/6)" />
-        <ErrorText text={`${error ? errorMessage : ""}`} />
+        {error ? <ErrorText text={`${errorMessage} Currently: ${hobbies.length}/5`} /> : <SubTitle text={`What are your hobbies? ${hobbies.length}/5`} />}
       </View>
       <View className="flex items-center">
-        <SubTitle text={`Selected: ${hobbies.length}/5`} />
+        <SubTitle text={``} />
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex-1 items-center justify-start p-screen bg-background gap-large">
@@ -305,8 +305,8 @@ const HobbiesInfo: FC = () => {
         </View>
       </ScrollView>
       <View className="flex items-center mb-1 gap-mid">
-        <PrimaryButton screen="LastVerification" action={handleProceed} text="Proceed" />
-        <Description text="Bihebari © 2026. All rights reserved." />
+        <PrimaryButton action={handleProceed} text="Proceed" />
+        <Description text="LamiSewa © 2026. All rights reserved." />
       </View>
     </SafeAreaView>
   );
