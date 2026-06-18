@@ -22,23 +22,9 @@ import {
   CustomDropdown,
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CalendarItems } from "@/src/utils/objects";
+import { CalendarItems, GenderOption, ProfileOptions } from "@/src/utils/objects";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
-
-const profileOptions = [
-  { index: 1, option: "Myself" },
-  { index: 2, option: "Son" },
-  { index: 3, option: "Brother" },
-  { index: 4, option: "Friend" },
-  { index: 5, option: "Daughter" },
-  { index: 6, option: "Others" },
-];
-const genderOption = [
-  { index: 1, option: "Male" },
-  { index: 2, option: "Female" },
-  { index: 3, option: "Others" },
-];
 
 const BasicInfo = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -193,7 +179,7 @@ const BasicInfo = () => {
           <View className="items-start w-full">
             <Title text="Let’s make Profile for:" />
             <View className="flex-row flex-wrap gap-3 mt-2">
-              {profileOptions.map((item) => (
+              {ProfileOptions.map((item) => (
                 <TouchableOpacity
                   key={item.index}
                   onPress={() => setIdOption(item.option)}
@@ -218,7 +204,7 @@ const BasicInfo = () => {
           <View className="items-start w-full">
             <Title text="Gender:" />
             <View className="flex-row flex-wrap gap-3 mt-2">
-              {genderOption.map((item) => (
+              {GenderOption.map((item) => (
                 <TouchableOpacity
                   key={item.index}
                   onPress={() => setGender(item.option)}

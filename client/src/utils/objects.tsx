@@ -1,3 +1,18 @@
+export const ProfileOptions = [
+  { index: 1, option: "Myself" },
+  { index: 2, option: "Son" },
+  { index: 3, option: "Brother" },
+  { index: 4, option: "Friend" },
+  { index: 5, option: "Daughter" },
+  { index: 6, option: "Others" },
+];
+
+export const GenderOption = [
+  { index: 1, option: "Male" },
+  { index: 2, option: "Female" },
+  { index: 3, option: "Others" },
+];
+
 export const CalendarItems = [
   { label: "AD", value: "AD" },
   { label: "BS", value: "BS" },
@@ -65,4 +80,14 @@ export const CommunityItems = [
 export const DietItems = [
   { label: "Vegerarian", value: "Vegerarian" },
   { label: "Non-Vegetarian", value: "Non-Vegetarian" },
+];
+
+export const DegreeItems = [
+  { label: "Bachelors", value: "Bachelors" },
+  { label: "Masters", value: "Masters" },
+];
+
+export const WorkingItems = [
+  { label: "Private Company", value: "Bachelors" },
+  { label: "Governmental Office", value: "Governmental Office" },
 ];
