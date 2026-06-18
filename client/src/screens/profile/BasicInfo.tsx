@@ -19,8 +19,10 @@ import {
   Title,
   DOBInput,
   PrimaryButton,
+  CustomDropdown,
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CalendarItems } from "@/src/utils/objects";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
 
@@ -51,17 +53,13 @@ const BasicInfo = () => {
 
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<"AD" | "BS">("AD");
-  const [items, setItems] = useState([
-    { label: "AD", value: "AD" },
-    { label: "BS", value: "BS" },
-  ]);
+  const [items, setItems] = useState(CalendarItems);
 
   const [date, setDate] = useState({
     day: "",
     month: "",
     year: "",
   });
-  const [calendarType, setCalendarType] = useState<"AD" | "BS">("AD");
 
   const pickAndUpload = async () => {
     setError(null);
@@ -180,11 +178,7 @@ const BasicInfo = () => {
                 <DOBInput dob={date} setDob={setDate} />
               </View>
               <View style={{ width: 110 }}>
-                <DropdownPicker
-                  style={{
-                    borderColor: "#CBCBCB",
-                    backgroundColor: "#F6F5FF",
-                  }}
+                <CustomDropdown
                   open={open}
                   value={value}
                   items={items}
@@ -251,6 +245,9 @@ const BasicInfo = () => {
           text="Proceed"
           screen="PersonalInfo"
         />
+      </View>
+      <View className="flex items-center w-full">
+        <Description text="Bihebari © 2026. All rights reserved." />
       </View>
     </SafeAreaView>
   );

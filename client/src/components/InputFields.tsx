@@ -288,6 +288,9 @@ export const CustomDropdown: FC<CustomDropdownProps> = ({
           setOpen={setOpen}
           setValue={setValue}
           setItems={setItems}
+          scrollViewProps={{
+            nestedScrollEnabled: true,
+          }}
           style={{
             borderWidth: 0,
             backgroundColor: "transparent",
