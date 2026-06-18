@@ -46,7 +46,7 @@ const BasicInfo = () => {
   const [name, setName] = useState<string>("");
   const [idOption, setIdOption] = useState<string>("");
 
-    const [gender, setGender] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
 
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<"AD" | "BS">("AD");
@@ -96,6 +96,13 @@ const BasicInfo = () => {
       "Local URL: ",
       localUri,
     );
+  };
+
+  const handleProcees = () => {
+    if (!name.trim() || !date.day || !date.month || !date.year || !idOption || !gender) {
+      setError("Please fill up all the details!");
+      return;
+    }
   };
 
   const imageSource = imageUrl
@@ -230,54 +237,9 @@ const BasicInfo = () => {
           </View>
         </View>
       </View>
-      <PrimaryButton text="Proceed" />
+      <PrimaryButton action={handleProcees} text="Proceed" screen="PersonalInfo"/>
     </View>
   );
 };
 
 export default BasicInfo;
-
-const styles = StyleSheet.create({
-  avatarWrapper: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    position: "relative",
-  },
-  avatar: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.45)",
-    borderRadius: 55,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  badge: {
-    position: "absolute",
-    bottom: 4,
-    right: 4,
-    backgroundColor: "#534AB7",
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  badgeText: {
-    fontSize: 14,
-  },
-  errorText: {
-    fontSize: 13,
-    color: "#E24B4A",
-    marginTop: 8,
-  },
-  successText: {
-    fontSize: 13,
-    color: "#1D9E75",
-    marginTop: 8,
-  },
-});
