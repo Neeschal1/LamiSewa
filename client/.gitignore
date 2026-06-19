@@ -44,3 +44,5 @@ app-example
 
 # environment variable
 .env
+.claude
+CLAUDE.md
