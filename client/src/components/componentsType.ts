@@ -25,7 +25,6 @@ export type RootStackParamList = {
   BasicInfo: undefined;
   AdditionalInfo: undefined;
   CareerInfo: undefined;
-  LastVerification: undefined;
   HobbiesInfo: undefined;
   PersonalInfo: undefined;
 };

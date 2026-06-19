@@ -4,6 +4,8 @@ import {
   StatusBar,
   TouchableOpacity,
   ScrollView,
+  Modal,
+  Image
 } from "react-native";
 import React, { FC, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,6 +15,7 @@ import {
   SubTitle,
   PrimaryButton,
   Description,
+  MainScreenName,
 } from "@/src/components/systemComponentsLayout";
 import {
   CreativeHobbies,
@@ -26,11 +29,15 @@ import {
   TravelAndAdventureHobbies,
 } from "@/src/utils/objects";
 
+const logo = require("@/src/assets/images/mainLogo.png");
+
 const HobbiesInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const [hobbies, setHobbies] = useState<string[]>([]);
+
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false)
 
   const toggleHobby = (option: string) => {
     if (hobbies.includes(option)) {
@@ -54,6 +61,12 @@ const HobbiesInfo: FC = () => {
       setErrorMessage("You must select any 5 hobbies in order to proceed!");
       return;
     }
+    setShowSuccessModal(true);
+    return;
+  }
+
+  const handleOkay = () => {
+
   }
 
   return (
@@ -308,6 +321,33 @@ const HobbiesInfo: FC = () => {
         <PrimaryButton action={handleProceed} text="Proceed" />
         <Description text="LamiSewa © 2026. All rights reserved." />
       </View>
+      <Modal
+        visible={showSuccessModal}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+      >
+        <View
+          className="flex-1 items-center justify-center"
+          style={{
+            backgroundColor: "rgba(0,0,0,0.8)",
+            padding: 10,
+          }}
+        >
+          <View className="bg-white py-4 mx-screen rounded-3xl w-full p-screen items-center gap-large">
+            <View className="flex items-center">
+              <Image className="h-40 w-40" source={logo} />
+              <View className="mt-[-30px] w-full flex items-center">
+                <MainScreenName text="Are you sure?!" />
+                <View className="mt-[-10px]">
+                  <Description text="By proceeding, you confirm that all the information provided is true. If any false or misleading information found, you agree to take full responsibility and prepare to face any legal consequences that may arrise. However, you can update your detail from your profile option. Are you sure to continue?" />
+                </View>
+              </View>
+            </View>
+            <PrimaryButton text="Okay :)" action={handleOkay} />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

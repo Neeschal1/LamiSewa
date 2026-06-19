@@ -18,7 +18,6 @@ import {
   BasicInfo,
   AdditionalInfo,
   CareerInfo,
-  LastVerification,
   HobbiesInfo,
   PersonalInfo,
 } from "@/src/screens/profile/profileScreenLayout";
@@ -38,7 +37,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const UnauthenticatedNavigation = () => {
   return (
-    <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }} >
+    <Stack.Navigator initialRouteName="HobbiesInfo" screenOptions={{ headerShown: false }} >
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Login" component={Login} />
@@ -53,7 +52,6 @@ const UnauthenticatedNavigation = () => {
       <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} options={optionsScreens} />
       <Stack.Screen name="CareerInfo" component={CareerInfo} options={optionsScreens} />
       <Stack.Screen name="HobbiesInfo" component={HobbiesInfo} options={optionsScreens} />
-      <Stack.Screen name="LastVerification" component={LastVerification} options={optionsScreens} />
       <Stack.Screen name="PersonalInfo" component={PersonalInfo} options={optionsScreens} />
       <Stack.Screen name="Chats" component={Chats} options={optionsScreens} />
       <Stack.Screen name="Home" component={Home} options={optionsScreens} />
