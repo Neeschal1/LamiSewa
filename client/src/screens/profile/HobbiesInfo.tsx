@@ -34,9 +34,7 @@ const logo = require("@/src/assets/images/mainLogo.png");
 const HobbiesInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
   const [hobbies, setHobbies] = useState<string[]>([]);
-
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false)
 
   const toggleHobby = (option: string) => {
@@ -66,7 +64,7 @@ const HobbiesInfo: FC = () => {
   }
 
   const handleOkay = () => {
-
+    console.log("Okay :)")
   }
 
   return (
