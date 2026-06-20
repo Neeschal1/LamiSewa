@@ -343,7 +343,7 @@ const HobbiesInfo: FC = () => {
                 </View>
               </View>
             </View>
-            <PrimaryButton text="Okay :)" action={handleOkay} />
+            <PrimaryButton text="Okay :)" action={handleOkay} screen="SubscriptionDetails" />
           </View>
         </View>
       </Modal>

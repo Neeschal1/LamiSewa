@@ -141,7 +141,7 @@ const CareerInfo: FC = () => {
               entering={FadeInDown.delay(300).duration(400).springify()}
             >
               <PrimaryButton
-                // screen="HobbiesInfo"
+                screen="HobbiesInfo"
                 action={handleProceed}
                 text="Proceed"
               />

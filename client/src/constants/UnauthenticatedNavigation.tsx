@@ -1,3 +1,4 @@
+import { TouchableOpacity, Text } from 'react-native'
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   Splash,
@@ -32,6 +33,9 @@ import {
   Search,
 } from "@/src/screens/main/mainScreenLayouts";
 
+// For Testing
+import SubscriptionDetails from "../screens/payments/SubscriptionDetails";
+
 import { RootStackParamList } from "@/src/components/componentsType";
 import { Title } from "../components/Texts";
 
@@ -39,7 +43,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const UnauthenticatedNavigation = () => {
   return (
-    <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }} >
+    <Stack.Navigator initialRouteName="CareerInfo" screenOptions={{ headerShown: false }} >
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Login" component={Login} />
@@ -62,6 +66,10 @@ const UnauthenticatedNavigation = () => {
       <Stack.Screen name="Profile" component={Profile} options={optionsScreens} />
       <Stack.Screen name="Search" component={Search} options={optionsScreens} />
 
+      {/* For Testing */}
+      <Stack.Screen name="SubscriptionDetails" component={SubscriptionDetails} options={{ headerShown: true, headerTransparent: true, headerTitle: " ", headerTintColor: "#F2F1FF", headerRight: () => (
+      <TouchableOpacity onPress={() => {}}><Text style={{ color: "#F2F1FF", fontSize: 16, fontWeight: "400", }}>Skip</Text></TouchableOpacity>
+    ),}}/>
     </Stack.Navigator>
   );
 };

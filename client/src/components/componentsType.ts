@@ -28,6 +28,9 @@ export type RootStackParamList = {
   HobbiesInfo: undefined;
   PersonalInfo: undefined;
   CasualInfo: undefined;
+
+  // Payment
+  SubscriptionDetails: undefined,
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
