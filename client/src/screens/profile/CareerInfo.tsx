@@ -1,4 +1,11 @@
-import { View, Text, StatusBar } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import React, { FC, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -38,69 +45,80 @@ const CareerInfo: FC = () => {
   };
 
   return (
-    <SafeAreaView className="bg-background flex flex-1">
-      <View className="flex-1 items-center justify-start p-screen bg-background gap-large pt-extralarge">
-        <StatusBar hidden translucent />
-        <View className="flex items-center">
-          <Title text="Career Information (4/6)" />
-          <ErrorText text={`${errorMessage}`} />
-        </View>
-        <View className="flex items-center gap-mid">
-          <View className="w-full z-4">
-            <Title text="Highest Qualification:" />
-            <CustomDropdown
-              open={degreeOpen}
-              value={degree}
-              items={degreeItem}
-              setOpen={setDegreeOpen}
-              setValue={setDegree}
-              setItems={setDegreeItem}
-            />
+    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1">
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 80}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View className="flex-1 flex items-center justify-start p-screen bg-background gap-large">
+            <StatusBar hidden translucent />
+            <ErrorText text={`${errorMessage}`} />
+            <View className="flex items-center gap-mid">
+              <View className="w-full z-4">
+                <Title text="Education:" />
+                <Title text="Highest Qualification:" />
+                <CustomDropdown
+                  open={degreeOpen}
+                  value={degree}
+                  items={degreeItem}
+                  setOpen={setDegreeOpen}
+                  setValue={setDegree}
+                  setItems={setDegreeItem}
+                />
+              </View>
+              <View className="items-start w-full">
+                <Title text="College Name:" />
+                <InputFields
+                  plchldr="eg: Butwal Multiple Campus"
+                  state={college}
+                  setState={setCollege}
+                  board="default"
+                />
+              </View>
+              <View className="w-full">
+                <Title text="Profession:" />
+                <Title text="Currently Working in:" />
+                <CustomDropdown
+                  open={workingOpen}
+                  value={working}
+                  items={workingItem}
+                  setOpen={setWorkingOpen}
+                  setValue={setWorking}
+                  setItems={setWorkingItem}
+                />
+              </View>
+              <View className="items-start w-full">
+                <Title text="Working Place (Office Name):" />
+                <InputFields
+                  plchldr="eg: Meta"
+                  state={companyName}
+                  setState={setCompanyName}
+                  board="default"
+                />
+              </View>
+              <View className="items-start w-full">
+                <Title text="Working as:" />
+                <InputFields
+                  plchldr="eg: Software Engineer"
+                  state={profession}
+                  setState={setProfession}
+                  board="default"
+                />
+              </View>
+            </View>
+            <PrimaryButton screen="HobbiesInfo" action={handleProceed} text="Proceed" />
           </View>
-          <View className="items-start w-full">
-            <Title text="College Name:" />
-            <InputFields
-              plchldr="eg: Butwal Multiple Campus"
-              state={college}
-              setState={setCollege}
-              board="default"
-            />
+          <View className="flex items-center w-full">
+            <Description text="LamiSewa © 2026. All rights reserved." />
           </View>
-          <View className="w-full z-4">
-            <Title text="Currently Working in:" />
-            <CustomDropdown
-              open={workingOpen}
-              value={working}
-              items={workingItem}
-              setOpen={setWorkingOpen}
-              setValue={setWorking}
-              setItems={setWorkingItem}
-            />
-          </View>
-          <View className="items-start w-full">
-            <Title text="Working Place (Office Name):" />
-            <InputFields
-              plchldr="eg: Meta"
-              state={companyName}
-              setState={setCompanyName}
-              board="default"
-            />
-          </View>
-          <View className="items-start w-full">
-            <Title text="Working as:" />
-            <InputFields
-              plchldr="eg: Software Engineer"
-              state={profession}
-              setState={setProfession}
-              board="default"
-            />
-          </View>
-        </View>
-        <PrimaryButton screen="HobbiesInfo" action={handleProceed} text="Proceed" />
-      </View>
-      <View className="flex items-center w-full">
-        <Description text="LamiSewa © 2026. All rights reserved." />
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
