@@ -81,7 +81,7 @@ const CareerInfo: FC = () => {
                   board="default"
                 />
               </View>
-              <View className="w-full">
+              <View className="w-full mt-mid">
                 <Title text="Profession:" />
                 <Title text="Currently Working in:" />
                 <CustomDropdown

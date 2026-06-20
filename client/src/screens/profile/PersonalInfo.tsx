@@ -42,6 +42,8 @@ const PersonalInfo: FC = () => {
   const [residencyStatusItems, setResidencyStatusItems] =
     useState(ResidencyStatusItems);
 
+  const [navigatingScreen, setNavigatingScreen] = useState<string>("")
+
   const handleProceed = () => {
     if (
       !livingCountry ||
@@ -56,6 +58,7 @@ const PersonalInfo: FC = () => {
     }
     setError(false);
     setErrorMessage("");
+    setNavigatingScreen("AdditionalInfo")
   };
 
   return (
@@ -130,6 +133,7 @@ const PersonalInfo: FC = () => {
             <PrimaryButton
               action={handleProceed}
               text="Proceed"
+              screen={navigatingScreen}
             />
           </View>
           <View className="flex items-center w-full">

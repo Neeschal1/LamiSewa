@@ -38,7 +38,7 @@ export interface TextProps {
 export interface ButtonProps {
   text: string | number;
   action?: () => void;
-  screen?: keyof RootStackParamList;
+  screen?: keyof RootStackParamList | string;
 }
 
 export interface SocialButtonProps {

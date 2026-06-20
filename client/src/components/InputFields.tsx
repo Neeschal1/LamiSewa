@@ -316,6 +316,7 @@ export const CustomDropdown: FC<CustomDropdownProps> = ({
             paddingVertical: 12,
             borderBottomWidth: 1,
             borderBottomColor: "#F0F0F0",
+            minHeight: 48,
           }}
           closeAfterSelecting={true}
           selectedItemContainerStyle={{

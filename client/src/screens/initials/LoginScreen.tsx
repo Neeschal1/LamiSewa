@@ -6,6 +6,16 @@ import {
   Dimensions,
 } from "react-native";
 import React, { FC, useState } from "react";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  FadeInUp,
+  FadeInDown,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  BounceIn,
+} from "react-native-reanimated";
 import {
   Description,
   InputFields,
@@ -46,15 +56,20 @@ const Login: FC = () => {
       </ImageBackground>
       <View className="flex w-full p-screen rounded-3xl gap-extralarge items-center mt-[-100px] bg-background">
         <View className="flex gap-large">
-          <View>
+          <Animated.View
+            entering={FadeInUp.delay(200).duration(400).springify()}
+          >
             <MainScreenName text="Login" />
             <View className="mt-[-10px]">
               <Description text="Login to find your perfect match through LamiSewa." />
             </View>
-          </View>
+          </Animated.View>
           <View className="flex w-full items-end gap-small">
             <View className="flex gap-mid">
-              <View className="items-start w-full">
+              <Animated.View
+                entering={FadeInUp.delay(400).duration(400).springify()}
+                className="items-start w-full"
+              >
                 <Title text="Email" />
                 <InputFields
                   plchldr="example@gmail.com"
@@ -62,8 +77,11 @@ const Login: FC = () => {
                   setState={setEmail}
                   board="default"
                 />
-              </View>
-              <View className="items-start w-full">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInUp.delay(600).duration(400).springify()}
+                className="items-start w-full"
+              >
                 <Title text="Password" />
                 <InputPassword
                   plchldr="***********"
@@ -73,16 +91,21 @@ const Login: FC = () => {
                   visibility={seePassword}
                   setVisibility={setSeePassword}
                 />
-              </View>
+              </Animated.View>
             </View>
-            <View className="flex flex-end">
+            <Animated.View
+              entering={FadeInUp.delay(800).duration(400).springify()}
+              className="flex flex-end"
+            >
               <TextualButton screen="ForgotPassword" text="Forgot Password" />
-            </View>
+            </Animated.View>
           </View>
         </View>
-        <PrimaryButton text="Login" />
+        <Animated.View entering={FadeInDown.delay(800).duration(400).springify()}>
+          <PrimaryButton text="Login" />
+        </Animated.View>
         <View className="flex w-full items-center justify-center gap-mid">
-          <View className="flex items-center justify-center flex-row gap-2">
+          <Animated.View entering={FadeInDown.delay(600).duration(400).springify()} className="flex items-center justify-center flex-row gap-2">
             <View
               style={{ height: 1, width: "40%", backgroundColor: "black" }}
             />
@@ -90,9 +113,9 @@ const Login: FC = () => {
             <View
               style={{ height: 1, width: "40%", backgroundColor: "black" }}
             />
-          </View>
+          </Animated.View>
           <View className="flex gap-small">
-            <View className="flex gap-mid">
+            <Animated.View entering={FadeInDown.delay(400).duration(400).springify()} className="flex gap-mid">
               <SocialButton
                 text="Continue with Facebook"
                 btnname="facebook"
@@ -103,15 +126,15 @@ const Login: FC = () => {
                 btnname="google"
                 logo={googleLogo}
               />
-            </View>
-            <View className="flex flex-row gap-2 justify-center items-center">
+            </Animated.View>
+            <Animated.View entering={FadeInDown.delay(300).duration(400).springify()} className="flex flex-row gap-2 justify-center items-center">
               <SubTitle text="New to LamiSewa?" />
               <TextualButton text="Signup" screen="Signup" />
-            </View>
+            </Animated.View>
           </View>
-          <View className="flex items-center w-full">
+          <Animated.View entering={FadeInDown.delay(200).duration(400).springify()} className="flex items-center w-full">
             <Description text="LamiSewa © 2026. All rights reserved." />
-          </View>
+          </Animated.View>
         </View>
       </View>
     </View>
