@@ -43,7 +43,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const UnauthenticatedNavigation = () => {
   return (
-    <Stack.Navigator initialRouteName="CareerInfo" screenOptions={{ headerShown: false }} >
+    <Stack.Navigator initialRouteName="SubscriptionDetails" screenOptions={{ headerShown: false }} >
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Login" component={Login} />

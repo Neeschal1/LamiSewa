@@ -39,6 +39,7 @@ module.exports = {
       },
       padding: {
         screen: "20px",
+        midscreen: "10px",
       },
       borderRadius: {
         button: "20"

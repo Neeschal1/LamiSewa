@@ -98,3 +98,45 @@ export const Basicoffers = [
     value: "Send limited “interest” requests per week",
   },
 ];
+
+export const InternationalPaymentMethod = [
+    {
+        index: 1,
+        logo: require("@/src/assets/images/visa.png"),
+        paymentName: "Visa",
+        bgcolor: "#014397/30"
+    },
+    {
+        index: 2,
+        logo: require("@/src/assets/images/mastercard.png"),
+        paymentName: "Master Card",
+        bgcolor: "#000000/30"
+    },
+    {
+        index: 3,
+        logo: require("@/src/assets/images/americanexpress.png"),
+        paymentName: "American Express",
+        bgcolor: "#016FD0/30"
+    }
+]
+
+export const NationalPaymentMethod = [
+    {
+        index: 1,
+        logo: require("@/src/assets/images/eSewa.png"),
+        paymentName: "eSewa",
+        bgcolor: "#60BB47/30"
+    },
+    {
+        index: 2,
+        logo: require("@/src/assets/images/connectIPS.png"),
+        paymentName: "ConnectIPS",
+        bgcolor: "#DA1911/30"
+    },
+    {
+        index: 3,
+        logo: require("@/src/assets/images/khalti.png"),
+        paymentName: "Khalti",
+        bgcolor: "#4C276D/30"
+    }
+]

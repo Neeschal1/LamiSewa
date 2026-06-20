@@ -7,12 +7,12 @@ import {
   SignupVerification,
   Splash,
 } from "../screens/initials/initialScreensLayout";
+
 // For Testing
 import {
   BasicInfo,
   AdditionalInfo,
   CareerInfo,
-  LastVerification,
   HobbiesInfo,
   PersonalInfo,
 } from "@/src/screens/profile/profileScreenLayout";
@@ -41,7 +41,6 @@ const AuthenticatedNavigation = () => {
       <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} options={optionsScreens} />
       <Stack.Screen name="CareerInfo" component={CareerInfo} options={optionsScreens} />
       <Stack.Screen name="HobbiesInfo" component={HobbiesInfo} options={optionsScreens} />
-      <Stack.Screen name="LastVerification" component={LastVerification} options={optionsScreens} />
       <Stack.Screen name="PersonalInfo" component={PersonalInfo} options={optionsScreens} />
       <Stack.Screen name="Chats" component={Chats} options={optionsScreens} />
       <Stack.Screen name="Home" component={Home} options={optionsScreens} />

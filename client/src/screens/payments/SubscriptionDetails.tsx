@@ -16,6 +16,7 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Basicoffers, Premiumoffers, VIPoffers } from "./PaymentServices";
+import PaymentOption from "./PaymentOption";
 
 const screenheight = Dimensions.get("window").height;
 const screenwidth = Dimensions.get("window").width;
@@ -46,6 +47,15 @@ const SubscriptionPlans = [
 
 const SubscriptionDetails = () => {
   const [selectedPackage, setSelectedPackage] = useState(SubscriptionPlans[2]);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   const PackageDetails = () => {
     if (selectedPackage.packagetype === "VIP") {
@@ -142,16 +152,12 @@ const SubscriptionDetails = () => {
           </View>
 
           <TouchableOpacity
-            onPress={() =>
-              console.log("Upgrading to:", selectedPackage.packagetype)
-            }
+            onPress={openModal}
+            className="rounded-2xl items-center justify-center"
             style={{
               height: screenheight * 0.061,
               width: screenwidth * 0.883,
               backgroundColor: selectedPackage.color,
-              borderRadius: 12,
-              alignItems: "center",
-              justifyContent: "center",
             }}
           >
             <View className="flex flex-row gap-mid">
@@ -163,6 +169,7 @@ const SubscriptionDetails = () => {
           </TouchableOpacity>
         </View>
       </View>
+      <PaymentOption isVisible={isModalVisible} onClose={closeModal} packageName={selectedPackage.packagetype} color={selectedPackage.color}/>
     </SafeAreaView>
   );
 };
