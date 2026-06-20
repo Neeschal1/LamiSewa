@@ -266,6 +266,7 @@ export const CustomDropdown: FC<CustomDropdownProps> = ({
   setItems,
 }: CustomDropdownProps) => {
   const hasValue = value !== null && value !== "";
+
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_500Medium,
@@ -288,6 +289,45 @@ export const CustomDropdown: FC<CustomDropdownProps> = ({
           setOpen={setOpen}
           setValue={setValue}
           setItems={setItems}
+          listMode="MODAL"
+          modalProps={{
+            animationType: "slide",
+            statusBarTranslucent: true,
+            backdropColor: "#000000/50",
+          }}
+          modalContentContainerStyle={{
+            flex: 1,
+            marginTop: "100%",
+            backgroundColor: "#F6F5FF",
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            padding: 16,
+            shadowOpacity: 0.5,
+          }}
+          modalTitle="Select an option"
+          modalTitleStyle={{
+            fontFamily: "Poppins_500Medium",
+            fontSize: 16,
+            color: "#000",
+            textAlign: "center",
+            marginBottom: 8,
+          }}
+          listItemContainerStyle={{
+            paddingVertical: 12,
+            borderBottomWidth: 1,
+            borderBottomColor: "#F0F0F0",
+          }}
+          closeAfterSelecting={true}
+          selectedItemContainerStyle={{
+            backgroundColor: "#F0F4FF",
+          }}
+          flatListProps={{
+            showsVerticalScrollIndicator: false,
+          }}
+          selectedItemLabelStyle={{
+            fontFamily: "Poppins_500Medium",
+            color: "#4987F6",
+          }}
           scrollViewProps={{
             nestedScrollEnabled: true,
           }}

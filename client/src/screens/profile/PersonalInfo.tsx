@@ -1,4 +1,10 @@
-import { View, Text, StatusBar } from "react-native";
+import {
+  View,
+  StatusBar,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import React, { FC, useState } from "react";
 import {
   InputFields,
@@ -53,76 +59,84 @@ const PersonalInfo: FC = () => {
   };
 
   return (
-    <SafeAreaView className="bg-background flex flex-1">
-      <View className="flex-1 items-center justify-start p-screen bg-background gap-large pt-extralarge">
-        <StatusBar hidden translucent />
-        <View className="flex items-center">
-          <Title text="Personal Information (2/6)" />
-          <ErrorText text={`${errorMessage}`} />
-        </View>
-        <View className="flex items-center gap-mid">
-          <View className="items-start w-full">
-            <Title text="Current living country:" />
-            <InputFields
-              plchldr="eg: Nepal"
-              state={livingCountry}
-              setState={setLivingCountry}
-              board="default"
-            />
-          </View>
-          <View className="items-start w-full">
-            <Title text="District/City:" />
-            <InputFields
-              plchldr="eg: Kathmandu"
-              state={district}
-              setState={setDistrict}
-              board="default"
-            />
-          </View>
-          <View className="w-full">
-            <Title text="Marital Status" />
-            <CustomDropdown
-              open={maritalStatusOpen}
-              value={maritalStatus}
-              items={maritalStatusItems}
-              setOpen={setMaritalStatusOpen}
-              setValue={setMaritalStatus}
-              setItems={setMaritalStatusItems}
-            />
-          </View>
-          <View className="w-full">
-            <Title text="Gotra" />
-            <CustomDropdown
-              open={gotraOption}
-              value={gotra}
-              items={gotraItems}
-              setOpen={setGotraOption}
-              setValue={setGotra}
-              setItems={setGotraItems}
-            />
-          </View>
-          <View className="w-full">
-            <Title text="Residency Status" />
+    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1">
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 80}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View className="flex-1 items-center justify-start p-screen bg-background gap-large pt-extralarge">
+            <StatusBar hidden translucent />
+            <ErrorText text={`${errorMessage}`} />
+            <View className="flex items-center gap-mid">
+              <View className="items-start w-full">
+                <Title text="Current living country:" />
+                <InputFields
+                  plchldr="eg: Nepal"
+                  state={livingCountry}
+                  setState={setLivingCountry}
+                  board="default"
+                />
+              </View>
+              <View className="items-start w-full">
+                <Title text="District/City:" />
+                <InputFields
+                  plchldr="eg: Kathmandu"
+                  state={district}
+                  setState={setDistrict}
+                  board="default"
+                />
+              </View>
+              <View className="w-full">
+                <Title text="Marital Status" />
+                <CustomDropdown
+                  open={maritalStatusOpen}
+                  value={maritalStatus}
+                  items={maritalStatusItems}
+                  setOpen={setMaritalStatusOpen}
+                  setValue={setMaritalStatus}
+                  setItems={setMaritalStatusItems}
+                />
+              </View>
+              <View className="w-full">
+                <Title text="Gotra" />
+                <CustomDropdown
+                  open={gotraOption}
+                  value={gotra}
+                  items={gotraItems}
+                  setOpen={setGotraOption}
+                  setValue={setGotra}
+                  setItems={setGotraItems}
+                />
+              </View>
+              <View className="w-full">
+                <Title text="Residency Status" />
 
-            <CustomDropdown
-              open={residencyStatusOpen}
-              value={residencyStatus}
-              items={residencyStatusItems}
-              setOpen={setResidencyStatusOpen}
-              setValue={setResidencyStatus}
-              setItems={setResidencyStatusItems}
+                <CustomDropdown
+                  open={residencyStatusOpen}
+                  value={residencyStatus}
+                  items={residencyStatusItems}
+                  setOpen={setResidencyStatusOpen}
+                  setValue={setResidencyStatus}
+                  setItems={setResidencyStatusItems}
+                />
+              </View>
+            </View>
+            <PrimaryButton
+              action={handleProceed}
+              text="Proceed"
             />
           </View>
-        </View>
-        <PrimaryButton
-          action={handleProceed}
-          text="Proceed"
-          screen="AdditionalInfo"
-        />
-      </View>
-      <View className="flex items-center w-full">
-        <Description text="LamiSewa © 2026. All rights reserved." />
-      </View>
+          <View className="flex items-center w-full">
+            <Description text="LamiSewa © 2026. All rights reserved." />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
