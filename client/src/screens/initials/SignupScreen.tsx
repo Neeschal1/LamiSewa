@@ -1,5 +1,9 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, StatusBar } from "react-native";
 import React, { useState } from "react";
+import Animated, {
+  FadeInUp,
+  FadeInDown,
+} from "react-native-reanimated";
 import {
   Description,
   InputFields,
@@ -56,17 +60,27 @@ const Signup = () => {
 
   return (
     <SafeAreaView className="flex flex-1 bg-background">
+      <StatusBar hidden translucent />
       <View className="flex-1 bg-background w-full items-start p-screen justify-center gap-extralarge">
         <View className="flex gap-large">
-          <View className="flex items-start">
+          <Animated.View
+            entering={FadeInUp.delay(200).duration(400).springify()}
+            className="flex items-start"
+          >
             <MainScreenName text="Signup" />
-            <View className="mt-[-10px]">
+            <Animated.View
+              entering={FadeInUp.delay(300).duration(400).springify()}
+              className="mt-[-10px]"
+            >
               <Description text="New to LamiSewa? Create a new account." />
-            </View>
-          </View>
+            </Animated.View>
+          </Animated.View>
 
           <View className="flex items-start gap-mid">
-            <View className="flex items-start w-full">
+            <Animated.View
+              entering={FadeInUp.delay(400).duration(400).springify()}
+              className="flex items-start w-full"
+            >
               <Title text="Full Name" />
               <InputFields
                 plchldr="eg: Neeschal Pokharel"
@@ -74,8 +88,11 @@ const Signup = () => {
                 setState={setName}
                 board="default"
               />
-            </View>
-            <View className="items-start w-full">
+            </Animated.View>
+            <Animated.View
+              entering={FadeInUp.delay(600).duration(400).springify()}
+              className="items-start w-full"
+            >
               <Title text="Email" />
               <InputFields
                 plchldr="eg: example@gmail.com"
@@ -83,8 +100,11 @@ const Signup = () => {
                 setState={setEmail}
                 board="email-address"
               />
-            </View>
-            <View className="items-start w-full">
+            </Animated.View>
+            <Animated.View
+              entering={FadeInUp.delay(800).duration(400).springify()}
+              className="items-start w-full"
+            >
               <Title text="Phone Number" />
 
               <View className="flex-row items-start border-gray-300 rounded-xl">
@@ -117,22 +137,32 @@ const Signup = () => {
                 />
                 <Description text="I agree to the Terms & Conditions and Privacy Policy of LamiSewa." />
               </View>
-            </View>
-            <View className="flex w-full">
+            </Animated.View>
+            <Animated.View
+              entering={FadeInUp.delay(1000).duration(400).springify()}
+              className="flex w-full"
+            >
               <View className="ml-[-10px] flex items-center text-center justify-center w-full">
                 {checkFilledState ? <ErrorText text={showMessage} /> : null}
               </View>
-            </View>
+            </Animated.View>
           </View>
         </View>
-        <PrimaryButton
-          action={handleButtonPress}
-          text="Proceed"
-          screen="SignupVerification"
-        />
+        <Animated.View
+          entering={FadeInDown.delay(1000).duration(400).springify()}
+        >
+          <PrimaryButton
+            action={handleButtonPress}
+            text="Proceed"
+            screen="SignupVerification"
+          />
+        </Animated.View>
 
         <View className="flex w-full items-center justify-center gap-mid">
-          <View className="flex items-center justify-center flex-row gap-2">
+          <Animated.View
+            entering={FadeInDown.delay(800).duration(400).springify()}
+            className="flex items-center justify-center flex-row gap-2"
+          >
             <View
               style={{ height: 1, width: "40%", backgroundColor: "black" }}
             />
@@ -140,28 +170,38 @@ const Signup = () => {
             <View
               style={{ height: 1, width: "40%", backgroundColor: "black" }}
             />
-          </View>
+          </Animated.View>
           <View className="flex gap-small">
             <View className="flex gap-mid">
-              <SocialButton
-                text="Continue with Facebook"
-                btnname="facebook"
-                logo={facebookLogo}
-              />
-              <SocialButton
-                text="Continue with Google"
-                btnname="google"
-                logo={googleLogo}
-              />
+              <Animated.View
+                entering={FadeInDown.delay(600).duration(400).springify()}
+              >
+                <SocialButton
+                  text="Continue with Facebook"
+                  btnname="facebook"
+                  logo={facebookLogo}
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(400).springify()}
+              >
+                <SocialButton
+                  text="Continue with Google"
+                  btnname="google"
+                  logo={googleLogo}
+                />
+              </Animated.View>
             </View>
-            <View className="flex flex-row gap-2 justify-center items-center">
+            <Animated.View
+              entering={FadeInDown.delay(300).duration(400).springify()} className="flex flex-row gap-2 justify-center items-center">
               <SubTitle text="Already have an account?" />
               <TextualButton text="Login" screen="Login" />
-            </View>
+            </Animated.View>
           </View>
-          <View className="flex items-center w-full">
+          <Animated.View
+              entering={FadeInDown.delay(200).duration(400).springify()} className="flex items-center w-full">
             <Description text="LamiSewa © 2026. All rights reserved." />
-          </View>
+          </Animated.View>
         </View>
       </View>
     </SafeAreaView>
