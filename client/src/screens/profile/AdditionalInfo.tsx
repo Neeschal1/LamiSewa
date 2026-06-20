@@ -1,4 +1,11 @@
-import { View, Text, StatusBar } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView
+} from "react-native";
 import React, { FC, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -38,68 +45,84 @@ const AdditionalInfo: FC = () => {
   };
 
   return (
-    <SafeAreaView className="bg-background flex flex-1">
-      <View className="flex-1 items-center justify-start p-screen bg-background gap-large pt-extralarge">
-        <StatusBar hidden translucent />
-        <View className="flex items-center">
-          <ErrorText text={`${errorMessage}`} />
-        </View>
-        <View className="flex items-center gap-mid">
-          <View className="items-start w-full">
-            <Title text="Religion:" />
-            <InputFields
-              plchldr="eg: Hindu"
-              state={religion}
-              setState={setReligion}
-              board="default"
+    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1 items-center">
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 80}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View className="flex-1 flex items-center justify-start p-screen bg-background gap-large">
+            <StatusBar hidden translucent />
+            <View className="flex items-center">
+              <ErrorText text={`${errorMessage}`} />
+            </View>
+            <View className="flex items-center gap-mid">
+              <View className="items-start w-full">
+                <Title text="Religion:" />
+                <InputFields
+                  plchldr="eg: Hindu"
+                  state={religion}
+                  setState={setReligion}
+                  board="default"
+                />
+              </View>
+              <View className="items-start w-full">
+                <Title text="Height:" />
+                <InputFields
+                  plchldr="eg: 5 ft 5 inch"
+                  state={height}
+                  setState={setHeight}
+                  board="default"
+                />
+              </View>
+              <View className="items-start w-full">
+                <Title text="Weight:" />
+                <InputFields
+                  plchldr="eg: 50kg"
+                  state={weight}
+                  setState={setWeight}
+                  board="default"
+                />
+              </View>
+              <View className="w-full z-4">
+                <Title text="Community:" />
+                <CustomDropdown
+                  open={communityOpen}
+                  value={community}
+                  items={communityItem}
+                  setOpen={setCommunityOpen}
+                  setValue={setCommunity}
+                  setItems={setCommunityItem}
+                />
+              </View>
+              <View style={{ zIndex: 1000 }} className="w-full z-1">
+                <Title text="Diet:" />
+                <CustomDropdown
+                  open={dietOpen}
+                  value={diet}
+                  items={dietItem}
+                  setOpen={setDietOpen}
+                  setValue={setDiet}
+                  setItems={setDietItem}
+                />
+              </View>
+            </View>
+            <PrimaryButton
+              action={handleProceed}
+              text="Proceed"
+              screen="CareerInfo"
             />
           </View>
-          <View className="items-start w-full">
-            <Title text="Height:" />
-            <InputFields
-              plchldr="eg: 5 ft 5 inch"
-              state={height}
-              setState={setHeight}
-              board="default"
-            />
+          <View className="flex items-center w-full">
+            <Description text="LamiSewa © 2026. All rights reserved." />
           </View>
-          <View className="items-start w-full">
-            <Title text="Weight:" />
-            <InputFields
-              plchldr="eg: 50kg"
-              state={weight}
-              setState={setWeight}
-              board="default"
-            />
-          </View>
-          <View className="w-full z-4">
-            <Title text="Community:" />
-            <CustomDropdown
-              open={communityOpen}
-              value={community}
-              items={communityItem}
-              setOpen={setCommunityOpen}
-              setValue={setCommunity}
-              setItems={setCommunityItem}
-            />
-          </View>
-          <View style={{ zIndex: 1000 }} className="w-full z-1">
-            <Title text="Diet:" />
-            <CustomDropdown
-              open={dietOpen}
-              value={diet}
-              items={dietItem}
-              setOpen={setDietOpen}
-              setValue={setDiet}
-              setItems={setDietItem}
-            />
-          </View>
-        </View>
-        <PrimaryButton action={handleProceed} text="Proceed" screen="CareerInfo"/>
-      </View>
-      <View className="flex items-center w-full">
-        <Description text="LamiSewa © 2026. All rights reserved." />
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
