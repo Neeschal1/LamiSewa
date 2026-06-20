@@ -1,11 +1,15 @@
 import {
   View,
   Image,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from "react-native";
+import Animated, {
+  FadeInUp,
+  FadeInDown,
+  BounceIn,
+} from "react-native-reanimated";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -13,7 +17,6 @@ import {
   Title,
   SubText,
   Description,
-  InputFields,
   OTPInputFields,
   PrimaryButton,
   ErrorText,
@@ -69,14 +72,29 @@ const SignupVerification = () => {
           showsVerticalScrollIndicator={false}
         >
           <View className="flex-1 items-center justify-center bg-background p-screen gap-extralarge">
-            <Image source={mailInboxImage} />
+            <Animated.View
+              entering={FadeInUp.delay(200).duration(400).springify()}
+            >
+              <Image source={mailInboxImage} />
+            </Animated.View>
             <View className="items-center">
-              <MainScreenName text="Verify your Email" />
-              <SubText text="We’ve sent you a 6-digit verification code to your email or phone or both. Please enter the code in order to verify it’s you." />
+              <Animated.View
+                entering={FadeInUp.delay(300).duration(400).springify()}
+              >
+                <MainScreenName text="Verify your Email" />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInUp.delay(400).duration(400).springify()}
+              >
+                <SubText text="We’ve sent you a 6-digit verification code to your email or phone or both. Please enter the code in order to verify it’s you." />
+              </Animated.View>
             </View>
 
             <View className="w-full items-center gap-large">
-              <View className="flex gap-mid">
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(400).springify()}
+                className="flex gap-mid"
+              >
                 <View className="flex flex-row items-center w-full justify-between">
                   <Title text="Enter your Code" />
                   <Description text={`Code expires in ${formattedTime}`} />
@@ -84,15 +102,23 @@ const SignupVerification = () => {
                 <View className="flex-row gap-2">
                   <OTPInputFields otp={otp} setOtp={setOtp} />
                 </View>
-              </View>
-              <View className="ml-[-20px] flex items-center text-center justify-center w-full">
+              </Animated.View>
+              <Animated.View
+              key={showMessage} 
+                entering={BounceIn.delay(200).duration(300)}
+                className="ml-[-20px] flex items-center text-center justify-center w-full"
+              >
                 {checkOTPState ? <ErrorText text={showMessage} /> : null}
-              </View>
-              <PrimaryButton
-                action={handleOTPAction}
-                text="Continue"
-                screen="Password"
-              />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(200).duration(400).springify()}
+              >
+                <PrimaryButton
+                  action={handleOTPAction}
+                  text="Continue"
+                  screen="Password"
+                />
+              </Animated.View>
               {timer === 0 && (
                 <View className="flex flex-row items-center gap-2">
                   <SubTitle text="Didn't receive the code?" />
