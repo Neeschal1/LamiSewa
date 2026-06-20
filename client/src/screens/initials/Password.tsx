@@ -1,4 +1,12 @@
-import { View, StatusBar, Modal, Image } from "react-native";
+import {
+  View,
+  StatusBar,
+  Modal,
+  Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import {
   Description,
@@ -8,6 +16,7 @@ import {
   ErrorText,
   InputPassword,
 } from "@/src/components/systemComponentsLayout";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
@@ -23,8 +32,8 @@ const Password = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleOkay = () => {
-    setShowSuccessModal(false)
-  }
+    setShowSuccessModal(false);
+  };
 
   const handleContinue = () => {
     const pass = password.trim();
@@ -52,73 +61,92 @@ const Password = () => {
   };
 
   return (
-    <View className="flex-1 items-start justify-center bg-background p-screen pt-[-10px]">
-      <StatusBar hidden translucent />
-      <View className="flex items-start justify-center gap-extralarge">
-        <View>
-          <MainScreenName text="Password" />
-          <View className="mt-[-10px]">
-            {unMatched ? (
-              <View className="flex align-start">
-              <ErrorText text={`${showMessage}`} />
-            </View>
-            ) : <Description text="Choose a stronger password to stay secure." />}
-          </View>
-        </View>
-        <View className="flex gap-mid">
-          <View className="items-start w-full">
-            <Title text="Password" />
-            <InputPassword
-              plchldr="***********"
-              state={password}
-              setState={setPassword}
-              board="default"
-              visibility={seePassword}
-              setVisibility={setSeePassword}
-            />
-          </View>
-          <View className="items-start w-full">
-            <Title text="Confirm Password" />
-            <InputPassword
-              plchldr="***********"
-              state={confirmPassword}
-              setState={setConfirmPassword}
-              board="default"
-              visibility={seeConfirmPassword}
-              setVisibility={setSeeConfirmPassword}
-            />
-          </View>
-        </View>
-        <PrimaryButton action={handleContinue} text="Continue" />
-      </View>
-      <Modal
-        visible={showSuccessModal}
-        transparent
-        animationType="fade"
-        statusBarTranslucent
+    <SafeAreaView className="bg-background items-center justify-center flex flex-1">
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
       >
-        <View
-          className="flex-1 items-center justify-center"
-          style={{
-            backgroundColor: "rgba(0,0,0,0.8)",
-            padding: 10,
-          }}
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <View className="bg-white py-4 mx-screen rounded-3xl w-full p-screen items-center gap-large">
-            <View className="flex items-center">
-              <Image className="h-40 w-40" source={logo} />
-              <View className="mt-[-30px] w-full flex items-center">
-                <MainScreenName text="Success!" />
+          <View className="flex-1 items-center justify-center bg-background p-screen">
+            <StatusBar hidden translucent />
+            <View className="flex items-start justify-center gap-extralarge">
+              <View>
+                <MainScreenName text="Password" />
                 <View className="mt-[-10px]">
-                  <Description text="Your Account has been Created Successfully" />
+                  {unMatched ? (
+                    <View className="flex align-start">
+                      <ErrorText text={`${showMessage}`} />
+                    </View>
+                  ) : (
+                    <Description text="Choose a stronger password to stay secure." />
+                  )}
                 </View>
               </View>
+              <View className="flex gap-mid">
+                <View className="items-start w-full">
+                  <Title text="Password" />
+                  <InputPassword
+                    plchldr="***********"
+                    state={password}
+                    setState={setPassword}
+                    board="default"
+                    visibility={seePassword}
+                    setVisibility={setSeePassword}
+                  />
+                </View>
+                <View className="items-start w-full">
+                  <Title text="Confirm Password" />
+                  <InputPassword
+                    plchldr="***********"
+                    state={confirmPassword}
+                    setState={setConfirmPassword}
+                    board="default"
+                    visibility={seeConfirmPassword}
+                    setVisibility={setSeeConfirmPassword}
+                  />
+                </View>
+              </View>
+              <PrimaryButton action={handleContinue} text="Continue" />
             </View>
-            <PrimaryButton text="Okay :)" action={handleOkay} screen="BasicInfo"/>
+            <Modal
+              visible={showSuccessModal}
+              transparent
+              animationType="fade"
+              statusBarTranslucent
+            >
+              <View
+                className="flex-1 items-center justify-center"
+                style={{
+                  backgroundColor: "rgba(0,0,0,0.8)",
+                  padding: 10,
+                }}
+              >
+                <View className="bg-white py-4 mx-screen rounded-3xl w-full p-screen items-center gap-large">
+                  <View className="flex items-center">
+                    <Image className="h-40 w-40" source={logo} />
+                    <View className="mt-[-30px] w-full flex items-center">
+                      <MainScreenName text="Success!" />
+                      <View className="mt-[-10px]">
+                        <Description text="Your Account has been Created Successfully" />
+                      </View>
+                    </View>
+                  </View>
+                  <PrimaryButton
+                    text="Okay :)"
+                    action={handleOkay}
+                    screen="BasicInfo"
+                  />
+                </View>
+              </View>
+            </Modal>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

@@ -64,15 +64,16 @@ const HobbiesInfo: FC = () => {
   }
 
   const handleOkay = () => {
-    console.log("Okay :)")
+    console.log("Okay :) Your hobbies are: ", hobbies);
+    setShowSuccessModal(false)
   }
 
   return (
-    <SafeAreaView className="bg-background flex flex-1">
+    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1">
       <StatusBar hidden translucent />
-      <View className="flex items-center gap-mid mb-[-20px]">
-        <Title text="Hobbies (5/6)" />
-        {error ? <ErrorText text={`${errorMessage} Currently: ${hobbies.length}/5`} /> : <SubTitle text={`What are your hobbies? ${hobbies.length}/5`} />}
+      <View className="items-center mb-[-20px] py-3">
+        <SubTitle text={`What are your hobbies? ${hobbies.length}/5`} />
+        {error ? <ErrorText text={`${errorMessage} `} /> : null}
       </View>
       <View className="flex items-center">
         <SubTitle text={``} />

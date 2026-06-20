@@ -1,5 +1,11 @@
-import { View, Image, TextInput,   KeyboardAvoidingView,
-  Platform, } from "react-native";
+import {
+  View,
+  Image,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -40,11 +46,11 @@ const SignupVerification = () => {
       setShowMessage("Enter complete OTP codes!");
     } else {
       setCheckOTPState(false);
-      let stringOTP = ""
-      for(let i=0; i<otp.length; i++){
-        stringOTP += otp[i]
+      let stringOTP = "";
+      for (let i = 0; i < otp.length; i++) {
+        stringOTP += otp[i];
       }
-      const numberOTP = Number(stringOTP)
+      const numberOTP = Number(stringOTP);
       console.log("Your Entered OTP: ", numberOTP);
     }
   };
@@ -52,35 +58,52 @@ const SignupVerification = () => {
   const formattedTime = `00:${timer.toString().padStart(2, "0")}`;
 
   return (
-    <View className="flex-1 items-center justify-start bg-background p-screen gap-extralarge pt-20">
-      <Image source={mailInboxImage} />
-      <View className="items-center">
-        <MainScreenName text="Verify your Email" />
-        <SubText text="We’ve sent you a 6-digit verification code to your email or phone or both. Please enter the code in order to verify it’s you." />
-      </View>
+    <SafeAreaView className="bg-background justify-center items-center flex flex-1">
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View className="flex-1 items-center justify-center bg-background p-screen gap-extralarge">
+            <Image source={mailInboxImage} />
+            <View className="items-center">
+              <MainScreenName text="Verify your Email" />
+              <SubText text="We’ve sent you a 6-digit verification code to your email or phone or both. Please enter the code in order to verify it’s you." />
+            </View>
 
-      <View className="w-full items-center gap-large">
-        <View className="flex gap-mid">
-          <View className="flex flex-row items-center w-full justify-between">
-            <Title text="Enter your Code" />
-            <Description text={`Code expires in ${formattedTime}`} />
+            <View className="w-full items-center gap-large">
+              <View className="flex gap-mid">
+                <View className="flex flex-row items-center w-full justify-between">
+                  <Title text="Enter your Code" />
+                  <Description text={`Code expires in ${formattedTime}`} />
+                </View>
+                <View className="flex-row gap-2">
+                  <OTPInputFields otp={otp} setOtp={setOtp} />
+                </View>
+              </View>
+              <View className="ml-[-20px] flex items-center text-center justify-center w-full">
+                {checkOTPState ? <ErrorText text={showMessage} /> : null}
+              </View>
+              <PrimaryButton
+                action={handleOTPAction}
+                text="Continue"
+                screen="Password"
+              />
+              {timer === 0 && (
+                <View className="flex flex-row items-center gap-2">
+                  <SubTitle text="Didn't receive the code?" />
+                  <TextualButton text="Resend it" />
+                </View>
+              )}
+            </View>
           </View>
-          <View className="flex-row gap-2">
-            <OTPInputFields otp={otp} setOtp={setOtp} />
-          </View>
-        </View>
-        <View className="ml-[-20px] flex items-center text-center justify-center w-full">
-          {checkOTPState ? <ErrorText text={showMessage} /> : null}
-        </View>
-        <PrimaryButton action={handleOTPAction} text="Continue" screen="Password"/>
-        {timer === 0 && (
-          <View className="flex flex-row items-center gap-2">
-            <SubTitle text="Didn't receive the code?" />
-            <TextualButton text="Resend it" />
-          </View>
-        )}
-      </View>
-    </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

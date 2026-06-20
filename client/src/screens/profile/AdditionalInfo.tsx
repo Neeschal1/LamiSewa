@@ -42,7 +42,6 @@ const AdditionalInfo: FC = () => {
       <View className="flex-1 items-center justify-start p-screen bg-background gap-large pt-extralarge">
         <StatusBar hidden translucent />
         <View className="flex items-center">
-          <Title text="Additional Information (3/6)" />
           <ErrorText text={`${errorMessage}`} />
         </View>
         <View className="flex items-center gap-mid">

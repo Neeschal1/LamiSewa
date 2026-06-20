@@ -7,6 +7,9 @@ import {
   ActivityIndicator,
   StyleSheet,
   StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import ProfilePicture from "@/src/utils/profilePicture";
@@ -22,7 +25,11 @@ import {
   CustomDropdown,
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CalendarItems, GenderOption, ProfileOptions } from "@/src/utils/objects";
+import {
+  CalendarItems,
+  GenderOption,
+  ProfileOptions,
+} from "@/src/utils/objects";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
 
@@ -104,137 +111,148 @@ const BasicInfo = () => {
       : defaultUserImage;
 
   return (
-    <SafeAreaView className="bg-background flex flex-1">
-      <View className="flex-1 items-center justify-start p-screen bg-background gap-large">
-        <StatusBar hidden translucent />
-        <View className="flex items-center">
-          <Title text="Basic Information (1/6)" />
-        </View>
-        <View className="flex items-center gap-mid">
-          <TouchableOpacity
-            onPress={pickAndUpload}
-            disabled={loading}
-            className="w-[110px] h-[110px] rounded-full relative"
-          >
-            <Image
-              source={imageSource}
-              className="w-[110px] h-[110px] rounded-full"
-            />
+    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1">
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View className="flex-1 items-center justify-start p-screen bg-background gap-large">
+            <StatusBar hidden translucent />
+            <View className="flex items-center gap-mid">
+              <TouchableOpacity
+                onPress={pickAndUpload}
+                disabled={loading}
+                className="w-[110px] h-[110px] rounded-full relative"
+              >
+                <Image
+                  source={imageSource}
+                  className="w-[110px] h-[110px] rounded-full"
+                />
 
-            {loading && (
-              <View className="absolute inset-0 bg-black/40 rounded-full items-center justify-center">
-                <ActivityIndicator size="small" color="#fff" />
-              </View>
-            )}
-          </TouchableOpacity>
+                {loading && (
+                  <View className="absolute inset-0 bg-black/40 rounded-full items-center justify-center">
+                    <ActivityIndicator size="small" color="#fff" />
+                  </View>
+                )}
+              </TouchableOpacity>
 
-          {imageUrl && !loading ? (
-            <View className="flex w-full items-center justify-center">
-              <Text className="font-Poppinsmedium text-primaryblue">
-                Image uploaded successfully :)
-              </Text>
-              <Description text="Tap on above icon in order to select your image" />
-            </View>
-          ) : (
-            <View className="flex w-full items-center justify-center">
-              <Title text="Select Image" />
-              {error ? (
-                <ErrorText text={`${error}`} />
+              {imageUrl && !loading ? (
+                <View className="flex w-full items-center justify-center">
+                  <Text className="font-Poppinsmedium text-primaryblue">
+                    Image uploaded successfully :)
+                  </Text>
+                  <Description text="Tap on above icon in order to select your image" />
+                </View>
               ) : (
-                <Description text="Tap on above icon in order to select your image" />
+                <View className="flex w-full items-center justify-center">
+                  <Title text="Select Image" />
+                  {error ? (
+                    <ErrorText text={`${error}`} />
+                  ) : (
+                    <Description text="Tap on above icon in order to select your image" />
+                  )}
+                </View>
               )}
             </View>
-          )}
-        </View>
-        <View className="flex gap-mid items-start">
-          <View className="items-start w-full">
-            <Title text="Full Name:" />
-            <InputFields
-              plchldr="eg: Neeschal Pokharel"
-              state={name}
-              setState={setName}
-              board="default"
-            />
-          </View>
-
-          <View className="items-start w-full">
-            <Title text="Date of Birth:" />
-            <View className="flex-row items-center w-full gap-3 mt-2">
-              <View className="flex-1">
-                <DOBInput dob={date} setDob={setDate} />
-              </View>
-              <View style={{ width: 110 }}>
-                <CustomDropdown
-                  open={open}
-                  value={value}
-                  items={items}
-                  setOpen={setOpen}
-                  setValue={setValue}
-                  setItems={setItems}
+            <View className="flex gap-mid items-start">
+              <View className="items-start w-full">
+                <Title text="Full Name:" />
+                <InputFields
+                  plchldr="eg: Neeschal Pokharel"
+                  state={name}
+                  setState={setName}
+                  board="default"
                 />
               </View>
+
+              <View className="items-start w-full">
+                <Title text="Date of Birth:" />
+                <View className="flex-row items-center w-full gap-3 mt-2">
+                  <View className="flex-1">
+                    <DOBInput dob={date} setDob={setDate} />
+                  </View>
+                  <View style={{ width: 110 }}>
+                    <CustomDropdown
+                      open={open}
+                      value={value}
+                      items={items}
+                      setOpen={setOpen}
+                      setValue={setValue}
+                      setItems={setItems}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              <View className="items-start w-full">
+                <Title text="Let’s make Profile for:" />
+                <View className="flex-row flex-wrap gap-3 mt-2">
+                  {ProfileOptions.map((item) => (
+                    <TouchableOpacity
+                      key={item.index}
+                      onPress={() => setIdOption(item.option)}
+                      className={`px-7 py-3 rounded-2xl border ${
+                        idOption === item.option
+                          ? "bg-primaryblue border-primaryblue"
+                          : "bg-background border-gray-300"
+                      }`}
+                    >
+                      <Text
+                        className={`font-Poppinsmedium ${
+                          idOption === item.option ? "text-white" : "text-black"
+                        }`}
+                      >
+                        {item.option}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              <View className="items-start w-full">
+                <Title text="Gender:" />
+                <View className="flex-row flex-wrap gap-3 mt-2">
+                  {GenderOption.map((item) => (
+                    <TouchableOpacity
+                      key={item.index}
+                      onPress={() => setGender(item.option)}
+                      className={`px-6 py-3 rounded-2xl border ${
+                        gender === item.option
+                          ? "bg-primaryblue border-primaryblue"
+                          : "bg-background border-gray-300"
+                      }`}
+                    >
+                      <Text
+                        className={`font-Poppinsmedium ${
+                          gender === item.option ? "text-white" : "text-black"
+                        }`}
+                      >
+                        {item.option}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
             </View>
           </View>
-
-          <View className="items-start w-full">
-            <Title text="Let’s make Profile for:" />
-            <View className="flex-row flex-wrap gap-3 mt-2">
-              {ProfileOptions.map((item) => (
-                <TouchableOpacity
-                  key={item.index}
-                  onPress={() => setIdOption(item.option)}
-                  className={`px-7 py-3 rounded-2xl border ${
-                    idOption === item.option
-                      ? "bg-primaryblue border-primaryblue"
-                      : "bg-background border-gray-300"
-                  }`}
-                >
-                  <Text
-                    className={`font-Poppinsmedium ${
-                      idOption === item.option ? "text-white" : "text-black"
-                    }`}
-                  >
-                    {item.option}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          <View className="items-start w-full">
-            <Title text="Gender:" />
-            <View className="flex-row flex-wrap gap-3 mt-2">
-              {GenderOption.map((item) => (
-                <TouchableOpacity
-                  key={item.index}
-                  onPress={() => setGender(item.option)}
-                  className={`px-7 py-3 rounded-2xl border ${
-                    gender === item.option
-                      ? "bg-primaryblue border-primaryblue"
-                      : "bg-background border-gray-300"
-                  }`}
-                >
-                  <Text
-                    className={`font-Poppinsmedium ${
-                      gender === item.option ? "text-white" : "text-black"
-                    }`}
-                  >
-                    {item.option}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+        </ScrollView>
+        <View className="flex w-full items-center gap-mid bg-background mt-2">
+          <PrimaryButton
+            action={handleProcees}
+            text="Proceed"
+            screen="PersonalInfo"
+          />
+          <View className="flex items-center w-full">
+            <Description text="LamiSewa © 2026. All rights reserved." />
           </View>
         </View>
-        <PrimaryButton
-          action={handleProcees}
-          text="Proceed"
-          screen="PersonalInfo"
-        />
-      </View>
-      <View className="flex items-center w-full">
-        <Description text="LamiSewa © 2026. All rights reserved." />
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
