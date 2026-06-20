@@ -104,7 +104,7 @@ const SignupVerification = () => {
                 </View>
               </Animated.View>
               <Animated.View
-              key={showMessage} 
+                key={showMessage}
                 entering={BounceIn.delay(200).duration(300)}
                 className="ml-[-20px] flex items-center text-center justify-center w-full"
               >

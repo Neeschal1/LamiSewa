@@ -8,6 +8,11 @@ import {
   Platform,
 } from "react-native";
 import React, { useState } from "react";
+import Animated, {
+  FadeInUp,
+  FadeInDown,
+  BounceIn,
+} from "react-native-reanimated";
 import {
   Description,
   MainScreenName,
@@ -74,20 +79,29 @@ const Password = () => {
           <View className="flex-1 items-center justify-center bg-background p-screen">
             <StatusBar hidden translucent />
             <View className="flex items-start justify-center gap-extralarge">
-              <View>
+              <Animated.View
+                entering={FadeInUp.delay(200).duration(400).springify()}
+              >
                 <MainScreenName text="Password" />
                 <View className="mt-[-10px]">
                   {unMatched ? (
-                    <View className="flex align-start">
+                    <Animated.View
+                      key={showMessage}
+                      entering={BounceIn.delay(200).duration(300)}
+                      className="flex align-start"
+                    >
                       <ErrorText text={`${showMessage}`} />
-                    </View>
+                    </Animated.View>
                   ) : (
                     <Description text="Choose a stronger password to stay secure." />
                   )}
                 </View>
-              </View>
+              </Animated.View>
               <View className="flex gap-mid">
-                <View className="items-start w-full">
+                <Animated.View
+                  entering={FadeInUp.delay(400).duration(400).springify()}
+                  className="items-start w-full"
+                >
                   <Title text="Password" />
                   <InputPassword
                     plchldr="***********"
@@ -97,8 +111,11 @@ const Password = () => {
                     visibility={seePassword}
                     setVisibility={setSeePassword}
                   />
-                </View>
-                <View className="items-start w-full">
+                </Animated.View>
+                <Animated.View
+                  entering={FadeInDown.delay(400).duration(400).springify()}
+                  className="items-start w-full"
+                >
                   <Title text="Confirm Password" />
                   <InputPassword
                     plchldr="***********"
@@ -108,9 +125,13 @@ const Password = () => {
                     visibility={seeConfirmPassword}
                     setVisibility={setSeeConfirmPassword}
                   />
-                </View>
+                </Animated.View>
               </View>
-              <PrimaryButton action={handleContinue} text="Continue" />
+              <Animated.View
+                entering={FadeInDown.delay(200).duration(400).springify()}
+              >
+                <PrimaryButton action={handleContinue} text="Continue" />
+              </Animated.View>
             </View>
             <Modal
               visible={showSuccessModal}
