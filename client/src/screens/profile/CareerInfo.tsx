@@ -7,6 +7,11 @@ import {
   Platform,
 } from "react-native";
 import React, { FC, useState } from "react";
+import Animated, {
+  FadeInUp,
+  FadeInDown,
+  BounceIn,
+} from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   CustomDropdown,
@@ -58,9 +63,17 @@ const CareerInfo: FC = () => {
         >
           <View className="flex-1 flex items-center justify-start p-screen bg-background gap-large">
             <StatusBar hidden translucent />
-            <ErrorText text={`${errorMessage}`} />
+            <Animated.View
+              key={errorMessage}
+              entering={BounceIn.delay(200).duration(300)}
+            >
+              <ErrorText text={`${errorMessage}`} />
+            </Animated.View>
             <View className="flex items-center gap-mid">
-              <View className="w-full z-4">
+              <Animated.View
+                entering={FadeInUp.delay(200).duration(400).springify()}
+                className="w-full z-4"
+              >
                 <Title text="Education:" />
                 <Title text="Highest Qualification:" />
                 <CustomDropdown
@@ -71,8 +84,11 @@ const CareerInfo: FC = () => {
                   setValue={setDegree}
                   setItems={setDegreeItem}
                 />
-              </View>
-              <View className="items-start w-full">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInUp.delay(400).duration(400).springify()}
+                className="items-start w-full"
+              >
                 <Title text="College Name:" />
                 <InputFields
                   plchldr="eg: Butwal Multiple Campus"
@@ -80,8 +96,11 @@ const CareerInfo: FC = () => {
                   setState={setCollege}
                   board="default"
                 />
-              </View>
-              <View className="w-full mt-mid">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInUp.delay(600).duration(400).springify()}
+                className="w-full mt-mid"
+              >
                 <Title text="Profession:" />
                 <Title text="Currently Working in:" />
                 <CustomDropdown
@@ -92,8 +111,11 @@ const CareerInfo: FC = () => {
                   setValue={setWorking}
                   setItems={setWorkingItem}
                 />
-              </View>
-              <View className="items-start w-full">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(600).duration(400).springify()}
+                className="items-start w-full"
+              >
                 <Title text="Working Place (Office Name):" />
                 <InputFields
                   plchldr="eg: Meta"
@@ -101,8 +123,11 @@ const CareerInfo: FC = () => {
                   setState={setCompanyName}
                   board="default"
                 />
-              </View>
-              <View className="items-start w-full">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(400).springify()}
+                className="items-start w-full"
+              >
                 <Title text="Working as:" />
                 <InputFields
                   plchldr="eg: Software Engineer"
@@ -110,13 +135,24 @@ const CareerInfo: FC = () => {
                   setState={setProfession}
                   board="default"
                 />
-              </View>
+              </Animated.View>
             </View>
-            <PrimaryButton screen="HobbiesInfo" action={handleProceed} text="Proceed" />
+            <Animated.View
+              entering={FadeInDown.delay(300).duration(400).springify()}
+            >
+              <PrimaryButton
+                // screen="HobbiesInfo"
+                action={handleProceed}
+                text="Proceed"
+              />
+            </Animated.View>
           </View>
-          <View className="flex items-center w-full">
+          <Animated.View
+            entering={FadeInDown.delay(200).duration(400).springify()}
+            className="flex items-center w-full"
+          >
             <Description text="LamiSewa © 2026. All rights reserved." />
-          </View>
+          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

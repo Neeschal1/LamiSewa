@@ -20,6 +20,7 @@ import {
   CareerInfo,
   HobbiesInfo,
   PersonalInfo,
+  CasualInfo
 } from "@/src/screens/profile/profileScreenLayout";
 
 // For Testing
@@ -49,11 +50,12 @@ const UnauthenticatedNavigation = () => {
       <Stack.Screen name="Password" component={Password} options={optionsScreens} />
       <Stack.Screen name="SetNewPassword" component={SetNewPassword} options={optionsScreens} />
       <Stack.Screen name="SignupVerification" component={SignupVerification} options={optionsScreens} />
-      <Stack.Screen name="BasicInfo" component={BasicInfo} options={ProfileScreens("Basic Info(1/5)")} />
-      <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} options={ProfileScreens("Additional Info(3/5)")} />
-      <Stack.Screen name="CareerInfo" component={CareerInfo} options={ProfileScreens("Career Info(4/5)")} />
-      <Stack.Screen name="HobbiesInfo" component={HobbiesInfo} options={ProfileScreens("Hobbies Info(5/5)")} />
-      <Stack.Screen name="PersonalInfo" component={PersonalInfo} options={ProfileScreens("Personal Info(2/5)")} />
+      <Stack.Screen name="BasicInfo" component={BasicInfo} options={ProfileScreens("Basic Info(1/6)")} />
+      <Stack.Screen name="CasualInfo" component={CasualInfo} options={ProfileScreens("Casual Info(2/6)")} />
+      <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} options={ProfileScreens("Additional Info(4/6)")} />
+      <Stack.Screen name="CareerInfo" component={CareerInfo} options={ProfileScreens("Career Info(5/6)")} />
+      <Stack.Screen name="HobbiesInfo" component={HobbiesInfo} options={ProfileScreens("Hobbies Info(6/6)")} />
+      <Stack.Screen name="PersonalInfo" component={PersonalInfo} options={ProfileScreens("Personal Info(3/6)")} />
       <Stack.Screen name="Chats" component={Chats} options={optionsScreens} />
       <Stack.Screen name="Home" component={Home} options={optionsScreens} />
       <Stack.Screen name="Notification" component={Notification} options={optionsScreens} />

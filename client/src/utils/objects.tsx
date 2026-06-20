@@ -1,9 +1,9 @@
 export const ProfileOptions = [
-  { index: 1, option: "Myself" },
-  { index: 2, option: "Son" },
+  { index: 1, option: "That's Me" },
+  { index: 2, option: "Father" },
   { index: 3, option: "Brother" },
-  { index: 4, option: "Friend" },
-  { index: 5, option: "Daughter" },
+  { index: 4, option: "Sister" },
+  { index: 5, option: "Mother" },
   { index: 6, option: "Others" },
 ];
 
@@ -16,6 +16,19 @@ export const GenderOption = [
 export const CalendarItems = [
   { label: "AD", value: "AD" },
   { label: "BS", value: "BS" },
+];
+
+export const RelativeItems = [
+  { label: "Grandfather", value: "Grandfather" },
+  { label: "Grandmother", value: "Grandmother" },
+  { label: "Uncle", value: "Uncle" },
+  { label: "Aunt", value: "Aunt" },
+  { label: "Maternal Uncle", value: "Maternal Uncle" },
+  { label: "Maternal Aunt", value: "Maternal Aunt" },
+  { label: "Brother-in-law", value: "Brother-in-law" },
+  { label: "Sister-in-law", value: "Sister-in-law" },
+  { label: "Guardian", value: "Guardian" },
+  { label: "Family Friend", value: "Family Friend" },
 ];
 
 export const GotraItems = [

@@ -14,6 +14,11 @@ import {
   ErrorText,
   Description,
 } from "@/src/components/systemComponentsLayout";
+import Animated, {
+  FadeInUp,
+  FadeInDown,
+  BounceIn,
+} from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   GotraItems,
@@ -42,7 +47,7 @@ const PersonalInfo: FC = () => {
   const [residencyStatusItems, setResidencyStatusItems] =
     useState(ResidencyStatusItems);
 
-  const [navigatingScreen, setNavigatingScreen] = useState<string>("")
+  const [navigatingScreen, setNavigatingScreen] = useState<string>("");
 
   const handleProceed = () => {
     if (
@@ -58,7 +63,7 @@ const PersonalInfo: FC = () => {
     }
     setError(false);
     setErrorMessage("");
-    setNavigatingScreen("AdditionalInfo")
+    setNavigatingScreen("AdditionalInfo");
   };
 
   return (
@@ -75,9 +80,17 @@ const PersonalInfo: FC = () => {
         >
           <View className="flex-1 items-center justify-start p-screen bg-background gap-large pt-extralarge">
             <StatusBar hidden translucent />
-            <ErrorText text={`${errorMessage}`} />
+            <Animated.View
+              key={errorMessage}
+              entering={BounceIn.delay(200).duration(300)}
+            >
+              <ErrorText text={`${errorMessage}`} />
+            </Animated.View>
             <View className="flex items-center gap-mid">
-              <View className="items-start w-full">
+              <Animated.View
+                entering={FadeInUp.delay(200).duration(400).springify()}
+                className="items-start w-full"
+              >
                 <Title text="Current living country:" />
                 <InputFields
                   plchldr="eg: Nepal"
@@ -85,8 +98,11 @@ const PersonalInfo: FC = () => {
                   setState={setLivingCountry}
                   board="default"
                 />
-              </View>
-              <View className="items-start w-full">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInUp.delay(400).duration(400).springify()}
+                className="items-start w-full"
+              >
                 <Title text="District/City:" />
                 <InputFields
                   plchldr="eg: Kathmandu"
@@ -94,8 +110,11 @@ const PersonalInfo: FC = () => {
                   setState={setDistrict}
                   board="default"
                 />
-              </View>
-              <View className="w-full">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInUp.delay(600).duration(400).springify()}
+                className="w-full"
+              >
                 <Title text="Marital Status" />
                 <CustomDropdown
                   open={maritalStatusOpen}
@@ -105,8 +124,11 @@ const PersonalInfo: FC = () => {
                   setValue={setMaritalStatus}
                   setItems={setMaritalStatusItems}
                 />
-              </View>
-              <View className="w-full">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(600).duration(400).springify()}
+                className="w-full"
+              >
                 <Title text="Gotra" />
                 <CustomDropdown
                   open={gotraOption}
@@ -116,8 +138,11 @@ const PersonalInfo: FC = () => {
                   setValue={setGotra}
                   setItems={setGotraItems}
                 />
-              </View>
-              <View className="w-full">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(400).springify()}
+                className="w-full"
+              >
                 <Title text="Residency Status" />
 
                 <CustomDropdown
@@ -128,17 +153,24 @@ const PersonalInfo: FC = () => {
                   setValue={setResidencyStatus}
                   setItems={setResidencyStatusItems}
                 />
-              </View>
+              </Animated.View>
             </View>
-            <PrimaryButton
-              action={handleProceed}
-              text="Proceed"
-              screen={navigatingScreen}
-            />
+            <Animated.View
+              entering={FadeInDown.delay(300).duration(400).springify()}
+            >
+              <PrimaryButton
+                action={handleProceed}
+                text="Proceed"
+                screen={navigatingScreen}
+              />
+            </Animated.View>
           </View>
-          <View className="flex items-center w-full">
+          <Animated.View
+            entering={FadeInDown.delay(200).duration(400).springify()}
+            className="flex items-center w-full"
+          >
             <Description text="LamiSewa © 2026. All rights reserved." />
-          </View>
+          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

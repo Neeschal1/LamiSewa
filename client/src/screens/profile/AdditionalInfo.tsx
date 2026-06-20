@@ -4,9 +4,14 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import React, { FC, useState } from "react";
+import Animated, {
+  FadeInUp,
+  FadeInDown,
+  BounceIn,
+} from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   CustomDropdown,
@@ -45,7 +50,10 @@ const AdditionalInfo: FC = () => {
   };
 
   return (
-    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1 items-center">
+    <SafeAreaView
+      edges={["bottom"]}
+      className="bg-background flex flex-1 items-center"
+    >
       <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 80}
@@ -58,10 +66,16 @@ const AdditionalInfo: FC = () => {
         >
           <View className="flex-1 flex items-center justify-start p-screen bg-background gap-large">
             <StatusBar hidden translucent />
-            <View className="flex items-center">
+            <Animated.View
+              key={errorMessage}
+              entering={BounceIn.delay(200).duration(300)}
+            >
               <ErrorText text={`${errorMessage}`} />
-            </View>
-            <View className="flex items-center gap-mid">
+            </Animated.View>
+            <Animated.View
+              entering={FadeInUp.delay(200).duration(400).springify()}
+              className="flex items-center gap-mid"
+            >
               <View className="items-start w-full">
                 <Title text="Religion:" />
                 <InputFields
@@ -71,7 +85,10 @@ const AdditionalInfo: FC = () => {
                   board="default"
                 />
               </View>
-              <View className="items-start w-full">
+              <Animated.View
+                entering={FadeInUp.delay(400).duration(400).springify()}
+                className="items-start w-full"
+              >
                 <Title text="Height:" />
                 <InputFields
                   plchldr="eg: 5 ft 5 inch"
@@ -79,8 +96,11 @@ const AdditionalInfo: FC = () => {
                   setState={setHeight}
                   board="default"
                 />
-              </View>
-              <View className="items-start w-full">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInUp.delay(600).duration(400).springify()}
+                className="items-start w-full"
+              >
                 <Title text="Weight:" />
                 <InputFields
                   plchldr="eg: 50kg"
@@ -88,8 +108,11 @@ const AdditionalInfo: FC = () => {
                   setState={setWeight}
                   board="default"
                 />
-              </View>
-              <View className="w-full z-4">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(600).duration(400).springify()}
+                className="w-full z-4"
+              >
                 <Title text="Community:" />
                 <CustomDropdown
                   open={communityOpen}
@@ -99,8 +122,12 @@ const AdditionalInfo: FC = () => {
                   setValue={setCommunity}
                   setItems={setCommunityItem}
                 />
-              </View>
-              <View style={{ zIndex: 1000 }} className="w-full z-1">
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(400).springify()}
+                style={{ zIndex: 1000 }}
+                className="w-full z-1"
+              >
                 <Title text="Diet:" />
                 <CustomDropdown
                   open={dietOpen}
@@ -110,17 +137,24 @@ const AdditionalInfo: FC = () => {
                   setValue={setDiet}
                   setItems={setDietItem}
                 />
-              </View>
-            </View>
-            <PrimaryButton
-              action={handleProceed}
-              text="Proceed"
-              screen="CareerInfo"
-            />
+              </Animated.View>
+            </Animated.View>
+            <Animated.View
+              entering={FadeInDown.delay(300).duration(400).springify()}
+            >
+              <PrimaryButton
+                action={handleProceed}
+                text="Proceed"
+                screen="CareerInfo"
+              />
+            </Animated.View>
           </View>
-          <View className="flex items-center w-full">
+          <Animated.View
+            entering={FadeInUp.delay(200).duration(400).springify()}
+            className="flex items-center w-full"
+          >
             <Description text="LamiSewa © 2026. All rights reserved." />
-          </View>
+          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
