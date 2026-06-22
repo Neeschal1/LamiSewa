@@ -34,14 +34,18 @@ import {
 } from "@/src/screens/main/mainScreenLayouts";
 
 // For Testing
+import MyTabs from "./BottomTabNavigation"
+
+// For Testing
 import { PaymentSuccess, SubscriptionDetails} from "@/src/screens/payments/PaymentLayout";
 
-import { RootStackParamList } from "@/src/components/componentsType";
+import { NavigationProps, RootStackParamList } from "@/src/components/componentsType";
 import { Title } from "../components/Texts";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const UnauthenticatedNavigation = () => {
+
   return (
     <Stack.Navigator initialRouteName="SubscriptionDetails" screenOptions={{ headerShown: false }} >
       <Stack.Screen name="Welcome" component={Welcome} />
@@ -64,14 +68,31 @@ const UnauthenticatedNavigation = () => {
       <Stack.Screen name="Home" component={Home} options={optionsScreens} />
       <Stack.Screen name="Notification" component={Notification} options={optionsScreens} />
       <Stack.Screen name="Profile" component={Profile} options={optionsScreens} />
-      <Stack.Screen name="Search" component={Search} options={optionsScreens} />
+      <Stack.Screen name="Search" component={Search} />
 
       {/* For Testing */}
-      <Stack.Screen name="SubscriptionDetails" component={SubscriptionDetails} options={{ headerShown: true, headerTransparent: true, headerTitle: " ", headerTintColor: "#F2F1FF", headerRight: () => (
-        <TouchableOpacity onPress={() => {}}><Text style={{ color: "#F2F1FF", fontSize: 16, fontWeight: "400", }}>Skip</Text></TouchableOpacity>
-      ),}}/>
+      <Stack.Screen name="SubscriptionDetails" component={SubscriptionDetails} 
+      options={({ navigation }) => ({
+        headerShown: true, 
+        headerTransparent: true, 
+        headerTitle: " ", 
+        headerTintColor: "#F2F1FF", 
+        headerRight: () => (
+          <TouchableOpacity onPress={() => navigation.navigate("MyTabs")}>
+            <Text style={{ 
+              color: "#F2F1FF", 
+              fontSize: 16, 
+              fontWeight: "400", 
+            }}>Skip</Text>
+          </TouchableOpacity>
+        ),})}/>
       <Stack.Screen name="PaymentSuccess" component={PaymentSuccess} options={{headerShown: false}} />
+
+      {/* For Testing */}
+      <Stack.Screen name="MyTabs" component={MyTabs} />
+
     </Stack.Navigator>
+
   );
 };
 
@@ -84,6 +105,13 @@ const optionsScreens = {
   headerTitle: " ",
   headerTintColor: "#000000",
 };
+
+const optionsTabs = {
+  headerShown: true,
+  headerTransparent: true,
+  headerTitle: " ",
+  headerTintColor: " ",
+}
 
 const ProfileScreens = (title: string) => ({
   headerShown: true,

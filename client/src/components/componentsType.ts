@@ -32,6 +32,9 @@ export type RootStackParamList = {
   // Payment
   PaymentSuccess: undefined,
   SubscriptionDetails: undefined,
+
+  // Mains
+  MyTabs: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;

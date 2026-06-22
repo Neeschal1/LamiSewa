@@ -17,6 +17,8 @@ import React, { FC, useState } from "react";
 import Modal from "react-native-modal";
 import { PaymentOptionProps } from "./PaymentComponentTypes";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
 
 const screenheight = Dimensions.get("window").height;
 const screenwidth = Dimensions.get("window").width;
@@ -24,6 +26,13 @@ const screenwidth = Dimensions.get("window").width;
 const successLogo = require("@/src/assets/images/successPayment.png");
 
 const PaymentSuccess = () => {
+
+  const navigation = useNavigation<NavigationProps>()
+
+  const handleReturnToHome = () => {
+    navigation.navigate("MyTabs")
+  }
+
   return (
     <SafeAreaView
       className="bg-background flex flex-1 items-center"
@@ -88,6 +97,7 @@ const PaymentSuccess = () => {
               height: screenheight * 0.061,
               width: screenwidth * 0.883,
             }}
+            onPress={handleReturnToHome}
             className="flex items-center justify-center bg-primaryblue rounded-2xl"
           >
             <Text className="text-white text-heading py-2 font-Poppinsmedium">Return to Home</Text>
