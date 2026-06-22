@@ -1,12 +1,16 @@
-import { View, Text } from 'react-native'
-import React, { FC } from 'react'
+import { View, Text, StatusBar } from "react-native";
+import React, { FC } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Chats: FC = () => {
   return (
-    <View>
-      <Text>Chats</Text>
-    </View>
-  )
-}
+    <SafeAreaView className="flex flex-1 bg-background">
+      <View className="flex-1 items-center justify-center bg-background">
+        <StatusBar hidden translucent />
+        <Text>Chats</Text>
+      </View>
+    </SafeAreaView>
+  );
+};
 
-export default Chats
+export default Chats;

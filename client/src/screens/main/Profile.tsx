@@ -1,12 +1,13 @@
-import { View, Text } from 'react-native'
-import React, { FC } from 'react'
+import { View, Text, StatusBar } from "react-native";
+import React, { FC } from "react";
 
 const Profile: FC = () => {
   return (
-    <View>
+    <View className="flex-1 items-center justify-center bg-background">
+      <StatusBar hidden translucent />
       <Text>Profile</Text>
     </View>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
