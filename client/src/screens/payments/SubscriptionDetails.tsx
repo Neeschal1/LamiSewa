@@ -160,7 +160,7 @@ const SubscriptionDetails = () => {
               backgroundColor: selectedPackage.color,
             }}
           >
-            <View className="flex flex-row gap-mid">
+            <View className="flex flex-row gap-mid items-center">
               <Ionicons name="diamond-outline" color="white" size={24} />
               <Text className="text-white text-heading py-2 font-Poppinsmedium">
                 Upgrade to {selectedPackage.packagetype}
