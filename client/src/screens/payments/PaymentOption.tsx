@@ -6,14 +6,11 @@ import Modal from "react-native-modal";
 import {
   InternationalPaymentMethod,
   NationalPaymentMethod,
+  SubscriptionPlans
 } from "./PaymentServices";
-
-interface PaymentOptionProps {
-  isVisible: boolean;
-  onClose: () => void;
-  packageName: string;
-  color: string;
-}
+import { PaymentOptionProps } from "./PaymentComponentTypes"
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
 
 const screenheight = Dimensions.get("window").height;
 const screenwidth = Dimensions.get("window").width;
@@ -25,10 +22,20 @@ const PaymentOption = ({
   color,
 }: PaymentOptionProps) => {
   const [paymentItem, setPaymentItem] = useState(InternationalPaymentMethod[0]);
+  const [selectedPackage, setSelectedPackage] = useState(SubscriptionPlans[2]);
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+
+  const navigation = useNavigation<NavigationProps>()
 
   const handlePayment = () => {
-    console.log(paymentItem["paymentName"])
+    console.log(paymentItem["paymentName"]);
+    setModalVisible(true);
+    navigation.navigate("PaymentSuccess");
   }
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   return (
     <Modal

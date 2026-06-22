@@ -30,6 +30,7 @@ export type RootStackParamList = {
   CasualInfo: undefined;
 
   // Payment
+  PaymentSuccess: undefined,
   SubscriptionDetails: undefined,
 };
 

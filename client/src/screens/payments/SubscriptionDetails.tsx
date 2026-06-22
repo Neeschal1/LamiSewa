@@ -15,35 +15,11 @@ import {
   Title,
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Basicoffers, Premiumoffers, VIPoffers } from "./PaymentServices";
+import { Basicoffers, Premiumoffers, VIPoffers, SubscriptionPlans } from "./PaymentServices";
 import PaymentOption from "./PaymentOption";
 
 const screenheight = Dimensions.get("window").height;
 const screenwidth = Dimensions.get("window").width;
-
-const SubscriptionPlans = [
-  {
-    index: 1,
-    duration: "1 month",
-    price: "NRs. 1000/month",
-    packagetype: "Basic",
-    color: "#0066FF",
-  },
-  {
-    index: 2,
-    duration: "1/2 year",
-    price: "NRs. 3000/0.5 years",
-    packagetype: "Premium",
-    color: "#C02DFA",
-  },
-  {
-    index: 3,
-    duration: "1 year",
-    price: "NRs. 5000/year",
-    packagetype: "VIP",
-    color: "#000000",
-  },
-];
 
 const SubscriptionDetails = () => {
   const [selectedPackage, setSelectedPackage] = useState(SubscriptionPlans[2]);

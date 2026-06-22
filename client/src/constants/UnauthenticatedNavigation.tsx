@@ -34,7 +34,7 @@ import {
 } from "@/src/screens/main/mainScreenLayouts";
 
 // For Testing
-import SubscriptionDetails from "../screens/payments/SubscriptionDetails";
+import { PaymentSuccess, SubscriptionDetails} from "@/src/screens/payments/PaymentLayout";
 
 import { RootStackParamList } from "@/src/components/componentsType";
 import { Title } from "../components/Texts";
@@ -68,8 +68,9 @@ const UnauthenticatedNavigation = () => {
 
       {/* For Testing */}
       <Stack.Screen name="SubscriptionDetails" component={SubscriptionDetails} options={{ headerShown: true, headerTransparent: true, headerTitle: " ", headerTintColor: "#F2F1FF", headerRight: () => (
-      <TouchableOpacity onPress={() => {}}><Text style={{ color: "#F2F1FF", fontSize: 16, fontWeight: "400", }}>Skip</Text></TouchableOpacity>
-    ),}}/>
+        <TouchableOpacity onPress={() => {}}><Text style={{ color: "#F2F1FF", fontSize: 16, fontWeight: "400", }}>Skip</Text></TouchableOpacity>
+      ),}}/>
+      <Stack.Screen name="PaymentSuccess" component={PaymentSuccess} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
