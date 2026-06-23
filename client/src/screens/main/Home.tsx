@@ -69,7 +69,7 @@ const Home: FC = () => {
 
   return (
     <View className="flex-1 w-full items-center justify-center bg-background">
-      <StatusBar translucent hidden />
+      <StatusBar translucent hidden={false} />
       <ImageBackground
         className="flex flex-1 w-full items-center justify-between pt-20"
         source={{ uri: DummyUsers[index].basicInfo.profile_picture }}
