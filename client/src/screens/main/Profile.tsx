@@ -5,7 +5,7 @@ const Profile: FC = () => {
   return (
     <View className="flex-1 items-center justify-center bg-background">
       <StatusBar hidden translucent />
-      <Text>Profile</Text>
+      <Text>Neeschal</Text>
     </View>
   );
 };

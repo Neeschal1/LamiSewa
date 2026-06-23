@@ -28,6 +28,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow LamiSewa to use your location."
+        }
+      ],
       "expo-router",
       [
         "expo-document-picker",

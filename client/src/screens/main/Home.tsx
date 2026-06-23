@@ -17,6 +17,8 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import { DummyUsers } from "@/src/utils/DummyData";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
 
 const star = require("@/src/assets/icons/star.png");
 const unselect = require("@/src/assets/icons/UnmatchedHeart.png");
@@ -24,6 +26,8 @@ const unselect = require("@/src/assets/icons/UnmatchedHeart.png");
 const Home: FC = () => {
   const [index, setIndex] = useState<number>(0);
   const [nearYou, setNearYou] = useState<boolean>(false);
+
+  const navigation = useNavigation<NavigationProps>();
 
   const handleNextArrow = () => {
     if (index >= DummyUsers.length - 1) {
@@ -56,6 +60,7 @@ const Home: FC = () => {
 
   const Nearyou = () => {
     setNearYou(true);
+    navigation.navigate("NearYou")
   };
 
   const Recommendation = () => {

@@ -31,6 +31,7 @@ import {
   Notification,
   Profile,
   Search,
+  NearYou
 } from "@/src/screens/main/mainScreenLayouts";
 
 // For Testing
@@ -69,6 +70,8 @@ const UnauthenticatedNavigation = () => {
       <Stack.Screen name="Notification" component={Notification} options={optionsScreens} />
       <Stack.Screen name="Profile" component={Profile} options={optionsScreens} />
       <Stack.Screen name="Search" component={Search} />
+
+      <Stack.Screen name="NearYou" component={NearYou} />
 
       {/* For Testing */}
       <Stack.Screen name="SubscriptionDetails" component={SubscriptionDetails} 
