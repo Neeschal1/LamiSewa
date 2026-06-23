@@ -8,21 +8,22 @@ import {
 } from "react-native";
 import React, { FC, useState } from "react";
 import { BlurView } from "expo-blur";
+import ToastManager, { Toast } from "toastify-react-native";
 import {
   Heading,
   SubHeading,
   Describe,
+  toastConfig
 } from "@/src/components/systemComponentsLayout";
 import { DummyUsers } from "@/src/utils/DummyData";
 import { Ionicons } from "@expo/vector-icons";
 
 const star = require("@/src/assets/icons/star.png");
 const unselect = require("@/src/assets/icons/UnmatchedHeart.png");
-const matchRequest = require("@/src/assets/icons/matchRequestHeart.png");
 
 const Home: FC = () => {
   const [index, setIndex] = useState<number>(0);
-  const [match, setMatch] = useState<boolean>(false);
+  const [nearYou, setNearYou] = useState<boolean>(false);
 
   const handleNextArrow = () => {
     if (index >= DummyUsers.length - 1) {
@@ -41,28 +42,48 @@ const Home: FC = () => {
   };
 
   const handleMatch = () => {
-    setMatch(true);
+    const name = DummyUsers[index].basicInfo.nickname;
+
+    Toast.show({
+      type: "success",
+      text1: `Match request sent to ${name}`,
+      position: "center",
+      visibilityTime: 3000,
+      autoHide: true,
+    });
     handleNextArrow();
+  };
+
+  const Nearyou = () => {
+    setNearYou(true);
+  };
+
+  const Recommendation = () => {
+    setNearYou(false);
   };
 
   return (
     <View className="flex-1 w-full items-center justify-center bg-background">
-      <StatusBar translucent />
+      <StatusBar translucent hidden />
       <ImageBackground
         className="flex flex-1 w-full items-center justify-between pt-20"
         source={{ uri: DummyUsers[index].basicInfo.profile_picture }}
       >
         <View className="flex flex-row gap-mid items-center">
-          <TouchableOpacity>
-            <Text className="font-Poppinsregular text-white text-subheading">
+          <TouchableOpacity onPress={Recommendation}>
+            <Text
+              className={`font-Poppinsregular ${nearYou ? "text-darkvariant" : "text-background"} ${nearYou ? "text-description" : "text-subheading"}`}
+            >
               Recommended
             </Text>
           </TouchableOpacity>
           <Text className="font-Poppinsregular text-white text-subheading">
             |
           </Text>
-          <TouchableOpacity>
-            <Text className="font-Poppinsregular text-white text-subheading">
+          <TouchableOpacity onPress={Nearyou}>
+            <Text
+              className={`font-Poppinsregular ${nearYou ? "text-background" : "text-darkvariant"} ${nearYou ? "text-subheading" : "text-description"}`}
+            >
               Near you
             </Text>
           </TouchableOpacity>
@@ -114,7 +135,7 @@ const Home: FC = () => {
                 className="flex w-[102px] h-[95px] items-center pt-3 justify-center"
                 source={star}
               >
-                <Image source={match ? matchRequest : unselect} />
+                <Image source={unselect} />
               </ImageBackground>
             </TouchableOpacity>
             <BlurView
@@ -140,6 +161,7 @@ const Home: FC = () => {
               </TouchableOpacity>
             </BlurView>
           </View>
+          <ToastManager config={toastConfig} />
         </View>
       </ImageBackground>
     </View>
