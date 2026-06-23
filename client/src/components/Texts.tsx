@@ -32,12 +32,38 @@ export const Description: FC<TextProps> = ({ text }) => {
 
 export const SubText: FC<TextProps> = ({ text }) => {
   return (
-    <Text className="font-Poppinslight text-darkvariant text-center text-description">{text}</Text>
+    <Text className="font-Poppinslight text-darkvariant text-center text-description">
+      {text}
+    </Text>
   );
 };
 
 export const ErrorText: FC<TextProps> = ({ text }) => {
   return (
-    <Text className="font-Poppinsmedium w-full text-primaryred text-subtitle text-center">{text}</Text>
+    <Text className="font-Poppinsmedium w-full text-primaryred text-subtitle text-center">
+      {text}
+    </Text>
+  );
+};
+
+export const Heading: FC<TextProps> = ({ text }) => {
+  return (
+    <Text className="font-Poppinssemibold text-background text-screenname">
+      {text}
+    </Text>
+  );
+};
+
+export const SubHeading: FC<TextProps> = ({ text }) => {
+  return (
+    <Text className="font-Poppinsmedium text-background text-heading">{text}</Text>
+  );
+};
+
+export const Describe: FC<TextProps> = ({ text }) => {
+  return (
+    <Text className="font-Poppinsregular text-center text-background text-hobbies">
+      {text}
+    </Text>
   );
 };

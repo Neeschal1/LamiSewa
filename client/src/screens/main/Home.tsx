@@ -4,19 +4,25 @@ import {
   StatusBar,
   TouchableOpacity,
   ImageBackground,
+  Image,
 } from "react-native";
 import React, { FC, useState } from "react";
 import { BlurView } from "expo-blur";
 import {
-  Description,
-  MainScreenName,
-  Title,
+  Heading,
+  SubHeading,
+  Describe,
 } from "@/src/components/systemComponentsLayout";
 import { DummyUsers } from "@/src/utils/DummyData";
 import { Ionicons } from "@expo/vector-icons";
 
+const star = require("@/src/assets/icons/star.png");
+const unselect = require("@/src/assets/icons/UnmatchedHeart.png");
+const matchRequest = require("@/src/assets/icons/matchRequestHeart.png");
+
 const Home: FC = () => {
   const [index, setIndex] = useState<number>(0);
+  const [match, setMatch] = useState<boolean>(false);
 
   const handleNextArrow = () => {
     if (index >= DummyUsers.length - 1) {
@@ -32,6 +38,11 @@ const Home: FC = () => {
     } else {
       setIndex(index - 1);
     }
+  };
+
+  const handleMatch = () => {
+    setMatch(true);
+    handleNextArrow();
   };
 
   return (
@@ -58,28 +69,24 @@ const Home: FC = () => {
         </View>
         <View className="flex items-start w-full p-screen gap-large">
           <View className="flex items-start">
-            <View className="flex flex-row items-center gap-mid justify-center">
+            <View className="flex flex-row items-center gap-small justify-center">
               <Ionicons name="location-outline" size={24} color="white" />
-              <Text className="font-Poppinssemibold text-background text-subheading">
-                {DummyUsers[index].personalInfo.current_city}
-              </Text>
+              <SubHeading text={DummyUsers[index].personalInfo.current_city} />
             </View>
-
-            <Text className="font-Poppinssemibold text-background text-screenname">
-              {DummyUsers[index].basicInfo.nickname}
-            </Text>
+            <Heading text={DummyUsers[index].basicInfo.nickname} />
 
             <View className="flex w-full flex-wrap flex-row gap-small">
               {DummyUsers[index]["hobbies"].slice(0, 3).map((index) => (
                 <View
                   key={index.item}
-                  className="bg-black w-[31%] py-2 px-1 rounded-2xl items-center justify-center"
+                  className="bg-black w-[25%] py-2 rounded-2xl items-center justify-center"
                 >
-                  <Text className="text-white font-Poppinsregular text-[12px] text-center">
-                    {index.hobby}
-                  </Text>
+                  <Describe text={index.hobby} />
                 </View>
               ))}
+              <TouchableOpacity className="bg-black py-2 px-2 rounded-2xl items-center justify-center">
+                <Describe text="More +2" />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -91,18 +98,25 @@ const Home: FC = () => {
               style={{
                 width: 65,
                 height: 65,
-                borderRadius: 32.5,
+                borderRadius: 35,
                 overflow: "hidden",
               }}
             >
               <TouchableOpacity
                 onPress={handleBackArrow}
-                className="flex-1 items-center justify-center border border-white/30"
+                className="h-[65px] w-[65px] backdrop-blur-lg border-white/50 rounded-full items-center justify-center bg-background/5"
               >
                 <Ionicons name="arrow-back-outline" size={24} color="white" />
               </TouchableOpacity>
             </BlurView>
-            <TouchableOpacity></TouchableOpacity>
+            <TouchableOpacity onPress={handleMatch}>
+              <ImageBackground
+                className="flex w-[102px] h-[95px] items-center pt-3 justify-center"
+                source={star}
+              >
+                <Image source={match ? matchRequest : unselect} />
+              </ImageBackground>
+            </TouchableOpacity>
             <BlurView
               experimentalBlurMethod="dimezisBlurView"
               intensity={30}

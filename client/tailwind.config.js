@@ -36,6 +36,7 @@ module.exports = {
         heading: "18px",
         subheading: "16px",
         description: "14px",
+        hobbies: "10px"
       },
       padding: {
         screen: "20px",
