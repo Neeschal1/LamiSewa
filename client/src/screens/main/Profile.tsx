@@ -6,6 +6,8 @@ import {
   Image,
   Dimensions,
   Text,
+  Touchable,
+  ScrollView,
 } from "react-native";
 import React, { FC } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,83 +22,192 @@ import {
   Title,
 } from "@/src/components/Texts";
 
+type AccountType = {
+  item: number;
+  icon: React.ComponentProps<typeof Ionicons>["name"];
+  btnname: string;
+};
+
 const CoverPP = require("@/src/assets/images/cover.png");
 const myProfile = require("@/src/assets/images/myPP.png");
+
+const Verification = require("@/src/assets/icons/verified.png");
+
+const FeaturePhotoes = [
+  {
+    item: 1,
+    image: require("@/src/assets/images/feature1.png"),
+  },
+  {
+    item: 2,
+    image: require("@/src/assets/images/feature2.png"),
+  },
+  {
+    item: 3,
+    image: require("@/src/assets/images/feature3.png"),
+  },
+  {
+    item: 4,
+    image: require("@/src/assets/images/feature4.png"),
+  },
+  {
+    item: 5,
+    image: require("@/src/assets/images/feature5.png"),
+  },
+  {
+    item: 6,
+    image: require("@/src/assets/images/feature6.png"),
+  },
+];
+
+const Accounts: AccountType[] = [
+  { item: 1, icon: "person", btnname: "Edit Profile" },
+  { item: 2, icon: "lock-closed", btnname: "Change Password" },
+  { item: 3, icon: "earth", btnname: "Language" },
+];
+
+const Others: AccountType[] = [
+  { item: 1, icon: "shield-checkmark", btnname: "Privacy Policy" },
+  { item: 2, icon: "newspaper", btnname: "Terms of Use" },
+  { item: 3, icon: "information-circle", btnname: "Help" },
+  { item: 4, icon: "people-circle", btnname: "Contact Us" },
+  { item: 5, icon: "log-out", btnname: "Log Out" },
+];
 
 const { width, height } = Dimensions.get("window");
 
 const Profile: FC = () => {
   return (
     <View className="flex-1 items-center justify-start bg-background">
-      <StatusBar hidden={false} translucent />
+      <ScrollView>
+        <StatusBar hidden={false} translucent />
 
-      <ImageBackground
-        source={CoverPP}
-        style={{
-          width: width,
-          height: height * 0.28,
-        }}
-        className="items-end pt-10 pr-6"
-        resizeMode="cover"
-      >
-        <TouchableOpacity className="w-12 h-12 rounded-full bg-[#2277F7] items-center justify-center">
-          <Ionicons name="diamond" size={24} color="#F2F1FF" />
-        </TouchableOpacity>
-      </ImageBackground>
+        <ImageBackground
+          source={CoverPP}
+          style={{
+            width: width,
+            height: height * 0.22,
+          }}
+          className="items-end pt-10 pr-6 w-full flex-end"
+          resizeMode="cover"
+        >
+          <View className="flex w-full justify-end pt-4 items-end flex-row gap-small">
+            <TouchableOpacity className="w-12 h-12 rounded-full bg-[#2277F7] items-center justify-center">
+              <Ionicons name="diamond" size={24} color="#F2F1FF" />
+            </TouchableOpacity>
+            <TouchableOpacity className="flex items-center justify-center bg-background w-12 h-12 rounded-full">
+              <Ionicons name="menu" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+        </ImageBackground>
 
-      <View
-        style={{
-          marginTop: -height * 0.08,
-        }}
-        className="flex-row items-start justify-between w-full p-screen"
-      >
-        <View className="flex flex-col gap-mid">
-          <TouchableOpacity
-            style={{
-              width: width * 0.35,
-              height: width * 0.35,
-              borderRadius: (width * 0.25) / 2,
-              overflow: "hidden",
-            }}
-          >
-            <Image
-              source={myProfile}
+        <View
+          style={{
+            marginTop: -height * 0.1,
+          }}
+          className="flex-row items-center justify-between w-full p-screen"
+        >
+          <View className="flex flex-col w-full items-center gap-mid">
+            <TouchableOpacity
               style={{
-                width: "100%",
-                height: "100%",
-                resizeMode: "cover",
+                width: width * 0.35,
+                height: width * 0.35,
+                borderRadius: (width * 0.25) / 2,
+                overflow: "hidden",
               }}
-            />
-          </TouchableOpacity>
-          <View className="gap-small">
-            <View>
-              <Text className="font-Poppinssemibold text-dark text-[24px]">
-                Neeschal Pokharel
-              </Text>
-              <View className="flex mt-[-10px]">
-                <Description text="Mobile Application Developer" />
+            >
+              <Image
+                source={myProfile}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  resizeMode: "cover",
+                }}
+              />
+            </TouchableOpacity>
+            <View className="gap-small w-full items-center">
+              <View className="flex items-center">
+                <View className="flex flex-row items-center justify-center gap-small">
+                  <Text className="font-Poppinssemibold text-dark text-[24px]">
+                    Neeschal Pokharel
+                  </Text>
+                  <Image source={Verification} />
+                </View>
+                <View className="flex mt-[-10px]">
+                  <Description text="Mobile Application Developer" />
+                </View>
               </View>
-            </View>
-            <SubTitle text="Hey, beautiful Soul...!" />
-            <View className="flex flex-row gap-mid">
-              <TouchableOpacity className="flex bg-[#FFFFFF] px-4 py-2 rounded-2xl">
-                <SubTitle text="Matching: 28" />
-              </TouchableOpacity>
-              <TouchableOpacity className="flex bg-primaryred px-4 py-2 rounded-2xl">
-                <Text className="font-Poppinsregular text-background text-subheading">Matched: 12</Text>
-              </TouchableOpacity>
+              <SubTitle text="Hey, beautiful Soul...!" />
+              <View className="flex flex-row gap-mid">
+                <TouchableOpacity className="flex bg-[#FFFFFF] px-4 py-2 rounded-2xl">
+                  <SubTitle text="Matching: 28" />
+                </TouchableOpacity>
+                <TouchableOpacity className="flex bg-primaryred px-4 py-2 rounded-2xl">
+                  <Text className="font-Poppinsregular text-background text-subheading">
+                    Matched: 12
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
 
-        <TouchableOpacity className="bg-primaryblue px-5 py-3 mt-6 ml-[-64px] rounded-2xl">
-          <SubHeading text="Favourite list" />
-        </TouchableOpacity>
-      </View>
+        <View className="flex items-start w-full p-screen">
+          <SubText text="Your Pictures" />
+          <View className="flex flex-row flex-wrap w-full">
+            {FeaturePhotoes.map((index) => (
+              <TouchableOpacity
+                className="flex flex-row w-[33%] py-extrasmall"
+                key={index.item}
+              >
+                <Image
+                  className="h-[118px] w-[113px] rounded-2xl pr-extrasmall"
+                  source={index.image}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
 
-      <View className="flex items-start w-full p-screen">
-        <SubText text="Your Pictures" />
-      </View>
+        <View className="flex w-full items-start p-screen">
+          <SubText text="Account" />
+          <View className="mt-4 gap-mid">
+            {Accounts.map((index) => (
+              <TouchableOpacity
+                key={index.item}
+                className="flex flex-row justify-between w-full"
+              >
+                <View className="flex flex-row gap-mid">
+                  <Ionicons name={index.icon} size={24} />
+                  <SubTitle text={index.btnname} />
+                </View>
+                <Ionicons
+                  name="chevron-forward-outline"
+                  size={24}
+                  color="black"
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <View className="flex w-full items-start p-screen">
+          <SubText text="Others" />
+          <View className="mt-4 gap-mid w-full">
+            {Others.map((index) => (
+              <TouchableOpacity
+                key={index.item}
+                className="flex flex-row w-full gap-mid"
+              >
+                <View className="flex flex-row gap-mid">
+                  <Ionicons name={index.icon} size={24} />
+                  <SubTitle text={index.btnname} />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };

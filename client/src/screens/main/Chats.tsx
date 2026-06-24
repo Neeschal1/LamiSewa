@@ -85,7 +85,7 @@ const Chats: FC = () => {
     <SafeAreaView className="flex-1 bg-background">
       <StatusBar hidden={false} />
 
-      <View className="flex-1 bg-background p-screen">
+      <View className="flex-1 w-full bg-background p-screen items-center">
         <MainScreenName text="Messages" />
 
         <View className="mt-large gap-mid">
@@ -193,7 +193,7 @@ const Chats: FC = () => {
           <Description text="No messages" />
         </View>
 
-        <View className="flex w-full items-end justify-end">
+        <View className="flex w-full items-center justify-center">
           <TouchableOpacity className="p-midscreen w-[15%] rounded-full bg-primaryred">
             <Ionicons name="add" size={30} color="#F2F1FF"/>
           </TouchableOpacity>
