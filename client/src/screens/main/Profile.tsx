@@ -8,8 +8,11 @@ import {
   Text,
   Touchable,
   ScrollView,
+  Pressable,
+  Linking,
+  Switch,
 } from "react-native";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
   Describe,
@@ -28,55 +31,71 @@ type AccountType = {
   btnname: string;
 };
 
+type OthersType = {
+  item: number;
+  icon: React.ComponentProps<typeof Ionicons>["name"];
+  btnname: string;
+  redirect: string;
+};
+
 const CoverPP = require("@/src/assets/images/cover.png");
 const myProfile = require("@/src/assets/images/myPP.png");
 
 const Verification = require("@/src/assets/icons/verified.png");
 
 const FeaturePhotoes = [
-  {
-    item: 1,
-    image: require("@/src/assets/images/feature1.png"),
-  },
-  {
-    item: 2,
-    image: require("@/src/assets/images/feature2.png"),
-  },
-  {
-    item: 3,
-    image: require("@/src/assets/images/feature3.png"),
-  },
-  {
-    item: 4,
-    image: require("@/src/assets/images/feature4.png"),
-  },
-  {
-    item: 5,
-    image: require("@/src/assets/images/feature5.png"),
-  },
-  {
-    item: 6,
-    image: require("@/src/assets/images/feature6.png"),
-  },
+  { item: 1, image: require("@/src/assets/images/feature1.png") },
+  { item: 2, image: require("@/src/assets/images/feature2.png") },
+  { item: 3, image: require("@/src/assets/images/feature3.png") },
+  { item: 4, image: require("@/src/assets/images/feature4.png") },
+  { item: 5, image: require("@/src/assets/images/feature5.png") },
+  { item: 6, image: require("@/src/assets/images/feature6.png") },
 ];
 
 const Accounts: AccountType[] = [
   { item: 1, icon: "person", btnname: "Edit Profile" },
-  { item: 2, icon: "lock-closed", btnname: "Change Password" },
-  { item: 3, icon: "earth", btnname: "Language" },
+  { item: 2, icon: "checkmark-circle", btnname: "Verify your ID" },
+  { item: 3, icon: "lock-closed", btnname: "Change Password" },
+  { item: 4, icon: "earth", btnname: "Language" },
 ];
 
-const Others: AccountType[] = [
-  { item: 1, icon: "shield-checkmark", btnname: "Privacy Policy" },
-  { item: 2, icon: "newspaper", btnname: "Terms of Use" },
-  { item: 3, icon: "information-circle", btnname: "Help" },
-  { item: 4, icon: "people-circle", btnname: "Contact Us" },
-  { item: 5, icon: "log-out", btnname: "Log Out" },
+const Others: OthersType[] = [
+  {
+    item: 1,
+    icon: "shield-checkmark",
+    btnname: "Privacy Policy",
+    redirect: "https://github.com/Neeschal1",
+  },
+  {
+    item: 2,
+    icon: "newspaper",
+    btnname: "Terms of Use",
+    redirect: "https://github.com/Neeschal1",
+  },
+  {
+    item: 3,
+    icon: "information-circle",
+    btnname: "Help",
+    redirect: "https://github.com/Neeschal1",
+  },
+  {
+    item: 4,
+    icon: "people-circle",
+    btnname: "Contact Us",
+    redirect: "https://github.com/Neeschal1",
+  },
+  {
+    item: 5,
+    icon: "log-out",
+    btnname: "Log Out",
+    redirect: "https://github.com/Neeschal1",
+  },
 ];
 
 const { width, height } = Dimensions.get("window");
 
 const Profile: FC = () => {
+  const [enabled, setEnabled] = useState<boolean>(false)
   return (
     <View className="flex-1 items-center justify-start bg-background">
       <ScrollView>
@@ -108,7 +127,10 @@ const Profile: FC = () => {
           className="flex-row items-center justify-between w-full p-screen"
         >
           <View className="flex flex-col w-full items-center gap-mid">
-            <TouchableOpacity
+            <Pressable
+              onPress={() => {
+                console.log("Profile pic pressed!");
+              }}
               style={{
                 width: width * 0.35,
                 height: width * 0.35,
@@ -116,15 +138,17 @@ const Profile: FC = () => {
                 overflow: "hidden",
               }}
             >
-              <Image
-                source={myProfile}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  resizeMode: "cover",
-                }}
-              />
-            </TouchableOpacity>
+              <View className="flex py-2 px-2 border-4 border-primaryblue bg-background rounded-full">
+                <Image
+                  source={myProfile}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    resizeMode: "cover",
+                  }}
+                />
+              </View>
+            </Pressable>
             <View className="gap-small w-full items-center">
               <View className="flex items-center">
                 <View className="flex flex-row items-center justify-center gap-small">
@@ -192,10 +216,24 @@ const Profile: FC = () => {
         </View>
 
         <View className="flex w-full items-start p-screen">
+          <SubText text="Notification" />
+          <View className="gap-mid w-full flex-row items-center justify-between">
+            <View className="flex flex-row gap-mid">
+              <Ionicons name="notifications" size={24} color="black" />
+              <SubTitle text="App Notification" />
+            </View>
+            <Switch value={enabled} onValueChange={setEnabled} trackColor={{false : "#BBBDC8", true: "#FF000E"}} thumbColor={enabled ?"#FFFFFF":"#FFFFFF"}/>
+          </View>
+        </View>
+
+        <View className="flex w-full items-start p-screen">
           <SubText text="Others" />
           <View className="mt-4 gap-mid w-full">
             {Others.map((index) => (
               <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(index.redirect);
+                }}
                 key={index.item}
                 className="flex flex-row w-full gap-mid"
               >
