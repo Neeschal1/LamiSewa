@@ -117,6 +117,9 @@ const Profile: FC = () => {
             <TouchableOpacity className="flex items-center justify-center bg-background w-12 h-12 rounded-full">
               <Ionicons name="menu" size={24} color="black" />
             </TouchableOpacity>
+            <TouchableOpacity className="flex items-center justify-center bg-background w-12 h-12 rounded-full">
+              <Ionicons name="share-social-outline" size={24} color="black" />
+            </TouchableOpacity>
           </View>
         </ImageBackground>
 
