@@ -23,12 +23,15 @@ import {
   SubText,
   SubTitle,
   Title,
-} from "@/src/components/Texts";
+} from "@/src/components/systemComponentsLayout";
+import { NavigationProps, RootStackParamList  } from "@/src/components/componentsType"
+import { useNavigation } from "expo-router";
 
 type AccountType = {
   item: number;
   icon: React.ComponentProps<typeof Ionicons>["name"];
   btnname: string;
+  headto: keyof RootStackParamList;
 };
 
 type OthersType = {
@@ -53,10 +56,10 @@ const FeaturePhotoes = [
 ];
 
 const Accounts: AccountType[] = [
-  { item: 1, icon: "person", btnname: "Edit Profile" },
-  { item: 2, icon: "checkmark-circle", btnname: "Verify your ID" },
-  { item: 3, icon: "lock-closed", btnname: "Change Password" },
-  { item: 4, icon: "earth", btnname: "Language" },
+  { item: 1, icon: "person", btnname: "Edit Profile", headto: "AccountPassword" },
+  { item: 2, icon: "checkmark-circle", btnname: "Verify your ID", headto: "AccountPassword" },
+  { item: 3, icon: "lock-closed", btnname: "Change Password", headto: "AccountPassword" },
+  { item: 4, icon: "earth", btnname: "Language", headto: "AccountPassword" },
 ];
 
 const Others: OthersType[] = [
@@ -96,6 +99,9 @@ const { width, height } = Dimensions.get("window");
 
 const Profile: FC = () => {
   const [enabled, setEnabled] = useState<boolean>(false)
+
+  const navigation = useNavigation<NavigationProps>();
+
   return (
     <View className="flex-1 items-center justify-start bg-background">
       <ScrollView>
@@ -203,6 +209,7 @@ const Profile: FC = () => {
               <TouchableOpacity
                 key={index.item}
                 className="flex flex-row justify-between w-full"
+                onPress={()=>{navigation.navigate(index.headto)}}
               >
                 <View className="flex flex-row gap-mid">
                   <Ionicons name={index.icon} size={24} />

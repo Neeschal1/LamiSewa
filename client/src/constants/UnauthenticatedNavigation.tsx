@@ -35,6 +35,9 @@ import {
 } from "@/src/screens/main/mainScreenLayouts";
 
 // For Testing
+import { AccountPassword } from "@/src/screens/accounts/AccountLayouts";
+
+// For Testing
 import MyTabs from "./BottomTabNavigation"
 
 // For Testing
@@ -94,6 +97,8 @@ const UnauthenticatedNavigation = () => {
       {/* For Testing */}
       <Stack.Screen name="MyTabs" component={MyTabs} />
 
+      {/* For Testing */}
+      <Stack.Screen name="AccountPassword" component={AccountPassword} options={ProfileScreens("Change Password")} />
     </Stack.Navigator>
 
   );

@@ -36,6 +36,9 @@ export type RootStackParamList = {
   // Mains
   MyTabs: undefined;
   NearYou: undefined;
+
+  // Accounts
+  AccountPassword: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
