@@ -57,7 +57,7 @@ const FeaturePhotoes = [
 
 const Accounts: AccountType[] = [
   { item: 1, icon: "person", btnname: "Edit Profile", headto: "AccountPassword" },
-  { item: 2, icon: "checkmark-circle", btnname: "Verify your ID", headto: "AccountPassword" },
+  { item: 2, icon: "checkmark-circle", btnname: "Verify your ID", headto: "Intro" },
   { item: 3, icon: "lock-closed", btnname: "Change Password", headto: "AccountPassword" },
   { item: 4, icon: "earth", btnname: "Language", headto: "AccountPassword" },
 ];

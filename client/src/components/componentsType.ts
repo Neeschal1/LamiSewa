@@ -39,6 +39,15 @@ export type RootStackParamList = {
 
   // Accounts
   AccountPassword: undefined;
+
+  // Id Verification
+  BasicDetails: undefined;
+  Documents: undefined;
+  FacialVerification: undefined;
+  FinalVerification: undefined;
+  Intro: undefined;
+  Verify: undefined;
+  
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;

@@ -43,6 +43,16 @@ import MyTabs from "./BottomTabNavigation"
 // For Testing
 import { PaymentSuccess, SubscriptionDetails} from "@/src/screens/payments/PaymentLayout";
 
+// For Testing
+import {     
+  BasicDetails,
+  Documents,
+  FacialVerification,
+  FinalVerification,
+  Intro,
+  Verify 
+} from "@/src/screens/accounts/idverification/IDVerificationLayout"
+
 import { NavigationProps, RootStackParamList } from "@/src/components/componentsType";
 import { Title } from "../components/Texts";
 
@@ -99,8 +109,16 @@ const UnauthenticatedNavigation = () => {
 
       {/* For Testing */}
       <Stack.Screen name="AccountPassword" component={AccountPassword} options={ProfileScreens("Change Password")} />
-    </Stack.Navigator>
 
+      {/* For Testing */}
+      <Stack.Screen name="BasicDetails" component={BasicDetails} options={ProfileScreens("Change Password")} />
+      <Stack.Screen name="Documents" component={Documents} options={ProfileScreens("Change Password")} />
+      <Stack.Screen name="FacialVerification" component={FacialVerification} options={ProfileScreens("Change Password")} />
+      <Stack.Screen name="FinalVerification" component={FinalVerification} options={ProfileScreens("Change Password")} />
+      <Stack.Screen name="Intro" component={Intro} options={optionsScreens} />
+      <Stack.Screen name="Verify" component={Verify} options={ProfileScreens("Change Password")} />
+
+    </Stack.Navigator>
   );
 };
 
