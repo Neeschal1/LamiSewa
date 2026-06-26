@@ -24,7 +24,10 @@ import {
   SubTitle,
   Title,
 } from "@/src/components/systemComponentsLayout";
-import { NavigationProps, RootStackParamList  } from "@/src/components/componentsType"
+import {
+  NavigationProps,
+  RootStackParamList,
+} from "@/src/components/componentsType";
 import { useNavigation } from "expo-router";
 
 type AccountType = {
@@ -56,9 +59,24 @@ const FeaturePhotoes = [
 ];
 
 const Accounts: AccountType[] = [
-  { item: 1, icon: "person", btnname: "Edit Profile", headto: "AccountPassword" },
-  { item: 2, icon: "checkmark-circle", btnname: "Verify your ID", headto: "Intro" },
-  { item: 3, icon: "lock-closed", btnname: "Change Password", headto: "AccountPassword" },
+  {
+    item: 1,
+    icon: "person",
+    btnname: "Edit Profile",
+    headto: "AccountPassword",
+  },
+  {
+    item: 2,
+    icon: "checkmark-circle",
+    btnname: "Verify your ID",
+    headto: "Intro",
+  },
+  {
+    item: 3,
+    icon: "lock-closed",
+    btnname: "Change Password",
+    headto: "AccountPassword",
+  },
   { item: 4, icon: "earth", btnname: "Language", headto: "AccountPassword" },
 ];
 
@@ -98,7 +116,7 @@ const Others: OthersType[] = [
 const { width, height } = Dimensions.get("window");
 
 const Profile: FC = () => {
-  const [enabled, setEnabled] = useState<boolean>(false)
+  const [enabled, setEnabled] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -186,7 +204,12 @@ const Profile: FC = () => {
         </View>
 
         <View className="flex items-start w-full p-screen">
-          <SubText text="Your Pictures" />
+          <View className="flex justify-between flex-row w-full">
+            <Description text="Your Pictures" />
+            <TouchableOpacity className="mr-2">
+              <SubText text="Tap to Edit" />
+            </TouchableOpacity>
+          </View>
           <View className="flex flex-row flex-wrap w-full">
             {FeaturePhotoes.map((index) => (
               <TouchableOpacity
@@ -203,13 +226,13 @@ const Profile: FC = () => {
         </View>
 
         <View className="flex w-full items-start p-screen">
-          <SubText text="Account" />
+          <Description text="Account" />
           <View className="mt-4 gap-mid">
             {Accounts.map((index) => (
               <TouchableOpacity
                 key={index.item}
                 className="flex flex-row justify-between w-full"
-                onPress={()=>{navigation.navigate(index.headto)}}
+                // onPress={()=>{navigation.navigate(index.headto)}}
               >
                 <View className="flex flex-row gap-mid">
                   <Ionicons name={index.icon} size={24} />
@@ -226,18 +249,23 @@ const Profile: FC = () => {
         </View>
 
         <View className="flex w-full items-start p-screen">
-          <SubText text="Notification" />
+          <Description text="Notification" />
           <View className="gap-mid w-full flex-row items-center justify-between">
             <View className="flex flex-row gap-mid">
               <Ionicons name="notifications" size={24} color="black" />
               <SubTitle text="App Notification" />
             </View>
-            <Switch value={enabled} onValueChange={setEnabled} trackColor={{false : "#BBBDC8", true: "#FF000E"}} thumbColor={enabled ?"#FFFFFF":"#FFFFFF"}/>
+            <Switch
+              value={enabled}
+              onValueChange={setEnabled}
+              trackColor={{ false: "#BBBDC8", true: "#FF000E" }}
+              thumbColor={enabled ? "#FFFFFF" : "#FFFFFF"}
+            />
           </View>
         </View>
 
         <View className="flex w-full items-start p-screen">
-          <SubText text="Others" />
+          <Description text="Others" />
           <View className="mt-4 gap-mid w-full">
             {Others.map((index) => (
               <TouchableOpacity

@@ -75,7 +75,7 @@ const AccountPassword = () => {
   };
 
   return (
-    <SafeAreaView className="flex flex-1 items-center justify-start bg-background">
+    <SafeAreaView edges={["bottom"]} className="flex flex-1 items-center justify-start bg-background">
       <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
@@ -85,7 +85,7 @@ const AccountPassword = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 flex items-center justify-start bg-background p-screen mt-[-40px] gap-large">
+          <View className="flex-1 flex items-center justify-start bg-background p-screen gap-large">
             <StatusBar hidden translucent />
             <View className="flex items-start justify-start">
               <Animated.View

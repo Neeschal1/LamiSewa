@@ -7,14 +7,8 @@ import {
   PrimaryButton,
 } from "@/src/components/systemComponentsLayout";
 import Animated, {
-  FadeIn,
-  FadeOut,
   FadeInUp,
   FadeInDown,
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  BounceIn,
 } from "react-native-reanimated";
 
 const Intro = () => {
@@ -34,7 +28,7 @@ const Intro = () => {
         <Animated.View
           entering={FadeInDown.delay(200).duration(400).springify()}
         >
-          <PrimaryButton text="Continue" />
+          <PrimaryButton screen="BasicDetails" text="Continue" />
         </Animated.View>
       </View>
       <Animated.View

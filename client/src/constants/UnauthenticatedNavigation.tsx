@@ -111,7 +111,7 @@ const UnauthenticatedNavigation = () => {
       <Stack.Screen name="AccountPassword" component={AccountPassword} options={ProfileScreens("Change Password")} />
 
       {/* For Testing */}
-      <Stack.Screen name="BasicDetails" component={BasicDetails} options={ProfileScreens("Change Password")} />
+      <Stack.Screen name="BasicDetails" component={BasicDetails} options={ProfileScreens("Basic Details (1/3)")} />
       <Stack.Screen name="Documents" component={Documents} options={ProfileScreens("Change Password")} />
       <Stack.Screen name="FacialVerification" component={FacialVerification} options={ProfileScreens("Change Password")} />
       <Stack.Screen name="FinalVerification" component={FinalVerification} options={ProfileScreens("Change Password")} />
