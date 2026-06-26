@@ -53,10 +53,13 @@ const AccountPassword = () => {
       return;
     }
 
-    if (newpassword != confirmnewPassword) {
+    if (
+      newpassword != confirmnewPassword ||
+      confirmnewPassword != newpassword
+    ) {
       setUnMatched(true);
       setShowMessage(
-        "Password and Confirm password didn't matched. Make sure they both matches first!",
+        "Password and Confirm password didn't matched. \nMake sure they both matches first!",
       );
       return;
     }
@@ -72,7 +75,7 @@ const AccountPassword = () => {
   };
 
   return (
-    <SafeAreaView className="flex flex-1 bg-background">
+    <SafeAreaView className="flex flex-1 items-center justify-start bg-background">
       <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
@@ -82,9 +85,9 @@ const AccountPassword = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 items-center justify-start bg-background p-screen">
+          <View className="flex-1 flex items-center justify-start bg-background p-screen mt-[-40px] gap-large">
             <StatusBar hidden translucent />
-            <View className="flex items-start justify-start gap-extralarge">
+            <View className="flex items-start justify-start">
               <Animated.View
                 entering={FadeInUp.delay(200).duration(400).springify()}
               >
