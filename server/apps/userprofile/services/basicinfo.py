@@ -41,4 +41,16 @@ class BasicInfo:
         )
 
 
-# { "userprofileid": 9, "fullname": "Nischal Pokhrel", "nickname": "Nischal", "bio": "I am a software engineer :)", "profile_picture": "https://picsum.photos/300/300", "cover_picture": "https://picsum.photos/1200/400", "profile_handler": "Father", "gender": "MALE", "date_of_birth": "2005-01-15" }
+    def _updatebasicinfo(self, request, pk) -> Response:
+        userinfo = get_object_or_404(UsersBasicInfo, id=pk)
+        serializer = UsersBasicInfoSerializer(userinfo, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(
+                {
+                    "message": "User's basic info updated successfully", 
+                    "data": {
+                        "Detail": serializer.data
+                    }}
+            )
+        return

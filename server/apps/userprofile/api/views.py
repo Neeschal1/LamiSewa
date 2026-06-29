@@ -28,3 +28,6 @@ class UsersBasicInfoSerializerView(viewsets.ViewSet):
     
     def create(self, request):
         return BasicInfo()._createbasicinfo(request)
+    
+    def update(self, request, pk=None):
+        return BasicInfo()._updatebasicinfo(request, pk)
