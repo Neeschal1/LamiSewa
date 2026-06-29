@@ -5,7 +5,8 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 
-router.register('userprofile', UserProfileSerializerView, basename="useraccounts")
+router.register('userprofile', UserProfileSerializerView, basename="userprofile")
+router.register('user-profile/basic-info', UsersBasicInfoSerializerView, basename="basicinfo")
 
 urlpatterns = [
     path('', include(router.urls))

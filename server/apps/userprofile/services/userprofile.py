@@ -8,7 +8,13 @@ from django.shortcuts import get_object_or_404
 
 class UserProfileService:
     def _generate_profile_id(self):
-        return f"BB00{random.randint(0, 999999)}"
+        randomnumber = str(random.randint(0, 999999))
+        while True:
+            if len(randomnumber) == 6:
+                break
+            else:
+                continue
+        return f"BB00{randomnumber}"
 
 
     def _createprofileid(self, request) -> Response:

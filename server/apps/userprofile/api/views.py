@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from .serializers import *
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from apps.userprofile.models.entities import *
 from apps.userprofile.services.userprofile import UserProfileService
-from django.shortcuts import get_object_or_404
+from apps.userprofile.services.basicinfo import BasicInfo
 
 
 class UserProfileSerializerView(viewsets.ViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request):
         return UserProfileService()._createprofileid(request)
@@ -23,3 +23,8 @@ class UserProfileSerializerView(viewsets.ViewSet):
         return UserProfileService()._destroyprofileid(request, pk)
         
             
+class UsersBasicInfoSerializerView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    def create(self, request):
+        return BasicInfo()._createbasicinfo(request)
