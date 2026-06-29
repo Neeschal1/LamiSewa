@@ -45,9 +45,31 @@ class UserProfileService:
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(
-                {"message": f"Successfully updated {profiledata.userid.first_name}'s Profile."}, status=status.HTTP_200_OK
+                {
+                    "message": f"Successfully updated {profiledata.userid.first_name}'s Profile."
+                },
+                status=status.HTTP_200_OK,
             )
         return Response(
             {"message": "Couldn't update user's detail."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    def _retrieveprofileid(self, request, pk) -> Response:
+        profiledata = get_object_or_404(UserProfile, id=pk)
+        serializer = UserProfileSerializer(profiledata, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            return Response(
+                {
+                    "message": "User's data retrieved!",
+                    "data": {
+                        "User ProfileID": profiledata.profileid,
+                        "Phone Number": serializer.data['phonenumber'],
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
+        return Response(
+            {"message": "Couldn't fetch user's detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )

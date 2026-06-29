@@ -15,4 +15,7 @@ class UserProfileSerializerView(viewsets.ViewSet):
         
     def update(self, request, pk=None):
         return UserProfileService()._updateprofileid(request, pk)
+    
+    def retrieve(self, request, pk=None):
+        return UserProfileService()._retrieveprofileid(request, pk)
             
