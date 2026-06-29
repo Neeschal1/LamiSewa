@@ -18,4 +18,8 @@ class UserProfileSerializerView(viewsets.ViewSet):
     
     def retrieve(self, request, pk=None):
         return UserProfileService()._retrieveprofileid(request, pk)
+    
+    def delete(self, request, pk=None):
+        return UserProfileService()._destroyprofileid(request, pk)
+        
             

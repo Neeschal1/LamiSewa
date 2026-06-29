@@ -1,7 +1,7 @@
 from apps.userprofile.models.entities import UserProfile
 from rest_framework.response import Response
 from apps.userprofile.api.serializers import *
-from rest_framework import status
+from rest_framework import status, validators
 import random
 from django.shortcuts import get_object_or_404
 
@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 class UserProfileService:
     def _generate_profile_id(self):
         return f"BB00{random.randint(0, 999999)}"
+
 
     def _createprofileid(self, request) -> Response:
         profiledata = UserProfileSerializer(data=request.data)
@@ -39,6 +40,7 @@ class UserProfileService:
             status=status.HTTP_201_CREATED,
         )
 
+
     def _updateprofileid(self, request, pk) -> Response:
         profiledata = get_object_or_404(UserProfile, id=pk)
         serializer = UserProfileSerializer(profiledata, data=request.data, partial=True)
@@ -50,10 +52,11 @@ class UserProfileService:
                 },
                 status=status.HTTP_200_OK,
             )
-        return Response(
+        return validators.ValidationError(
             {"message": "Couldn't update user's detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
 
     def _retrieveprofileid(self, request, pk) -> Response:
         profiledata = get_object_or_404(UserProfile, id=pk)
@@ -64,12 +67,26 @@ class UserProfileService:
                     "message": "User's data retrieved!",
                     "data": {
                         "User ProfileID": profiledata.profileid,
-                        "Phone Number": serializer.data['phonenumber'],
+                        "Phone Number": serializer.data["phonenumber"],
                     },
                 },
                 status=status.HTTP_200_OK,
             )
-        return Response(
+        return validators.ValidationError(
             {"message": "Couldn't fetch user's detail."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+    def _destroyprofileid(self, request, pk) -> Response:
+        profiledata = get_object_or_404(UserProfile, id=pk)
+        if profiledata:
+            profiledata.delete()
+            return Response(
+                {"message": "User's profile deleted successfully :)"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        return validators.ValidationError(
+            {"message": "Couldn't delete user's detail!"},
             status=status.HTTP_400_BAD_REQUEST,
         )
