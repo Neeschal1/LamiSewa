@@ -42,3 +42,16 @@ class UsersPersonalInfoSerializer(serializers.ModelSerializer):
             "current_city": {"required": True},
             "residency_status": {"required": True},
         }
+        
+
+class UsersAdditionalInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsersAdditionalInfo
+        fields = '__all__'
+        extra_kwargs = {
+            "userprofileid": {"write_only": True},
+            "height": {"required": True},
+            "weight": {"required": True},
+            "religion": {"required": True},
+            "diet": {"required": True},
+        }

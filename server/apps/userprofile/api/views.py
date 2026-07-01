@@ -6,6 +6,7 @@ from apps.userprofile.models.entities import *
 from apps.userprofile.services.userprofile import UserProfileService
 from apps.userprofile.services.basicinfo import BasicInfo
 from apps.userprofile.services.personalinfo import PersonalInfo
+from apps.userprofile.services.additionalinfo import AdditionalInfo
 from drf_yasg.utils import swagger_auto_schema
 
 
@@ -49,7 +50,7 @@ class UsersBasicInfoSerializerView(viewsets.ViewSet):
         return BasicInfo()._destroybasicinfo(request, pk)
     
     
-class PersonalInfoSerializerView(viewsets.ViewSet):
+class UsersPersonalInfoSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(request_body=UsersPersonalInfoSerializer)
@@ -67,3 +68,23 @@ class PersonalInfoSerializerView(viewsets.ViewSet):
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return PersonalInfo()._deletepersonalinfo(request, pk)
+    
+
+class UsersAdditionalInfoSerializerView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=UsersAdditionalInfoSerializer)
+    def create(self, request):
+        return AdditionalInfo()._createadditionalinfo(request)
+    
+    @swagger_auto_schema(request_body=UsersAdditionalInfoSerializer)
+    def update(self, request, pk=None):
+        return AdditionalInfo()._updateadditionalinfo(request, pk)
+    
+    @swagger_auto_schema()
+    def retrieve(self, request, pk=None):
+        return AdditionalInfo()._retrieveadditionalinfo(request, pk)
+    
+    @swagger_auto_schema()
+    def destroy(self, request, pk=None):
+        return AdditionalInfo()._deleteadditionalinfo(request, pk)
