@@ -3,11 +3,13 @@ from .serializers import *
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from ..services.auth import UserAuth
+from drf_yasg.utils import swagger_auto_schema
 
 
 class UserAccountSignupSerializersView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     
+    @swagger_auto_schema(request_body=UserAccountSignupSerializers)
     def create(self, request):
         number_of_users = User.objects.all().count()
         signup_serializers = UserAccountSignupSerializers(data=request.data)
@@ -22,6 +24,7 @@ class UserAccountSignupSerializersView(viewsets.ViewSet):
 class UserAccountLoginSerializerView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     
+    @swagger_auto_schema(request_body=UserAccountLoginSerializers)
     def create(self, request):
         serializers = UserAccountLoginSerializers(data=request.data)
         if serializers.is_valid(raise_exception=True):
