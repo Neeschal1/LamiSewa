@@ -1,53 +1,49 @@
-from apps.userprofile.models.entities import UsersBasicInfo
+from apps.userprofile.models.entities import UsersPersonalInfo
 from rest_framework.response import Response
 from apps.userprofile.api.serializers import *
 from rest_framework import status, validators
 from django.shortcuts import get_object_or_404
 
 
-class BasicInfo:
-    def _createbasicinfo(self, request) -> Response:
-        user = UsersBasicInfoSerializer(data=request.data)
-
+class PersonalInfo:
+    def _createpersonalinfo(self, request) -> Response:
+        user = UsersPersonalInfoSerializer(data=request.data)
         if user.is_valid(raise_exception=True):
-            userinfo = UsersBasicInfo.objects.create(
+            userinfo = UsersPersonalInfo.objects.create(
                 userprofileid=user.validated_data["userprofileid"],
-                fullname=user.validated_data["fullname"],
-                nickname=user.validated_data["nickname"],
-                profile_picture=user.validated_data["profile_picture"],
-                cover_picture=user.validated_data["cover_picture"],
-                bio=user.validated_data["bio"],
-                profile_handler=user.validated_data["profile_handler"],
-                gender=user.validated_data["gender"],
-                date_of_birth=user.validated_data["date_of_birth"],
+                maritalstatus=user.validated_data["maritalstatus"],
+                gotra=user.validated_data["gotra"],
+                current_living_country=user.validated_data["current_living_country"],
+                current_city=user.validated_data["current_city"],
+                residency_status=user.validated_data["residency_status"],
             )
             return Response(
                 {
-                    "message": f"Successfully created basic info.",
+                    "message": f"Successfully created personal info.",
                     "Profile Info": {
                         "Name": userinfo.userprofileid.userid.first_name,
                         "ProfileID": userinfo.userprofileid.profileid,
                         "PhoneNumber": userinfo.userprofileid.phonenumber,
                     },
-                    "data": UsersBasicInfoSerializer(userinfo).data,
+                    "data": UsersPersonalInfoSerializer(userinfo).data,
                 },
                 status=status.HTTP_201_CREATED,
             )
 
         return Response(
-            {"message": "Couldn't create user's basic detail."},
+            {"message": "Couldn't create user's personal detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-
-
-    def _updatebasicinfo(self, request, pk) -> Response:
-        userinfo = get_object_or_404(UsersBasicInfo, id=pk)
-        serializer = UsersBasicInfoSerializer(userinfo, data=request.data, partial=True)
+    
+    
+    def _updatepersonalinfo(self, request, pk) -> Response:
+        userinfo = get_object_or_404(UsersPersonalInfo, id=pk)
+        serializer = UsersPersonalInfoSerializer(userinfo, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(
                 {
-                    "message": "User's basic info updated successfully",
+                    "message": "User's personal info updated successfully",
                     "data": serializer.data,
                 }
             )
@@ -55,15 +51,15 @@ class BasicInfo:
             {"message": "Couldn't update user's basic info detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-
-
-    def _retrievebasicinfo(self, request, pk) -> Response:
-        basicdata = get_object_or_404(UsersBasicInfo, id=pk)
-        serializer = UsersBasicInfoSerializer(basicdata, data=request.data, partial=True)
+    
+    
+    def _retrievepersonalinfo(self, request, pk) -> Response:
+        personaldata = get_object_or_404(UsersPersonalInfo, id=pk)
+        serializer = UsersPersonalInfoSerializer(personaldata, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             return Response(
                 {
-                    "message": "User's basic info detail retrieved!",
+                    "message": "User's personal info detail retrieved!",
                     "data": serializer.data
                 },
                 status=status.HTTP_200_OK,
@@ -72,14 +68,14 @@ class BasicInfo:
             {"message": "Couldn't fetch user's detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-
-
-    def _destroybasicinfo(self, request, pk) -> Response:
-        basicdata = get_object_or_404(UsersBasicInfo, id=pk)
-        if basicdata:
-            basicdata.delete()
+    
+    
+    def _deletepersonalinfo(self, request, pk) -> Response:
+        personaldata = get_object_or_404(UsersPersonalInfo, id=pk)
+        if personaldata:
+            personaldata.delete()
             return Response(
-                {"message": "User's basic info details deleted successfully :)"},
+                {"message": "User's personal info details deleted successfully :)"},
                 status=status.HTTP_204_NO_CONTENT,
             )
         return validators.ValidationError(

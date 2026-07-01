@@ -39,7 +39,7 @@ class UsersBasicInfoAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(PersonalInfo)
+@admin.register(UsersPersonalInfo)
 class PersonalInfoAdmin(admin.ModelAdmin):
     list_display = [
         "userprofileid",
@@ -61,7 +61,7 @@ class PersonalInfoAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(AdditionalInfo)
+@admin.register(UsersAdditionalInfo)
 class AdditionalInfoAdmin(admin.ModelAdmin):
     list_display = [
         "userprofileid",
@@ -79,7 +79,7 @@ class AdditionalInfoAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(FeaturedImages)
+@admin.register(UsersFeaturedImages)
 class FeaturedImagesAdmin(admin.ModelAdmin):
     list_display = [
         "userprofileid",
@@ -89,7 +89,7 @@ class FeaturedImagesAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(Hobbies)
+@admin.register(UsersHobbies)
 class HobbiesAdmin(admin.ModelAdmin):
     list_display = [
         "userprofileid",
@@ -109,7 +109,7 @@ class HobbiesAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(Career)
+@admin.register(UsersCareer)
 class CareerAdmin(admin.ModelAdmin):
     list_display = [
         "userprofileid",
@@ -130,7 +130,7 @@ class CareerAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(FamilyDetail)
+@admin.register(UsersFamilyDetail)
 class FamilyDetailAdmin(admin.ModelAdmin):
     list_display = [
         "userprofileid",
@@ -146,7 +146,7 @@ class FamilyDetailAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(AstroDetail)
+@admin.register(UsersAstroDetail)
 class AstroDetailAdmin(admin.ModelAdmin):
     list_display = [
         "userprofileid",
@@ -164,7 +164,7 @@ class AstroDetailAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(PartnerPreference)
+@admin.register(UsersPartnerPreference)
 class PartnerPreferenceAdmin(admin.ModelAdmin):
     list_display = [
         "userprofileid",
@@ -188,7 +188,7 @@ class PartnerPreferenceAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(Stories)
+@admin.register(UsersStories)
 class StoriesAdmin(admin.ModelAdmin):
     list_display = [
         "userprofileid",

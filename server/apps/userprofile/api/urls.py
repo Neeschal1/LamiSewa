@@ -7,6 +7,7 @@ router = DefaultRouter()
 
 router.register('userprofile', UserProfileSerializerView, basename="userprofile")
 router.register('user-profile/basic-info', UsersBasicInfoSerializerView, basename="basicinfo")
+router.register('user-profile/personal-info', PersonalInfoSerializerView, basename="personalinfo")
 
 urlpatterns = [
     path('', include(router.urls))

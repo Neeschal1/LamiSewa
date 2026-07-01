@@ -30,3 +30,15 @@ class UsersBasicInfoSerializer(serializers.ModelSerializer):
         }
         
     
+class UsersPersonalInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsersPersonalInfo
+        fields = '__all__'
+        extra_kwargs = {
+            "userprofileid": {"write_only": True},
+            "maritalstatus": {"required": True},
+            "gotra": {"required": True},
+            "current_living_country": {"required": True},
+            "current_city": {"required": True},
+            "residency_status": {"required": True},
+        }

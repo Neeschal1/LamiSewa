@@ -28,7 +28,7 @@ class UsersBasicInfo(models.Model):
         return f"Basic info of: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
 
 
-class PersonalInfo(models.Model):
+class UsersPersonalInfo(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='personal_info')
     maritalstatus = models.CharField(max_length=15, choices=MARITAL_STATUS)
     gotra = models.CharField(max_length=15, choices=GOTRAS)
@@ -40,7 +40,7 @@ class PersonalInfo(models.Model):
         return f"Personal info of: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
     
 
-class AdditionalInfo(models.Model):
+class UsersAdditionalInfo(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='additional_info')
     height = models.CharField(max_length=20, blank=False)
     weight = models.CharField(max_length=10, blank=False)
@@ -51,7 +51,7 @@ class AdditionalInfo(models.Model):
         return f"Additional info of: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
     
 
-class FeaturedImages(models.Model):
+class UsersFeaturedImages(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='featured_image')
     image1 = models.URLField(default=Config.DEFAULTUSERPROFILE, blank=True)
     image2 = models.URLField(default=Config.DEFAULTUSERPROFILE, blank=True)
@@ -64,7 +64,7 @@ class FeaturedImages(models.Model):
         return f"Featured Image list of: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
 
 
-class Hobbies(models.Model):
+class UsersHobbies(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='hobbies')
     hobby1 = models.CharField(max_length=20, blank=False)
     hobby2 = models.CharField(max_length=20, blank=False)
@@ -76,7 +76,7 @@ class Hobbies(models.Model):
         return f"Hobbies list of: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
     
     
-class Career(models.Model):
+class UsersCareer(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='career')
     highest_qualification = models.CharField(max_length=30, choices=QUALIFICATION_DEGREES, blank=False)
     college_name = models.CharField(max_length=255, blank=False)
@@ -88,7 +88,7 @@ class Career(models.Model):
         return f"Career detail of: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
     
     
-class FamilyDetail(models.Model):
+class UsersFamilyDetail(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='family_info')
     family_type = models.CharField(max_length=30, choices=FAMILY_TYPES, blank=False)
     total_family_members = models.IntegerField(blank=False)
@@ -98,7 +98,7 @@ class FamilyDetail(models.Model):
         return f"Family detail of: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
     
     
-class AstroDetail(models.Model):
+class UsersAstroDetail(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='astro_info')
     mangalik = models.CharField(max_length=10, choices=MANGLIK_STATUS, blank=False)
     sunshine = models.CharField(max_length=15, choices=SUN_SIGNS, blank=False)
@@ -108,7 +108,7 @@ class AstroDetail(models.Model):
         return f"Astro detail of: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
     
     
-class PartnerPreference(models.Model):
+class UsersPartnerPreference(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='partner_preference')
     age_ranging = models.CharField(max_length=10, blank=False, default="20 to 30")
     maritalstatus = models.CharField(max_length=15, choices=MARITAL_STATUS, blank=False)
@@ -124,7 +124,7 @@ class PartnerPreference(models.Model):
         return f"Partner Preference detail of: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
     
     
-class Stories(models.Model):
+class UsersStories(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='stories')
     story = models.URLField(blank=True)
     storyviews = models.IntegerField(default=0)
