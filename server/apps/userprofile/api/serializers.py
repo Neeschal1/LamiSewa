@@ -55,3 +55,18 @@ class UsersAdditionalInfoSerializer(serializers.ModelSerializer):
             "religion": {"required": True},
             "diet": {"required": True},
         }
+        
+
+class UsersFeaturedImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsersFeaturedImages
+        fields = '__all__'
+        extra_kwargs = {
+            "userprofileid": {"write_only": True},
+            "image1": {"required": True},
+            "image2": {"required": True},
+            "image3": {"required": True},
+            "image4": {"required": True},
+            "image5": {"required": True},
+        }
+        

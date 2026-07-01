@@ -9,6 +9,7 @@ router.register('userprofile', UserProfileSerializerView, basename="userprofile"
 router.register('user-profile/basic-info', UsersBasicInfoSerializerView, basename="basicinfo")
 router.register('user-profile/personal-info', UsersPersonalInfoSerializerView, basename="personalinfo")
 router.register('user-profile/additional-info', UsersAdditionalInfoSerializerView, basename="additionalinfo")
+router.register('user-profile/featured-images-details', UsersFeaturedImagesSerializerView, basename="featuredimages")
 
 urlpatterns = [
     path('', include(router.urls))
