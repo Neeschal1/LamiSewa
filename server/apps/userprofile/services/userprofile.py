@@ -38,9 +38,10 @@ class UserProfileService:
             {
                 "message": f"Successfully created {profile.userid.first_name}'s Profile.",
                 "data": {
-                    "Userid": profile.userid.pk,
-                    "Phonenumber": profile.phonenumber,
-                    "Profileid": profile.profileid,
+                    "user_account_id": profile.userid.pk,
+                    "user_profile_id": profile.pk,
+                    "phonenumber": profile.phonenumber,
+                    "profileid": profile.profileid,
                 },
             },
             status=status.HTTP_201_CREATED,

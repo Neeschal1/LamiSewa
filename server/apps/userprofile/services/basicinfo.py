@@ -48,9 +48,42 @@ class BasicInfo:
             serializer.save()
             return Response(
                 {
-                    "message": "User's basic info updated successfully", 
-                    "data": {
-                        "Detail": serializer.data
-                    }}
+                    "message": "User's basic info updated successfully",
+                    "data": serializer.data,
+                }
             )
-        return
+        return validators.ValidationError(
+            {"message": "Couldn't update user's basic info detail."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+    def _retrievebasicinfo(self, request, pk) -> Response:
+        basicdata = get_object_or_404(UsersBasicInfo, id=pk)
+        serializer = UsersBasicInfoSerializer(basicdata, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            return Response(
+                {
+                    "message": "User's basic info detail retrieved!",
+                    "data": serializer.data
+                },
+                status=status.HTTP_200_OK,
+            )
+        return validators.ValidationError(
+            {"message": "Couldn't fetch user's detail."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+    def _destroybasicinfo(self, request, pk) -> Response:
+        basicdata = get_object_or_404(UsersBasicInfo, id=pk)
+        if basicdata:
+            basicdata.delete()
+            return Response(
+                {"message": "User's basic info details deleted successfully :)"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        return validators.ValidationError(
+            {"message": "Couldn't delete user's detail!"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
