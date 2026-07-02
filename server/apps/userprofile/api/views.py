@@ -8,6 +8,7 @@ from apps.userprofile.services.basicinfo import BasicInfo
 from apps.userprofile.services.personalinfo import PersonalInfo
 from apps.userprofile.services.additionalinfo import AdditionalInfo
 from apps.userprofile.services.featuredpictures import FeaturedPictures
+from apps.userprofile.services.hobbies import Hobbies
 from drf_yasg.utils import swagger_auto_schema
 
 
@@ -116,16 +117,16 @@ class UsersHobbiesSerializerView(viewsets.ViewSet):
     
     @swagger_auto_schema(request_body=UsersFeaturedImagesSerializer)
     def create(self, request):
-        return FeaturedPictures()._createfeaturedimages(request)
+        return Hobbies()._createhobbies(request)
     
     @swagger_auto_schema(request_body=UsersFeaturedImagesSerializer)
     def update(self, request, pk=None):
-        return FeaturedPictures()._updatefeaturedimages(request, pk)
+        return Hobbies()._updatehobbies(request, pk)
     
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
-        return FeaturedPictures()._retrievefeaturedimages(request, pk)
+        return Hobbies()._retrievehobbies(request, pk)
     
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
-        return FeaturedPictures()._destroyfeaturedimages(request, pk)
+        return Hobbies()._destroyhobbies(request, pk)

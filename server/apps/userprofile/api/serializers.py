@@ -66,9 +66,9 @@ class UsersFeaturedImagesSerializer(serializers.ModelSerializer):
         }
         
         
-class UsersHobbiesSerializerView(serializers.ModelSerializer):
+class UsersHobbiesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UsersFeaturedImages
+        model = UsersHobbies
         fields = '__all__'
         extra_kwargs = {
             "userprofileid": {"write_only": True},
@@ -78,11 +78,3 @@ class UsersHobbiesSerializerView(serializers.ModelSerializer):
             "hobby4": {"required": True},
             "hobby5": {"required": True},
         }
-        
-    # userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='hobbies')
-    # hobby1 = models.CharField(max_length=20, blank=False)
-    # hobby2 = models.CharField(max_length=20, blank=False)
-    # hobby3 = models.CharField(max_length=20, blank=False)
-    # hobby4 = models.CharField(max_length=20, blank=False)
-    # hobby5 = models.CharField(max_length=20, blank=False)
-            

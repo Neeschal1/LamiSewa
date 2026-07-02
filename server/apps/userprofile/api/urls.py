@@ -10,6 +10,7 @@ router.register('user-profile/basic-info', UsersBasicInfoSerializerView, basenam
 router.register('user-profile/personal-info', UsersPersonalInfoSerializerView, basename="personalinfo")
 router.register('user-profile/additional-info', UsersAdditionalInfoSerializerView, basename="additionalinfo")
 router.register('user-profile/featured-images-details', UsersFeaturedImagesSerializerView, basename="featuredimages")
+router.register('user-profile/hobbies-list', UsersHobbiesSerializerView, basename="hobbiesdata")
 
 urlpatterns = [
     path('', include(router.urls))
