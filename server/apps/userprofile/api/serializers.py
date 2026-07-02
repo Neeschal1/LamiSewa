@@ -92,3 +92,15 @@ class UsersCareerSerializer(serializers.ModelSerializer):
             "occupation": {"required": True},
             "company_or_organization_name": {"required": True},
         }
+        
+        
+class UsersFamilyDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsersFamilyDetail
+        fields = '__all__'
+        extra_kwargs = {
+            "userprofileid": {"write_only": True},
+            "family_type": {"required": True},
+            "total_family_members": {"required": True},
+            "siblings": {"required": True},
+        }

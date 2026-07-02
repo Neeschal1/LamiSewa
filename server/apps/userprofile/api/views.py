@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+from apps.userprofile.models.entities import *
 from .serializers import *
-from rest_framework import viewsets
+from rest_framework import viewsets, status, validators
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from apps.userprofile.models.entities import *
 from apps.userprofile.services.userprofile import UserProfileService
@@ -12,7 +14,86 @@ from apps.userprofile.services.career import Career
 from apps.userprofile.services.hobbies import Hobbies
 from drf_yasg.utils import swagger_auto_schema
 
+class UsersFamilyDetailSerializerView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=UsersFamilyDetailSerializer)
+    def create(self, request):
+        user = UsersFamilyDetailSerializer(data=request.data)
+        if user.is_valid(raise_exception=True):
+            userinfo = UsersFamilyDetail.objects.create(
+                userprofileid=user.validated_data["userprofileid"],
+                family_type=user.validated_data["family_type"],
+                total_family_members=user.validated_data["total_family_members"],
+                siblings=user.validated_data["siblings"],
+            )
+            return Response(
+                {
+                    "message": f"Successfully created users family detail.",
+                    "Profile Info": {
+                        "Name": userinfo.userprofileid.userid.first_name,
+                        "ProfileID": userinfo.userprofileid.profileid,
+                        "PhoneNumber": userinfo.userprofileid.phonenumber,
+                    },
+                    "data": UsersFamilyDetailSerializer(userinfo).data,
+                },
+                status=status.HTTP_201_CREATED,
+            )
 
+        return Response(
+            {"message": "Couldn't create user's family detail."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+        
+    @swagger_auto_schema(request_body=UsersFamilyDetailSerializer)
+    def update(self, request, pk=None):
+        usersfamilydetail = get_object_or_404(UsersFamilyDetail, id=pk)
+        serializer = UsersFamilyDetailSerializer(usersfamilydetail, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(
+                {
+                    "message": "User's family detail updated successfully",
+                    "data": serializer.data,
+                }
+            )
+        return validators.ValidationError(
+            {"message": "Couldn't update user's family detail."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    
+    @swagger_auto_schema()
+    def retrieve(self, request, pk=None):
+        usersfamilydata = get_object_or_404(UsersFamilyDetail, id=pk)
+        serializer = UsersFamilyDetailSerializer(usersfamilydata, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            return Response(
+                {
+                    "message": "User's family detail retrieved!",
+                    "data": serializer.data
+                },
+                status=status.HTTP_200_OK,
+            )
+        return validators.ValidationError(
+            {"message": "Couldn't fetch user's family detail."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    
+    @swagger_auto_schema()
+    def destroy(self, request, pk=None):
+        usersfamilydata = get_object_or_404(UsersFamilyDetail, id=pk)
+        if usersfamilydata:
+            usersfamilydata.delete()
+            return Response(
+                {"message": "User's family details deleted successfully :)"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        return validators.ValidationError(
+            {"message": "Couldn't delete user's family detail!"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    
+    
 class UserProfileSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     
