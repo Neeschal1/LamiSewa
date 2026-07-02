@@ -78,3 +78,17 @@ class UsersHobbiesSerializer(serializers.ModelSerializer):
             "hobby4": {"required": True},
             "hobby5": {"required": True},
         }
+        
+        
+class UsersCareerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsersCareer
+        fields = '__all__'
+        extra_kwargs = {
+            "userprofileid": {"write_only": True},
+            "highest_qualification": {"required": True},
+            "college_name": {"required": True},
+            "working_as": {"required": True},
+            "occupation": {"required": True},
+            "company_or_organization_name": {"required": True},
+        }
