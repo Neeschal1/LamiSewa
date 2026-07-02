@@ -11,9 +11,50 @@ from apps.userprofile.services.personalinfo import PersonalInfo
 from apps.userprofile.services.additionalinfo import AdditionalInfo
 from apps.userprofile.services.featuredpictures import FeaturedPictures
 from apps.userprofile.services.career import Career
+from apps.userprofile.services.partnerpreference import PartnerPreference
 from apps.userprofile.services.hobbies import Hobbies
 from drf_yasg.utils import swagger_auto_schema
 
+    
+class UserProfileSerializerView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=UserProfileSerializer)
+    def create(self, request):
+        return UserProfileService()._createprofileid(request)
+        
+    @swagger_auto_schema(request_body=UserProfileSerializer)
+    def update(self, request, pk=None):
+        return UserProfileService()._updateprofileid(request, pk)
+    
+    @swagger_auto_schema()
+    def retrieve(self, request, pk=None):
+        return UserProfileService()._retrieveprofileid(request, pk)
+    
+    @swagger_auto_schema()
+    def destroy(self, request, pk=None):
+        return UserProfileService()._destroyprofileid(request, pk)
+        
+            
+class UsersBasicInfoSerializerView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=UsersBasicInfoSerializer)
+    def create(self, request):
+        return BasicInfo()._createbasicinfo(request)
+    
+    @swagger_auto_schema(request_body=UsersBasicInfoSerializer)
+    def update(self, request, pk=None):
+        return BasicInfo()._updatebasicinfo(request, pk)
+    
+    @swagger_auto_schema()
+    def retrieve(self, request, pk=None):
+        return BasicInfo()._retrievebasicinfo(request, pk)
+    
+    @swagger_auto_schema()
+    def destroy(self, request, pk=None):
+        return BasicInfo()._destroybasicinfo(request, pk)
+    
 
 class UsersFamilyDetailSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
@@ -93,6 +134,46 @@ class UsersFamilyDetailSerializerView(viewsets.ViewSet):
             {"message": "Couldn't delete user's family detail!"},
             status=status.HTTP_400_BAD_REQUEST,
         )
+    
+    
+class UsersPersonalInfoSerializerView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=UsersPersonalInfoSerializer)
+    def create(self, request):
+        return PersonalInfo()._createpersonalinfo(request)
+    
+    @swagger_auto_schema(request_body=UsersPersonalInfoSerializer)
+    def update(self, request, pk=None):
+        return PersonalInfo()._updatepersonalinfo(request, pk)
+    
+    @swagger_auto_schema()
+    def retrieve(self, request, pk=None):
+        return PersonalInfo()._retrievepersonalinfo(request, pk)
+    
+    @swagger_auto_schema()
+    def destroy(self, request, pk=None):
+        return PersonalInfo()._deletepersonalinfo(request, pk)
+    
+
+class UsersAdditionalInfoSerializerView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=UsersAdditionalInfoSerializer)
+    def create(self, request):
+        return AdditionalInfo()._createadditionalinfo(request)
+    
+    @swagger_auto_schema(request_body=UsersAdditionalInfoSerializer)
+    def update(self, request, pk=None):
+        return AdditionalInfo()._updateadditionalinfo(request, pk)
+    
+    @swagger_auto_schema()
+    def retrieve(self, request, pk=None):
+        return AdditionalInfo()._retrieveadditionalinfo(request, pk)
+    
+    @swagger_auto_schema()
+    def destroy(self, request, pk=None):
+        return AdditionalInfo()._deleteadditionalinfo(request, pk)
         
         
 class UsersAstroDetailSerializerView(viewsets.ViewSet):
@@ -175,85 +256,6 @@ class UsersAstroDetailSerializerView(viewsets.ViewSet):
         )
     
     
-class UserProfileSerializerView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
-    
-    @swagger_auto_schema(request_body=UserProfileSerializer)
-    def create(self, request):
-        return UserProfileService()._createprofileid(request)
-        
-    @swagger_auto_schema(request_body=UserProfileSerializer)
-    def update(self, request, pk=None):
-        return UserProfileService()._updateprofileid(request, pk)
-    
-    @swagger_auto_schema()
-    def retrieve(self, request, pk=None):
-        return UserProfileService()._retrieveprofileid(request, pk)
-    
-    @swagger_auto_schema()
-    def destroy(self, request, pk=None):
-        return UserProfileService()._destroyprofileid(request, pk)
-        
-            
-class UsersBasicInfoSerializerView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
-    
-    @swagger_auto_schema(request_body=UsersBasicInfoSerializer)
-    def create(self, request):
-        return BasicInfo()._createbasicinfo(request)
-    
-    @swagger_auto_schema(request_body=UsersBasicInfoSerializer)
-    def update(self, request, pk=None):
-        return BasicInfo()._updatebasicinfo(request, pk)
-    
-    @swagger_auto_schema()
-    def retrieve(self, request, pk=None):
-        return BasicInfo()._retrievebasicinfo(request, pk)
-    
-    @swagger_auto_schema()
-    def destroy(self, request, pk=None):
-        return BasicInfo()._destroybasicinfo(request, pk)
-    
-    
-class UsersPersonalInfoSerializerView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
-    
-    @swagger_auto_schema(request_body=UsersPersonalInfoSerializer)
-    def create(self, request):
-        return PersonalInfo()._createpersonalinfo(request)
-    
-    @swagger_auto_schema(request_body=UsersPersonalInfoSerializer)
-    def update(self, request, pk=None):
-        return PersonalInfo()._updatepersonalinfo(request, pk)
-    
-    @swagger_auto_schema()
-    def retrieve(self, request, pk=None):
-        return PersonalInfo()._retrievepersonalinfo(request, pk)
-    
-    @swagger_auto_schema()
-    def destroy(self, request, pk=None):
-        return PersonalInfo()._deletepersonalinfo(request, pk)
-    
-
-class UsersAdditionalInfoSerializerView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
-    
-    @swagger_auto_schema(request_body=UsersAdditionalInfoSerializer)
-    def create(self, request):
-        return AdditionalInfo()._createadditionalinfo(request)
-    
-    @swagger_auto_schema(request_body=UsersAdditionalInfoSerializer)
-    def update(self, request, pk=None):
-        return AdditionalInfo()._updateadditionalinfo(request, pk)
-    
-    @swagger_auto_schema()
-    def retrieve(self, request, pk=None):
-        return AdditionalInfo()._retrieveadditionalinfo(request, pk)
-    
-    @swagger_auto_schema()
-    def destroy(self, request, pk=None):
-        return AdditionalInfo()._deleteadditionalinfo(request, pk)
-    
     
 class UsersFeaturedImagesSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
@@ -313,3 +315,23 @@ class UsersCareerSerializerView(viewsets.ViewSet):
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return Career()._destroycareerdetail(request, pk)
+    
+    
+class UsersPartnerPreferenceSerializerView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=UsersPartnerPreferenceSerializer)
+    def create(self, request):
+        return PartnerPreference()._createpartnerpreferencedetail(request)
+    
+    @swagger_auto_schema(request_body=UsersPartnerPreferenceSerializer)
+    def update(self, request, pk=None):
+        return PartnerPreference()._updatepartnerpreferencedetail(request, pk)
+    
+    @swagger_auto_schema()
+    def retrieve(self, request, pk=None):
+        return PartnerPreference()._retrievepartnerpreferencedetail(request, pk)
+    
+    @swagger_auto_schema()
+    def destroy(self, request, pk=None):
+        return PartnerPreference()._destroypartnerpreferencedetail(request, pk)

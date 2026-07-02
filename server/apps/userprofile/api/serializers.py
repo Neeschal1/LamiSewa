@@ -116,3 +116,21 @@ class UsersAstroDetailSerializer(serializers.ModelSerializer):
             "sunshine": {"required": True},
             "moon_sign": {"required": True},
         }
+        
+        
+class UsersPartnerPreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsersPartnerPreference
+        fields = '__all__'
+        extra_kwargs = {
+            "userprofileid": {"write_only": True},
+            "age_ranging": {"required": True},
+            "maritalstatus": {"required": True},
+            "living_in": {"required": True},
+            "partner_religion": {"required": True},
+            "partner_diet": {"required": True},
+            "partner_education": {"required": True},
+            "partner_profession": {"required": True},
+            "partner_mangalik": {"required": True},
+            "preference_summary": {"read_only": True},
+        }
