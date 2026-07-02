@@ -104,3 +104,15 @@ class UsersFamilyDetailSerializer(serializers.ModelSerializer):
             "total_family_members": {"required": True},
             "siblings": {"required": True},
         }
+        
+        
+class UsersAstroDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsersAstroDetail
+        fields = '__all__'
+        extra_kwargs = {
+            "userprofileid": {"write_only": True},
+            "mangalik": {"required": True},
+            "sunshine": {"required": True},
+            "moon_sign": {"required": True},
+        }

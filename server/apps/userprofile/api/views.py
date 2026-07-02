@@ -14,6 +14,7 @@ from apps.userprofile.services.career import Career
 from apps.userprofile.services.hobbies import Hobbies
 from drf_yasg.utils import swagger_auto_schema
 
+
 class UsersFamilyDetailSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     
@@ -90,6 +91,86 @@ class UsersFamilyDetailSerializerView(viewsets.ViewSet):
             )
         return validators.ValidationError(
             {"message": "Couldn't delete user's family detail!"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+        
+        
+class UsersAstroDetailSerializerView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=UsersAstroDetailSerializer)
+    def create(self, request):
+        userastro = UsersAstroDetailSerializer(data=request.data)
+        if userastro.is_valid(raise_exception=True):
+            userinfo = UsersAstroDetail.objects.create(
+                userprofileid=userastro.validated_data["userprofileid"],
+                mangalik=userastro.validated_data["mangalik"],
+                sunshine=userastro.validated_data["sunshine"],
+                moon_sign=userastro.validated_data["moon_sign"],
+            )
+            return Response(
+                {
+                    "message": f"Successfully created users astro detail.",
+                    "Profile Info": {
+                        "Name": userinfo.userprofileid.userid.first_name,
+                        "ProfileID": userinfo.userprofileid.profileid,
+                        "PhoneNumber": userinfo.userprofileid.phonenumber,
+                    },
+                    "data": UsersAstroDetailSerializer(userinfo).data,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        return Response(
+            {"message": "Couldn't create user's astro detail."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+        
+    @swagger_auto_schema(request_body=UsersAstroDetailSerializer)
+    def update(self, request, pk=None):
+        usersastrodetail = get_object_or_404(UsersAstroDetail, id=pk)
+        serializer = UsersAstroDetailSerializer(usersastrodetail, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(
+                {
+                    "message": "User's astro detail updated successfully",
+                    "data": serializer.data,
+                }
+            )
+        return validators.ValidationError(
+            {"message": "Couldn't update user's astro detail."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    
+    @swagger_auto_schema()
+    def retrieve(self, request, pk=None):
+        usersastrodata = get_object_or_404(UsersAstroDetail, id=pk)
+        serializer = UsersAstroDetailSerializer(usersastrodata, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            return Response(
+                {
+                    "message": "User's astro detail retrieved!",
+                    "data": serializer.data
+                },
+                status=status.HTTP_200_OK,
+            )
+        return validators.ValidationError(
+            {"message": "Couldn't fetch user's astro detail."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    
+    @swagger_auto_schema()
+    def destroy(self, request, pk=None):
+        usersastrodata = get_object_or_404(UsersAstroDetail, id=pk)
+        if usersastrodata:
+            usersastrodata.delete()
+            return Response(
+                {"message": "User's astro details deleted successfully :)"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        return validators.ValidationError(
+            {"message": "Couldn't delete user's astro detail!"},
             status=status.HTTP_400_BAD_REQUEST,
         )
     

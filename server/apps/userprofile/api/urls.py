@@ -13,6 +13,7 @@ router.register('user-profile/featured-images-details', UsersFeaturedImagesSeria
 router.register('user-profile/hobbies-list', UsersHobbiesSerializerView, basename="hobbiesdata")
 router.register('user-profile/career-info', UsersCareerSerializerView, basename="careerinfo")
 router.register('user-profile/family-detail', UsersFamilyDetailSerializerView, basename="familydetail")
+router.register('user-profile/astro-detail', UsersAstroDetailSerializerView, basename="astrodetails")
 
 urlpatterns = [
     path('', include(router.urls))
