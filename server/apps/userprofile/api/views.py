@@ -109,3 +109,23 @@ class UsersFeaturedImagesSerializerView(viewsets.ViewSet):
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return FeaturedPictures()._destroyfeaturedimages(request, pk)
+    
+    
+class UsersHobbiesSerializerView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=UsersFeaturedImagesSerializer)
+    def create(self, request):
+        return FeaturedPictures()._createfeaturedimages(request)
+    
+    @swagger_auto_schema(request_body=UsersFeaturedImagesSerializer)
+    def update(self, request, pk=None):
+        return FeaturedPictures()._updatefeaturedimages(request, pk)
+    
+    @swagger_auto_schema()
+    def retrieve(self, request, pk=None):
+        return FeaturedPictures()._retrievefeaturedimages(request, pk)
+    
+    @swagger_auto_schema()
+    def destroy(self, request, pk=None):
+        return FeaturedPictures()._destroyfeaturedimages(request, pk)

@@ -9,14 +9,7 @@ class FeaturedPictures:
         user = UsersFeaturedImagesSerializer(data=request.data)
 
         if user.is_valid(raise_exception=True):
-            userinfo = UsersFeaturedImages.objects.create(
-                userprofileid=user.validated_data["userprofileid"],
-                image1=user.validated_data["image1"],
-                image2=user.validated_data["image2"],
-                image3=user.validated_data["image3"],
-                image4=user.validated_data["image4"],
-                image5=user.validated_data["image5"],
-            )
+            userinfo = user.save()
             return Response(
                 {
                     "message": f"Successfully set up user's featured images.",
