@@ -125,9 +125,10 @@ class UsersPartnerPreference(models.Model):
     
     
 class UsersStories(models.Model):
-    userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='stories')
+    userprofileid = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='stories')
     story = models.URLField(blank=True)
     storyviews = models.IntegerField(default=0)
     
     def __str__(self):
         return f"Story kept by: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
+    
