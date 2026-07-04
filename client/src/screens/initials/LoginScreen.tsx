@@ -1,7 +1,11 @@
 import axios from "axios";
 import { View, StatusBar, ImageBackground, Dimensions } from "react-native";
 import React, { FC, useState } from "react";
-import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
+import Animated, {
+  FadeInUp,
+  FadeInDown,
+  BounceIn,
+} from "react-native-reanimated";
 import {
   Description,
   InputFields,
@@ -12,6 +16,7 @@ import {
   SubTitle,
   TextualButton,
   InputPassword,
+  ErrorText,
 } from "@/src/components/systemComponentsLayout";
 import HandleLoginService from "@/src/services/accounts/login";
 import { useAuth } from "@/src/auth/AuthContext";
@@ -27,8 +32,12 @@ const Login: FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [seePassword, setSeePassword] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleLogin = async () => {
+    setLoading(true)
     try {
       if (email && password) {
         const accessToken = await HandleLoginService(email, password);
@@ -36,11 +45,26 @@ const Login: FC = () => {
       }
     } catch (e) {
       if (axios.isAxiosError(e)) {
+        const status = e.response?.status;
+        const response = e.response?.data;
+
+        if (status === 404 || status === 401) {
+          setError(true);
+          setErrorMessage(response["Message"]);
+        }
+
+        setTimeout(() => {
+          setError(false);
+          setErrorMessage("");
+        }, 5000);
+
         console.log("Status:", e.response?.status);
         console.log("Response:", e.response?.data);
       } else {
-        console.log(e);
+        console.log("Issue: ", e);
       }
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -48,14 +72,26 @@ const Login: FC = () => {
     <View className="flex-1 items-start justify-start bg-background">
       <StatusBar hidden translucent />
       <ImageBackground
+        source={loginBanner}
         style={{
           height: screenheight * 0.31,
           width: "100%",
         }}
-        className="w-full flex h-10"
-        source={loginBanner}
+        className="items-center justify-center"
       >
-        <View></View>
+        {error && (
+          <Animated.View
+            entering={BounceIn.delay(200).duration(300)}
+            className="bg-background p-4 mt-[-60px] rounded-2xl"
+            style={{
+              width: "90%",
+              alignItems: "center",
+              paddingHorizontal: 20,
+            }}
+          >
+            <ErrorText text={errorMessage} />
+          </Animated.View>
+        )}
       </ImageBackground>
       <View className="flex w-full p-screen rounded-3xl gap-extralarge items-center mt-[-100px] bg-background">
         <View className="flex gap-large">
@@ -107,7 +143,7 @@ const Login: FC = () => {
         <Animated.View
           entering={FadeInDown.delay(800).duration(400).springify()}
         >
-          <PrimaryButton text="Login" action={handleLogin} />
+          <PrimaryButton text={loading ? "Loading..." : "Login"} action={handleLogin} />
         </Animated.View>
         <View className="flex w-full items-center justify-center gap-mid">
           <Animated.View

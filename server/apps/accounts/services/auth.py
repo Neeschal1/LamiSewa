@@ -8,7 +8,7 @@ from rest_framework import status
 class UserAuth:
     def _login(self, email: str, password: str) -> Response:
         if not User.objects.filter(email = email).exists():
-            return Response({"Message":"User didn't found with the email provided. So sorry for your inconvenience :("})
+            return Response({"Message":"User didn't found with the email provided. So sorry for your inconvenience :("}, status=status.HTTP_404_NOT_FOUND)
         user = User.objects.get(email = email)
         
         refresh = RefreshToken.for_user(user)
@@ -21,7 +21,7 @@ class UserAuth:
                 "refreshtoken": refresh_token
             }})
         
-        return Response({"Message":"Invalid Credentials. So Sorry :("})
+        return Response({"Message":"Invalid Credentials. So Sorry :("}, status=status.HTTP_401_UNAUTHORIZED)
     
     
 

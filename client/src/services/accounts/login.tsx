@@ -12,6 +12,7 @@ const HandleLoginService = async (
     password: password,
   };
   const res = await api.post(API.ACCOUNTS.LOGIN, loginData);
+  console.log(res.data)
   await saveTokens(res.data.Tokens.accesstoken);
   return res.data.Tokens.accesstoken;
 };

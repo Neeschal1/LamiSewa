@@ -29,6 +29,7 @@ import {
   RootStackParamList,
 } from "@/src/components/componentsType";
 import { useNavigation } from "expo-router";
+import { useAuth } from "@/src/auth/AuthContext";
 
 type AccountType = {
   item: number;
@@ -116,9 +117,14 @@ const Others: OthersType[] = [
 const { width, height } = Dimensions.get("window");
 
 const Profile: FC = () => {
+  const { logout } = useAuth();
   const [enabled, setEnabled] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
+
+  const handleLogOut = async () => {
+    await logout();
+  };
 
   return (
     <View className="flex-1 items-center justify-start bg-background">
@@ -262,6 +268,12 @@ const Profile: FC = () => {
               thumbColor={enabled ? "#FFFFFF" : "#FFFFFF"}
             />
           </View>
+        </View>
+
+        <View>
+          <TouchableOpacity onPress={handleLogOut}>
+            <Text>LOGOUT!!!!!!!!!!!!!!!!!</Text>
+          </TouchableOpacity>
         </View>
 
         <View className="flex w-full items-start p-screen">
