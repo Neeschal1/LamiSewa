@@ -2,9 +2,8 @@ from apps.userprofile.models.entities import UserProfile
 from rest_framework.response import Response
 from apps.userprofile.api.serializers import *
 from rest_framework import status, validators
-from env_config import Config
 import random
-import requests
+from .smsservice import SendOTP
 from django.shortcuts import get_object_or_404
 
 
@@ -12,33 +11,6 @@ class UserProfileService:
     def _generate_profile_id(self):
         randomnumber = str(random.randint(100000, 999999))
         return f"BB00{randomnumber}"
-    
-    
-    def _send_sms(self, phone_number, name):
-        otpcode = random.randint(100000, 999999)
-        
-        payload = {
-            "token": Config.SPARROW_SMS_TOKEN,
-            "from": f"{Config.SPARROW_SMS_FROM}",
-            "to": phone_number,
-            "text": f"""Hey {name}, your LamiSewa verification code is {otpcode}. This code is valid for 2 minutes. Please do not share it with anyone. 
-            
-              Thank You :)
-            Team Lamisewa"""
-        }
-        try:
-            response = requests.post(Config.SPARROW_SMS_URL, data=payload)
-            response.raise_for_status()
-            return {
-                "success": True,
-                "response": response.json()
-            }
-            
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e)
-            }
 
 
     def _createprofileid(self, request) -> Response:
@@ -58,7 +30,7 @@ class UserProfileService:
             profileid=profile_id,
         )
         
-        self._send_sms(phonenumber, profile.userid.first_name)
+        SendOTP()._send_sms(phonenumber, profile.userid.first_name, "verification") 
 
         return Response(
             {
