@@ -23,14 +23,19 @@ import {
   TextualButton,
   SubTitle,
 } from "@/src/components/systemComponentsLayout";
+import { getData } from "@/src/storage/Ids";
+import HandleAccountCredentials from "@/src/services/accounts/credentials";
 
 const mailInboxImage = require("@/src/assets/images/mails.png");
 
 const SignupVerification = () => {
-  const [timer, setTimer] = useState<number>(60);
+  const [timer, setTimer] = useState<number>(120);
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [checkOTPState, setCheckOTPState] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<string>("");
+
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [name, setName] = useState<string>("");
 
   useEffect(() => {
     if (timer === 0) return;
@@ -58,6 +63,33 @@ const SignupVerification = () => {
     }
   };
 
+  useEffect(() => {
+    const userdata = async () => {
+      const details = (await getData()) as {
+        fullname: string;
+        email: string;
+        phonenumber: string;
+      };
+      if (details) {
+        setPhoneNumber(details.phonenumber);
+        setName(details.fullname);
+      }
+    };
+
+    userdata();
+  }, []);
+
+  const handleResend = async () => {
+    setTimer(120);
+    await HandleAccountCredentials(name, phoneNumber);
+    console.log(
+      "Your Data: \nFullName: ",
+      name,
+      "\nPhone Number: ",
+      phoneNumber,
+    );
+  };
+
   const formattedTime = `00:${timer.toString().padStart(2, "0")}`;
 
   return (
@@ -81,12 +113,14 @@ const SignupVerification = () => {
               <Animated.View
                 entering={FadeInUp.delay(300).duration(400).springify()}
               >
-                <MainScreenName text="Verify your Email" />
+                <MainScreenName text="Verify your Number" />
               </Animated.View>
               <Animated.View
                 entering={FadeInUp.delay(400).duration(400).springify()}
               >
-                <SubText text="We’ve sent you a 6-digit verification code to your email or phone or both. Please enter the code in order to verify it’s you." />
+                <SubText
+                  text={`We’ve sent a 6-digit verification code to +${phoneNumber} to ${name}. Please enter the code in order to verify it’s you.`}
+                />
               </Animated.View>
             </View>
 
@@ -97,7 +131,7 @@ const SignupVerification = () => {
               >
                 <View className="flex flex-row items-center w-full justify-between">
                   <Title text="Enter your Code" />
-                  <Description text={`Code expires in ${formattedTime}`} />
+                  {timer === 0 ? null : <Description text={`Code expires in ${formattedTime}`} />}
                 </View>
                 <View className="flex-row gap-2">
                   <OTPInputFields otp={otp} setOtp={setOtp} />
@@ -122,7 +156,7 @@ const SignupVerification = () => {
               {timer === 0 && (
                 <View className="flex flex-row items-center gap-2">
                   <SubTitle text="Didn't receive the code?" />
-                  <TextualButton text="Resend it" />
+                  <TextualButton action={handleResend} text="Resend it" />
                 </View>
               )}
             </View>

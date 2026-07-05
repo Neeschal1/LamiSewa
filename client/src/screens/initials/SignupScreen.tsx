@@ -19,6 +19,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
 import CountryPicker, { CountryCode } from "react-native-country-picker-modal";
 import HandleAccountCredentials from "@/src/services/accounts/credentials";
+import { saveData } from "@/src/storage/Ids";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
 
 const facebookLogo = require("@/src/assets/images/facebook.png");
 const googleLogo = require("@/src/assets/images/google.png");
@@ -35,7 +38,9 @@ const Signup = () => {
   const [showMessage, setShowMessage] = useState<string>("");
   const [isSelected, setIsSelection] = useState(false);
 
-  const handleButtonPress = () => {
+  const navigation = useNavigation<NavigationProps>()
+
+  const handleButtonPress = async () => {
     if (name === "" || email === "" || phone === "") {
       setCheckFilledState(true);
       setShowMessage("Fill up all the credentials first!");
@@ -45,6 +50,15 @@ const Signup = () => {
     } else {
       setCheckFilledState(false);
       const mobile = country["callingCode"][0] + "" + phone;
+
+      const data = {
+        fullname: name,
+        email: email,
+        phonenumber: mobile
+      }
+
+      await saveData(data)
+
       const phoneNumber = Number(mobile);
       console.log(
         "\nName: ",
@@ -58,6 +72,8 @@ const Signup = () => {
       );
 
       HandleAccountCredentials(name, mobile)
+
+      navigation.navigate("SignupVerification")
     }
   };
 
@@ -157,7 +173,6 @@ const Signup = () => {
           <PrimaryButton
             action={handleButtonPress}
             text="Proceed"
-            screen="SignupVerification"
           />
         </Animated.View>
 

@@ -1,23 +1,30 @@
 import * as SecureStore from "expo-secure-store";
 
-export const saveID = async (id: string) => {
+export const saveData = async (data: any) => {
   try {
-    await SecureStore.setItemAsync("userid", id);
+    await SecureStore.setItemAsync(
+      "userdata",
+      JSON.stringify(data)
+    );
   } catch (err) {
-    return err;
+    console.log(err);
   }
 };
 
-export const getID = async () => {
+export const getData = async () => {
   try {
-    const id = await SecureStore.getItem("userid");
-    return id;
+    const data = await SecureStore.getItemAsync("userdata");
+
+    if (!data) return null;
+
+    return JSON.parse(data);
   } catch (err) {
-    return err;
+    console.log(err);
+    return null;
   }
 };
 
-export const clearID = async () => {
+export const clearData = async () => {
   try {
     await SecureStore.deleteItemAsync("userid");
   } catch (err) {
