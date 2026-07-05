@@ -48,9 +48,6 @@ MIDDLEWARE = [
 ]
 
 
-# Cors Setup
-# CORS_ALLOWED_ORIGINS = [Config.CORSALLOWEDCLIENT]
-
 CORS_ALLOW_METHODS = (
     "DELETE",
     "GET",

@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .smsservice import SendOTP
+from django.core.cache import cache
 
 
 class UserAuth:
@@ -63,6 +64,15 @@ class UserAuth:
         type="Account Activation/Verification"
         sms = SendOTP()
         result = sms._send_sms(phonenumber, name, type)
+        
+        try:
+            user = User.objects.get(first_name = name)
+        except User.DoesNotExist:
+            return Response({"Message": f"{name} doesnot exists. Sorry :("}, status=status.HTTP_404_NOT_FOUND)
+        
+        unique_attribute = user.email
+        cache.set(f"users_info_{unique_attribute}", result, timeout=120)
+        
         if not result["success"]:
             return Response({"Message": result["error"]},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response({"Message": "OTP sent successfully!"},status=status.HTTP_200_OK)
