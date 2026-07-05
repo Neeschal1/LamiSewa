@@ -5,7 +5,7 @@ from env_config import Config
 class SendOTP:
     
     def _send_sms(self, phone_number, name, type):
-        otpcode = random.randint(100000, 999999)
+        otpcode = str(random.randint(100000, 999999))
         
         payload = {
             "token": Config.SPARROW_SMS_TOKEN,
@@ -21,7 +21,8 @@ class SendOTP:
             response.raise_for_status()
             return {
                 "success": True,
-                "response": response.json()
+                "response": response.json(),
+                "otpcode": otpcode
             }
             
         except Exception as e:

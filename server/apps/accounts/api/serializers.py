@@ -24,3 +24,8 @@ class UserAccountCredentialsSetupSerializer(serializers.Serializer):
     username = serializers.CharField()
     fullname = serializers.CharField()
     email = serializers.EmailField()
+    
+
+class VerifyOTPSerializer(serializers.Serializer):
+    otp = serializers.CharField()
+    email = serializers.EmailField()

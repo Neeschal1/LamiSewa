@@ -44,3 +44,15 @@ class UserAccountCredentialsSetupSerializerView(viewsets.ViewSet):
             phonenumber = serializers.validated_data['username']
             email = serializers.validated_data['email']
             return UserAuth()._verifycredentials(name, phonenumber, email)
+        
+        
+class VerifyOTPSerializerView(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+    
+    @swagger_auto_schema(request_body=VerifyOTPSerializer)
+    def create(self, request):
+        serializers = VerifyOTPSerializer(data=request.data)
+        if serializers.is_valid(raise_exception=True):
+            mail = serializers.validated_data['email']
+            otpcode = serializers.validated_data['otp']
+            return UserAuth()._verifyotpcode(mail, otpcode)

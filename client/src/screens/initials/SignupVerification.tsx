@@ -36,6 +36,7 @@ const SignupVerification = () => {
 
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
     if (timer === 0) return;
@@ -73,6 +74,7 @@ const SignupVerification = () => {
       if (details) {
         setPhoneNumber(details.phonenumber);
         setName(details.fullname);
+        setEmail(details.email)
       }
     };
 
@@ -81,13 +83,7 @@ const SignupVerification = () => {
 
   const handleResend = async () => {
     setTimer(120);
-    await HandleAccountCredentials(name, phoneNumber);
-    console.log(
-      "Your Data: \nFullName: ",
-      name,
-      "\nPhone Number: ",
-      phoneNumber,
-    );
+    HandleAccountCredentials(name, phoneNumber, email);
   };
 
   const formattedTime = `00:${timer.toString().padStart(2, "0")}`;

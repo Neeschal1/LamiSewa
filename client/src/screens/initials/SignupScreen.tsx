@@ -50,29 +50,13 @@ const Signup = () => {
     } else {
       setCheckFilledState(false);
       const mobile = country["callingCode"][0] + "" + phone;
-
       const data = {
         fullname: name,
         email: email,
         phonenumber: mobile
       }
-
       await saveData(data)
-
-      const phoneNumber = Number(mobile);
-      console.log(
-        "\nName: ",
-        name,
-        "\nEmail: ",
-        email,
-        "\nPhone Number: ",
-        phoneNumber,
-        "\nisChecked?: ",
-        isSelected,
-      );
-
-      HandleAccountCredentials(name, mobile)
-
+      HandleAccountCredentials(name, mobile, email)
       navigation.navigate("SignupVerification")
     }
   };

@@ -65,13 +65,18 @@ class UserAuth:
                 sms = SendOTP()
                 result = sms._send_sms(phonenumber, name, type)
                 
+                print(result)
+                
                 try:
                     user = User.objects.get(first_name = name)
                 except User.DoesNotExist:
                     return Response({"Message": f"{name} doesnot exists. Sorry :("}, status=status.HTTP_404_NOT_FOUND)
                 
                 unique_attribute = user.email
-                cache.set(f"users_info_{unique_attribute}", result, timeout=120)
+                
+                if result["success"] == True:
+                    cache.set(f"users_info_{unique_attribute}", result, timeout=120)
+                
                 if not result["success"]:
                     return Response({"Message": result["error"]},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 return Response({"Message": "OTP sent successfully!"},status=status.HTTP_200_OK)
@@ -79,5 +84,16 @@ class UserAuth:
         except User.DoesNotExist:
             return Response({
                 "Message":"An account is already signed up with the entered email. Please choose another account. Thank you :)"}, status=status.HTTP_401_UNAUTHORIZED)
+            
+    
+    def _verifyotpcode(self, email: str, otp: str) -> Response:
+        try:
+            user = User.objects.filter(email = email).exists()
+        except User.DoesNotExist:
+            return Response({"Message": f"Invalid {email}!"}, status=status.HTTP_404_NOT_FOUND)
         
-        
+        if user:
+            storedotpcode = cache.get(f"users_info_{email}")
+            if otp == storedotpcode["otpcode"]:
+                return Response({"Message": "Credentials successfully verified!"}, status=status.HTTP_200_OK)
+            return Response({"Message": "The OTP you entered is incorrect. Please try again."},status=status.HTTP_400_BAD_REQUEST)
