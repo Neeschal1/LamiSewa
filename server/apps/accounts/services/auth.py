@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
+from .smsservice import SendOTP
 
 
 class UserAuth:
@@ -56,3 +57,12 @@ class UserAuth:
                     "refreshtoken": refresh_token}}, 
                 "Total number of users": number_of_users}, 
             status = status.HTTP_201_CREATED)
+        
+    
+    def _verifycredentials(self, name: str, phonenumber: str) -> Response:
+        type="Account Activation/Verification"
+        sms = SendOTP()
+        result = sms._send_sms(phonenumber, name, type)
+        if not result["success"]:
+            return Response({"Message": result["error"]},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"Message": "OTP sent successfully!"},status=status.HTTP_200_OK)

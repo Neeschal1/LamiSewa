@@ -18,6 +18,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
 import CountryPicker, { CountryCode } from "react-native-country-picker-modal";
+import HandleAccountCredentials from "@/src/services/accounts/credentials";
 
 const facebookLogo = require("@/src/assets/images/facebook.png");
 const googleLogo = require("@/src/assets/images/google.png");
@@ -55,6 +56,8 @@ const Signup = () => {
         "\nisChecked?: ",
         isSelected,
       );
+
+      HandleAccountCredentials(name, mobile)
     }
   };
 

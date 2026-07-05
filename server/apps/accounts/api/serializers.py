@@ -18,3 +18,8 @@ class UserAccountSignupSerializers(serializers.ModelSerializer):
 class UserAccountLoginSerializers(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'})
+
+
+class UserAccountCredentialsSetupSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    fullname = serializers.CharField()

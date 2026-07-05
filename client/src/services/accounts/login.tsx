@@ -1,6 +1,5 @@
 import { API } from "@/src/constants/apiEndpoints";
 import api from "../api";
-import axios from "axios";
 import { saveTokens } from "@/src/storage/Tokens";
 
 const HandleLoginService = async (

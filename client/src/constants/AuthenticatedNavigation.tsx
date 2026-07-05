@@ -34,11 +34,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const AuthenticatedNavigation = () => {
   return (
     <Stack.Navigator initialRouteName="MyTabs" screenOptions={{headerShown: false}}>
-      <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={optionsScreens} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} options={optionsScreens} />
       <Stack.Screen name="Password" component={Password} options={optionsScreens} />
       <Stack.Screen name="SetNewPassword" component={SetNewPassword} options={optionsScreens} />
-      <Stack.Screen name="SignupVerification" component={SignupVerification} options={optionsScreens} />
       <Stack.Screen name="BasicInfo" component={BasicInfo} options={ProfileScreens("Basic Info(1/6)")} />
       <Stack.Screen name="CasualInfo" component={CasualInfo} options={ProfileScreens("Casual Info(2/6)")} />
       <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} options={ProfileScreens("Additional Info(4/6)")} />

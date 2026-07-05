@@ -3,6 +3,8 @@ import {
   Welcome,
   Login,
   Signup,
+  SignupVerification,
+  ForgotPassword,
 } from "@/src/screens/initials/initialScreensLayout";
 import { RootStackParamList } from "../components/componentsType";
 
@@ -17,8 +19,19 @@ const UnauthenticatedNavigation = () => {
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Login" component={Login} />
+
+      
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={optionsScreens} />
+      <Stack.Screen name="SignupVerification" component={SignupVerification} options={optionsScreens} />
     </Stack.Navigator>
   );
 };
 
 export default UnauthenticatedNavigation;
+
+const optionsScreens = {
+  headerShown: true,
+  headerTransparent: true,
+  headerTitle: " ",
+  headerTintColor: "#000000",
+};

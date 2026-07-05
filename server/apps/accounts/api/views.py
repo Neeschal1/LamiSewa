@@ -31,3 +31,15 @@ class UserAccountLoginSerializerView(viewsets.ViewSet):
             email = serializers.validated_data['email']
             password = serializers.validated_data['password']
             return UserAuth()._login(email, password)
+        
+
+class UserAccountCredentialsSetupSerializerView(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+    
+    @swagger_auto_schema(request_body=UserAccountCredentialsSetupSerializer)
+    def create(self, request):
+        serializers = UserAccountCredentialsSetupSerializer(data=request.data)
+        if serializers.is_valid(raise_exception=True):
+            name = serializers.validated_data['fullname']
+            phonenumber = serializers.validated_data['username']
+            return UserAuth()._verifycredentials(name, phonenumber)
