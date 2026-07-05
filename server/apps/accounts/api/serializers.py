@@ -23,3 +23,4 @@ class UserAccountLoginSerializers(serializers.Serializer):
 class UserAccountCredentialsSetupSerializer(serializers.Serializer):
     username = serializers.CharField()
     fullname = serializers.CharField()
+    email = serializers.EmailField()

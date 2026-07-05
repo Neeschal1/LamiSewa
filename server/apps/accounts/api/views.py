@@ -42,4 +42,5 @@ class UserAccountCredentialsSetupSerializerView(viewsets.ViewSet):
         if serializers.is_valid(raise_exception=True):
             name = serializers.validated_data['fullname']
             phonenumber = serializers.validated_data['username']
-            return UserAuth()._verifycredentials(name, phonenumber)
+            email = serializers.validated_data['email']
+            return UserAuth()._verifycredentials(name, phonenumber, email)

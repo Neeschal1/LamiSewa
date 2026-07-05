@@ -31,9 +31,6 @@ class UserAuth:
         if (User.objects.filter(email=email).exists()):
             return Response({"Message":"An account is already signed up with the entered email. Please choose another account. Thank you :)"})
         
-        if (User.objects.filter(username=username).exists()):
-            return Response({"Message":"That username is already taken. Please choose something else that best suits you :)"})
-        
         user = User.objects.create(
             first_name = firstname,
             email = email,
@@ -60,19 +57,27 @@ class UserAuth:
             status = status.HTTP_201_CREATED)
         
     
-    def _verifycredentials(self, name: str, phonenumber: str) -> Response:
-        type="Account Activation/Verification"
-        sms = SendOTP()
-        result = sms._send_sms(phonenumber, name, type)
-        
+    def _verifycredentials(self, name: str, phonenumber: str, email: str) -> Response:
         try:
-            user = User.objects.get(first_name = name)
+            useremail = User.objects.filter(email=email).exists()
+            if useremail:
+                type="Account Activation/Verification"
+                sms = SendOTP()
+                result = sms._send_sms(phonenumber, name, type)
+                
+                try:
+                    user = User.objects.get(first_name = name)
+                except User.DoesNotExist:
+                    return Response({"Message": f"{name} doesnot exists. Sorry :("}, status=status.HTTP_404_NOT_FOUND)
+                
+                unique_attribute = user.email
+                cache.set(f"users_info_{unique_attribute}", result, timeout=120)
+                if not result["success"]:
+                    return Response({"Message": result["error"]},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({"Message": "OTP sent successfully!"},status=status.HTTP_200_OK)
+            return Response({"Message": "User with that email didn't found :("}, status=status.HTTP_404_NOT_FOUND)
         except User.DoesNotExist:
-            return Response({"Message": f"{name} doesnot exists. Sorry :("}, status=status.HTTP_404_NOT_FOUND)
+            return Response({
+                "Message":"An account is already signed up with the entered email. Please choose another account. Thank you :)"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        unique_attribute = user.email
-        cache.set(f"users_info_{unique_attribute}", result, timeout=120)
         
-        if not result["success"]:
-            return Response({"Message": result["error"]},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response({"Message": "OTP sent successfully!"},status=status.HTTP_200_OK)
