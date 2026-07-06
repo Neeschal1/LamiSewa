@@ -25,6 +25,10 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import { getData } from "@/src/storage/Ids";
 import HandleAccountCredentials from "@/src/services/accounts/credentials";
+import HandleOTPVerification from "@/src/services/accounts/otpverification";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
+import axios from "axios";
 
 const mailInboxImage = require("@/src/assets/images/mails.png");
 
@@ -38,6 +42,11 @@ const SignupVerification = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
+  const [error, setError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>("")
+
+  const navigation = useNavigation<NavigationProps>();
+
   useEffect(() => {
     if (timer === 0) return;
 
@@ -48,19 +57,42 @@ const SignupVerification = () => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const handleOTPAction = () => {
+  const handleOTPAction = async () => {
     const otpCode = otp.join("");
     if (otpCode.length != 6) {
       setCheckOTPState(true);
       setShowMessage("Enter complete OTP codes!");
     } else {
       setCheckOTPState(false);
-      let stringOTP = "";
-      for (let i = 0; i < otp.length; i++) {
-        stringOTP += otp[i];
+    }
+    let stringOTP = "";
+    for (let i = 0; i < otp.length; i++) {
+      stringOTP += otp[i];
+    }
+    try{
+      const otpdata = HandleOTPVerification(email, stringOTP);
+      const statuscode = (await otpdata).status
+      if (statuscode === 200){
+        navigation.navigate("Password");
       }
-      const numberOTP = Number(stringOTP);
-      console.log("Your Entered OTP: ", numberOTP);
+    } catch (e) {
+      console.log("Error: ", e)
+      if (axios.isAxiosError(e)) {
+        const status = e.response?.status;
+        const response = e.response?.data;
+
+        if (status === 404 || status === 401 || status === 400) {
+          setCheckOTPState(true);
+          setShowMessage(response["Message"]);
+        }
+        setTimeout(() => {
+          setError(false);
+          setErrorMessage("");
+        }, 5000);
+        
+      } else {
+        console.log("Issue: ", e);
+      }
     }
   };
 
@@ -74,7 +106,7 @@ const SignupVerification = () => {
       if (details) {
         setPhoneNumber(details.phonenumber);
         setName(details.fullname);
-        setEmail(details.email)
+        setEmail(details.email);
       }
     };
 
@@ -127,7 +159,9 @@ const SignupVerification = () => {
               >
                 <View className="flex flex-row items-center w-full justify-between">
                   <Title text="Enter your Code" />
-                  {timer === 0 ? null : <Description text={`Code expires in ${formattedTime}`} />}
+                  {timer === 0 ? null : (
+                    <Description text={`Code expires in ${formattedTime}`} />
+                  )}
                 </View>
                 <View className="flex-row gap-2">
                   <OTPInputFields otp={otp} setOtp={setOtp} />
@@ -143,11 +177,7 @@ const SignupVerification = () => {
               <Animated.View
                 entering={FadeInDown.delay(200).duration(400).springify()}
               >
-                <PrimaryButton
-                  action={handleOTPAction}
-                  text="Continue"
-                  screen="Password"
-                />
+                <PrimaryButton action={handleOTPAction} text="Continue" />
               </Animated.View>
               {timer === 0 && (
                 <View className="flex flex-row items-center gap-2">

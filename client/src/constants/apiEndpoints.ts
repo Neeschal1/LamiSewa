@@ -3,6 +3,7 @@ export const API = {
         LOGIN: "/accounts/account-login/",
         SIGNUP: "/accounts/account-signup/",
         ACCOUNTCREDENTIALS: "/accounts/account-credentials-verification/",
+        OTPVERIFICATION: "/accounts/account-credentials-otp-verification/",
     },
     PROFILE: {
         USERPROFILE: "/profiles/userprofile/",

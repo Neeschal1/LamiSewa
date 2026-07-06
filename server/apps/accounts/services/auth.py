@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .smsservice import SendOTP
+import random
 from django.core.cache import cache
 
 
@@ -58,42 +59,49 @@ class UserAuth:
         
     
     def _verifycredentials(self, name: str, phonenumber: str, email: str) -> Response:
-        try:
-            useremail = User.objects.filter(email=email).exists()
-            if useremail:
-                type="Account Activation/Verification"
-                sms = SendOTP()
-                result = sms._send_sms(phonenumber, name, type)
-                
-                print(result)
-                
-                try:
-                    user = User.objects.get(first_name = name)
-                except User.DoesNotExist:
-                    return Response({"Message": f"{name} doesnot exists. Sorry :("}, status=status.HTTP_404_NOT_FOUND)
-                
-                unique_attribute = user.email
-                
-                if result["success"] == True:
-                    cache.set(f"users_info_{unique_attribute}", result, timeout=120)
-                
-                if not result["success"]:
-                    return Response({"Message": result["error"]},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-                return Response({"Message": "OTP sent successfully!"},status=status.HTTP_200_OK)
-            return Response({"Message": "User with that email didn't found :("}, status=status.HTTP_404_NOT_FOUND)
-        except User.DoesNotExist:
-            return Response({
-                "Message":"An account is already signed up with the entered email. Please choose another account. Thank you :)"}, status=status.HTTP_401_UNAUTHORIZED)
+        user_exists = User.objects.filter(email=email).exists()
+
+        if user_exists:
+            return Response({"Message": "An account with this email already exists."}, status=status.HTTP_404_NOT_FOUND)
+        
+        type="Account Activation/Verification"
+            # sms = SendOTP()
+            # result = sms._send_sms(phonenumber, name, type)   
+        result = {"success": True,"otpcode": str(random.randint(100000, 999999))}     
+        print(f"\n\n\n{result["otpcode"]}\n\n\n")      
+        # try:
+        #     user = User.objects.get(first_name = name)
+        # except User.DoesNotExist:
+        #     return Response({"Message": f"{name} doesnot exists. Sorry :("}, status=status.HTTP_404_NOT_FOUND)      
+        if result["success"] == True:
+            cache.set(f"users_info_{email}", result, timeout=120)     
+            print("Saved key:", f"users_info_{email}")
+            print("Saved value:", cache.get(f"users_info_{email}")) 
+        if not result["success"]:
+            return Response({"Message": result["error"]},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"Message": "OTP sent successfully!"},status=status.HTTP_200_OK)
             
     
     def _verifyotpcode(self, email: str, otp: str) -> Response:
+        print("\n\nEmail from request:", email)
+        print("\nCache key:", f"users_info_{email}")
+        print("\nCache value:", cache.get(f"users_info_{email}\n\n")) 
         try:
             user = User.objects.filter(email = email).exists()
         except User.DoesNotExist:
             return Response({"Message": f"Invalid {email}!"}, status=status.HTTP_404_NOT_FOUND)
         
         if user:
-            storedotpcode = cache.get(f"users_info_{email}")
-            if otp == storedotpcode["otpcode"]:
-                return Response({"Message": "Credentials successfully verified!"}, status=status.HTTP_200_OK)
-            return Response({"Message": "The OTP you entered is incorrect. Please try again."},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Message": "An account is already signed up with the entered email. Please choose another email."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        storedotpcode = cache.get(f"users_info_{email}")
+
+        if otp == storedotpcode["otpcode"]:
+            return Response({"Message": "Credentials successfully verified!"}, status=status.HTTP_200_OK)
+            
+        if storedotpcode["success"] == False:
+            return Response({"Message": "OTP has expired or was not found. Please request a new one."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        return Response({"Message": "The OTP you entered is incorrect. Please try again."}, status=status.HTTP_400_BAD_REQUEST)
+        
+            

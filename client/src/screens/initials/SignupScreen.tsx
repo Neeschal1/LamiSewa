@@ -50,7 +50,8 @@ const Signup = () => {
     } else {
       setCheckFilledState(false);
       const mobile = country["callingCode"][0] + "" + phone;
-      const data = {
+      try{
+        const data = {
         fullname: name,
         email: email,
         phonenumber: mobile
@@ -58,6 +59,9 @@ const Signup = () => {
       await saveData(data)
       HandleAccountCredentials(name, mobile, email)
       navigation.navigate("SignupVerification")
+    } catch (err) {
+      console.log("Error occured: ", err)
+    }
     }
   };
 
