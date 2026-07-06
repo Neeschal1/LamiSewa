@@ -4,7 +4,6 @@ from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .smsservice import SendOTP
-import random
 from django.core.cache import cache
 
 
@@ -65,14 +64,8 @@ class UserAuth:
             return Response({"Message": "An account with this email already exists."}, status=status.HTTP_404_NOT_FOUND)
         
         type="Account Activation/Verification"
-            # sms = SendOTP()
-            # result = sms._send_sms(phonenumber, name, type)   
-        result = {"success": True,"otpcode": str(random.randint(100000, 999999))}     
-        print(f"\n\n\n{result["otpcode"]}\n\n\n")      
-        # try:
-        #     user = User.objects.get(first_name = name)
-        # except User.DoesNotExist:
-        #     return Response({"Message": f"{name} doesnot exists. Sorry :("}, status=status.HTTP_404_NOT_FOUND)      
+        sms = SendOTP()
+        result = sms._send_sms(phonenumber, name, type)   
         if result["success"] == True:
             cache.set(f"users_info_{email}", result, timeout=120)     
             print("Saved key:", f"users_info_{email}")

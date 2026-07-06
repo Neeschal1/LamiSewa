@@ -1,9 +1,6 @@
 import { View, StatusBar } from "react-native";
 import React, { useState } from "react";
-import Animated, {
-  FadeInUp,
-  FadeInDown,
-} from "react-native-reanimated";
+import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
 import {
   Description,
   InputFields,
@@ -22,6 +19,7 @@ import HandleAccountCredentials from "@/src/services/accounts/credentials";
 import { saveData } from "@/src/storage/Ids";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
+import axios from "axios";
 
 const facebookLogo = require("@/src/assets/images/facebook.png");
 const googleLogo = require("@/src/assets/images/google.png");
@@ -38,7 +36,7 @@ const Signup = () => {
   const [showMessage, setShowMessage] = useState<string>("");
   const [isSelected, setIsSelection] = useState(false);
 
-  const navigation = useNavigation<NavigationProps>()
+  const navigation = useNavigation<NavigationProps>();
 
   const handleButtonPress = async () => {
     if (name === "" || email === "" || phone === "") {
@@ -50,18 +48,26 @@ const Signup = () => {
     } else {
       setCheckFilledState(false);
       const mobile = country["callingCode"][0] + "" + phone;
-      try{
+      console.log(mobile);
+
+      try {
         const data = {
-        fullname: name,
-        email: email,
-        phonenumber: mobile
+          fullname: name,
+          email: email,
+          phonenumber: mobile,
+        };
+        await saveData(data);
+        HandleAccountCredentials(name, mobile, email);
+        navigation.navigate("SignupVerification");
+      } catch (e) {
+        console.log("Error occured: ", e);
+        if (axios.isAxiosError(e)) {
+          const status = e.response?.status;
+          const response = e.response?.data;
+          console.log("Error Status: ", status);
+          console.log("Error Response: ", response);
+        }
       }
-      await saveData(data)
-      HandleAccountCredentials(name, mobile, email)
-      navigation.navigate("SignupVerification")
-    } catch (err) {
-      console.log("Error occured: ", err)
-    }
     }
   };
 
@@ -158,10 +164,7 @@ const Signup = () => {
         <Animated.View
           entering={FadeInDown.delay(1000).duration(400).springify()}
         >
-          <PrimaryButton
-            action={handleButtonPress}
-            text="Proceed"
-          />
+          <PrimaryButton action={handleButtonPress} text="Proceed" />
         </Animated.View>
 
         <View className="flex w-full items-center justify-center gap-mid">
@@ -199,13 +202,17 @@ const Signup = () => {
               </Animated.View>
             </View>
             <Animated.View
-              entering={FadeInDown.delay(300).duration(400).springify()} className="flex flex-row gap-2 justify-center items-center">
+              entering={FadeInDown.delay(300).duration(400).springify()}
+              className="flex flex-row gap-2 justify-center items-center"
+            >
               <SubTitle text="Already have an account?" />
               <TextualButton text="Login" screen="Login" />
             </Animated.View>
           </View>
           <Animated.View
-              entering={FadeInDown.delay(200).duration(400).springify()} className="flex items-center w-full">
+            entering={FadeInDown.delay(200).duration(400).springify()}
+            className="flex items-center w-full"
+          >
             <Description text="LamiSewa © 2026. All rights reserved." />
           </Animated.View>
         </View>

@@ -76,7 +76,6 @@ const SignupVerification = () => {
         navigation.navigate("Password");
       }
     } catch (e) {
-      console.log("Error: ", e)
       if (axios.isAxiosError(e)) {
         const status = e.response?.status;
         const response = e.response?.data;
@@ -84,12 +83,11 @@ const SignupVerification = () => {
         if (status === 404 || status === 401 || status === 400) {
           setCheckOTPState(true);
           setShowMessage(response["Message"]);
+          setTimeout(() => {
+            setError(false);
+            setErrorMessage("");
+          }, 5000);
         }
-        setTimeout(() => {
-          setError(false);
-          setErrorMessage("");
-        }, 5000);
-        
       } else {
         console.log("Issue: ", e);
       }
