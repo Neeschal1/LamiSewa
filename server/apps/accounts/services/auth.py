@@ -30,8 +30,8 @@ class UserAuth:
 
     def _signup(self, firstname: str, email: str, username: str, password: str, number_of_users: int) -> Response:
         if (User.objects.filter(email=email).exists()):
-            return Response({"Message":"An account is already signed up with the entered email. Please choose another account. Thank you :)"})
-        
+            return Response({"Message":"An account is already signed up with the entered email. Please choose another account. Thank you :)"}, status=status.HTTP_400_BAD_REQUEST)
+            
         user = User.objects.create(
             first_name = firstname,
             email = email,
@@ -61,13 +61,13 @@ class UserAuth:
     def _verifycredentials(self, name: str, phonenumber: str, email: str) -> Response:
         print("\n\n\nEntered _verifycredentials")
         print("Email:", email)
-        
-        user_exists = User.objects.filter(email=email).exists()
-        print("User exists:", user_exists)
 
-        if user_exists:
+        if (User.objects.filter(email=email).exists()):
             print("Returning user exists response")
             return Response({"Message": "An account with this email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if (User.objects.filter(username = phonenumber).exists()):
+            return Response({"Message":"An account is already signed up with the entered phone number!"}, status=status.HTTP_409_CONFLICT)
         
         print("\n\n\nSending OTP...")
         type="Account Activation/Verification"

@@ -41,6 +41,7 @@ const SignupVerification = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false)
 
   const [error, setError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
@@ -70,10 +71,12 @@ const SignupVerification = () => {
       stringOTP += otp[i];
     }
     try{
+      setLoading(true)
       const otpdata = HandleOTPVerification(email, stringOTP);
       const statuscode = (await otpdata).status
       if (statuscode === 200){
         navigation.navigate("Password");
+        setLoading(false)
       }
     } catch (e) {
       if (axios.isAxiosError(e)) {
@@ -91,6 +94,8 @@ const SignupVerification = () => {
       } else {
         console.log("Issue: ", e);
       }
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -145,7 +150,7 @@ const SignupVerification = () => {
                 entering={FadeInUp.delay(400).duration(400).springify()}
               >
                 <SubText
-                  text={`We’ve sent a 6-digit verification code to +${phoneNumber} to ${name}. Please enter the code in order to verify it’s you.`}
+                  text={`We’ve sent a 6-digit verification code to +${phoneNumber}. Please enter the code in order to verify it’s you.`}
                 />
               </Animated.View>
             </View>
@@ -175,11 +180,11 @@ const SignupVerification = () => {
               <Animated.View
                 entering={FadeInDown.delay(200).duration(400).springify()}
               >
-                <PrimaryButton action={handleOTPAction} text="Continue" />
+                <PrimaryButton action={handleOTPAction} text={loading ? "Loading..." : "Continue"} />
               </Animated.View>
               {timer === 0 && (
-                <View className="flex flex-row items-center gap-2">
-                  <SubTitle text="Didn't receive the code?" />
+                <View className="flex flex-column items-center gap-2">
+                  <SubTitle text="Code expired or didn't received it?" />
                   <TextualButton action={handleResend} text="Resend it" />
                 </View>
               )}

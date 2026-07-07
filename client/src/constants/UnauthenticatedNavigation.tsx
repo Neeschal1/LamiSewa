@@ -21,7 +21,6 @@ const UnauthenticatedNavigation = () => {
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Login" component={Login} />
 
-      
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={optionsScreens} />
       <Stack.Screen name="SignupVerification" component={SignupVerification} options={optionsScreens} />
       <Stack.Screen name="Password" component={Password} options={optionsScreens} />
@@ -36,4 +35,6 @@ const optionsScreens = {
   headerTransparent: true,
   headerTitle: " ",
   headerTintColor: "#000000",
+  headerBackVisible: false,
+  gestureEnabled: false,
 };

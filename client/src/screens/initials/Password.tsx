@@ -6,6 +6,8 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 import React, { useState } from "react";
 import Animated, {
@@ -22,6 +24,9 @@ import {
   InputPassword,
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
+import HandleSignupService from "@/src/services/accounts/signup";
+import { getData } from "@/src/storage/Ids";
+import axios from "axios";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
@@ -33,6 +38,7 @@ const Password = () => {
 
   const [unMatched, setUnMatched] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -40,7 +46,7 @@ const Password = () => {
     setShowSuccessModal(false);
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const pass = password.trim();
     const confirmpass = confirmPassword.trim();
 
@@ -58,10 +64,35 @@ const Password = () => {
         "Your password and confirm password doesn't \nmatch. Please check them again and try again!",
       );
       return;
-    } else {
-      setUnMatched(false);
-      setShowMessage("");
-      setShowSuccessModal(true);
+    }
+    try {
+      setLoading(true);
+      const data = await getData();
+      const email = data["email"];
+      const name = data["fullname"];
+      const phoneNumber = data["phonenumber"];
+      const response = await HandleSignupService(
+        name,
+        email,
+        phoneNumber,
+        password,
+      );
+      if (response === 201) {
+        setUnMatched(false);
+        setLoading(false);
+        setShowMessage("");
+        setShowSuccessModal(true);
+      }
+    } catch (e) {
+      console.log("Error occured: ", e);
+      if (axios.isAxiosError(e)) {
+        const status = e.response?.status;
+        const response = e.response?.data;
+        console.log("Error Status: ", status);
+        console.log("Error Response: ", response);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,7 +108,7 @@ const Password = () => {
           showsVerticalScrollIndicator={false}
         >
           <View className="flex-1 items-center justify-center bg-background p-screen">
-            <StatusBar hidden translucent />
+            <StatusBar hidden={false} translucent />
             <View className="flex items-start justify-center gap-extralarge">
               <Animated.View
                 entering={FadeInUp.delay(200).duration(400).springify()}
@@ -165,6 +196,12 @@ const Password = () => {
               </View>
             </Modal>
           </View>
+          <Animated.View
+            entering={FadeInDown.delay(200).duration(400).springify()}
+            className="flex items-center w-full"
+          >
+            <Description text="LamiSewa © 2026. All rights reserved." />
+          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -24,12 +24,13 @@ const HandleAccountCredentials = async (
     if (axios.isAxiosError(e)) {
       console.log("\n\nStatus code: ", e.response?.status)
       if (e.response?.status === 400){
-        return 400
+        return 400;
       } else {
-        return 123
+        return 409;
       }
     }
   }
+  return 123;
 };
 
 export default HandleAccountCredentials;

@@ -35,6 +35,7 @@ const Signup = () => {
   const [checkFilledState, setCheckFilledState] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<string>("");
   const [isSelected, setIsSelection] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false)
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -51,6 +52,7 @@ const Signup = () => {
       console.log(mobile);
 
       try {
+        setLoading(true)
         const data = {
           fullname: name,
           email: email,
@@ -63,12 +65,18 @@ const Signup = () => {
           setShowMessage("User with that email address already exists!")
           return;
         } 
+        if (response === 409){
+          setCheckFilledState(true)
+          setShowMessage("User with that phone number already exists!")
+          return;
+        } 
         if (response === 123){
           setCheckFilledState(true)
           setShowMessage("Something occured. Try again!")
           return;
         }
         navigation.navigate("SignupVerification");
+        setLoading(false)
       } catch (e) {
         console.log("Error occured: ", e);
         if (axios.isAxiosError(e)) {
@@ -77,13 +85,15 @@ const Signup = () => {
           console.log("Error Status: ", status);
           console.log("Error Response: ", response);
         }
+      } finally {
+        setLoading(false)
       }
     }
   };
 
   return (
     <SafeAreaView className="flex flex-1 bg-background">
-      <StatusBar hidden translucent />
+      <StatusBar hidden={false} translucent />
       <View className="flex-1 bg-background w-full items-start p-screen justify-center gap-extralarge">
         <View className="flex gap-large">
           <Animated.View
@@ -174,7 +184,7 @@ const Signup = () => {
         <Animated.View
           entering={FadeInDown.delay(1000).duration(400).springify()}
         >
-          <PrimaryButton action={handleButtonPress} text="Proceed" />
+          <PrimaryButton action={handleButtonPress} text={loading ? "Loading..." : "Proceed"} />
         </Animated.View>
 
         <View className="flex w-full items-center justify-center gap-mid">
