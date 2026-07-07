@@ -5,6 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .smsservice import SendOTP
 from django.core.cache import cache
+import random
 
 
 class UserAuth:
@@ -58,14 +59,26 @@ class UserAuth:
         
     
     def _verifycredentials(self, name: str, phonenumber: str, email: str) -> Response:
+        print("\n\n\nEntered _verifycredentials")
+        print("Email:", email)
+        
         user_exists = User.objects.filter(email=email).exists()
+        print("User exists:", user_exists)
 
         if user_exists:
-            return Response({"Message": "An account with this email already exists."}, status=status.HTTP_404_NOT_FOUND)
+            print("Returning user exists response")
+            return Response({"Message": "An account with this email already exists."}, status=status.HTTP_400_BAD_REQUEST)
         
+        print("\n\n\nSending OTP...")
         type="Account Activation/Verification"
-        sms = SendOTP()
-        result = sms._send_sms(phonenumber, name, type)   
+        # sms = SendOTP()
+        # result = sms._send_sms(phonenumber, name, type)   
+        
+        otp = str(random.randint(100000, 999999))
+        result = {"success": True, "otpcode": otp}
+        
+        print(f"\n\n\n{result}\n\n\n")
+        
         if result["success"] == True:
             cache.set(f"users_info_{email}", result, timeout=120)     
             print("Saved key:", f"users_info_{email}")

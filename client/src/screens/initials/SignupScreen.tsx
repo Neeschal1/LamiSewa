@@ -57,7 +57,17 @@ const Signup = () => {
           phonenumber: mobile,
         };
         await saveData(data);
-        HandleAccountCredentials(name, mobile, email);
+        const response = await HandleAccountCredentials(name, mobile, email);
+        if (response === 400){
+          setCheckFilledState(true)
+          setShowMessage("User with that email address already exists!")
+          return;
+        } 
+        if (response === 123){
+          setCheckFilledState(true)
+          setShowMessage("Something occured. Try again!")
+          return;
+        }
         navigation.navigate("SignupVerification");
       } catch (e) {
         console.log("Error occured: ", e);
