@@ -18,7 +18,6 @@ import {
   Title,
   SubText,
   Description,
-  InputFields,
   OTPInputFields,
   PrimaryButton,
   ErrorText,
@@ -26,6 +25,10 @@ import {
   SubTitle,
 } from "@/src/components/systemComponentsLayout";
 import { getDataString } from "@/src/storage/Ids";
+import HandleForgotPasswordOTPVerification from "@/src/services/accounts/forgotpasswordotp";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
+import axios from "axios";
 
 const confusedImage = require("@/src/assets/images/confused.png");
 
@@ -35,6 +38,10 @@ const OtpVerification = () => {
   const [checkOTPState, setCheckOTPState] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>("")
+
+  const navigation = useNavigation<NavigationProps>();
 
   useEffect(() => {
     if (timer === 0) return;
@@ -51,6 +58,7 @@ const OtpVerification = () => {
     if (otpCode.length != 6) {
       setCheckOTPState(true);
       setShowMessage("Enter complete OTP codes!");
+      return;
     } else {
       setCheckOTPState(false);
     }
@@ -60,10 +68,38 @@ const OtpVerification = () => {
     }
     try {
       setLoading(true);
-      const userid = await getDataString()
-      const useridnumber = Number(userid)
-      console.log("User's ID: ", userid, "UserID Number: ", useridnumber, "Datatype: ", typeof(useridnumber))
+      const userid = Number(await getDataString());
+      console.log(
+        "User's ID: ",
+        userid,
+        "Datatype: ",
+        typeof userid,
+        "Entered OTP: ",
+        stringOTP,
+        "Type of entered otp: ",
+        typeof stringOTP,
+      );
+      const res = await HandleForgotPasswordOTPVerification(userid, stringOTP);
+      if (res["status"] === 200) {
+        setLoading(false);
+        navigation.navigate("SetNewPassword");
+      }
     } catch (e) {
+      if (axios.isAxiosError(e)) {
+        const status = e.response?.status;
+        const response = e.response?.data;
+
+        console.log("Response from server: ", response, "It's status code: ", status)
+
+        if (status === 404 || status === 401 || status === 400) {
+          setCheckOTPState(true);
+          setShowMessage(response["Message"]);
+          setTimeout(() => {
+            setError(false);
+            setErrorMessage("");
+          }, 5000);
+        }
+      }
     } finally {
       setLoading(false);
     }

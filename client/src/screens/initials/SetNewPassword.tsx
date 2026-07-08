@@ -57,7 +57,7 @@ const SetNewPassword = () => {
 
   return (
     <View className="flex-1 items-start justify-center bg-background p-screen pt-[-10px]">
-      <StatusBar hidden translucent />
+      <StatusBar hidden={false} translucent />
       <View className="flex items-center justify-center gap-extralarge">
         <View>
           <MainScreenName text="Set a New Password" />

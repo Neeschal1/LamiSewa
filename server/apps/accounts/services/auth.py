@@ -136,11 +136,11 @@ class UserAuth:
         return Response({"Message": "User with the entered contact number does not exists!"}, status=status.HTTP_400_BAD_REQUEST)
         
     
-    def _codeverification(self, usersid, code) -> Response:
+    def _codeverification(self, usersid: int, code: str) -> Response:
         userinfo = User.objects.get(id = usersid)
         print("\n\nEmail from request:", userinfo.email)
         print("\nCache key:", f"users_info_{userinfo.email}")
-        print("\nCache value:", cache.get(f"users_info_{userinfo.email}\n\n")) 
+        print("\nCache value:", cache.get(f"users_info_{userinfo.email}")) 
             
         storedotpcode = cache.get(f"users_info_{userinfo.email}")
 
