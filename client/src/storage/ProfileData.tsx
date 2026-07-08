@@ -47,3 +47,13 @@ export const RemoveDataAsync: FC<ProfileData> = async ({ key }) => {
     return `${err}`;
   }
 };
+
+export const FetchProfileState = async () => {
+  try {
+    const value = await AsyncStorage.getItem("ProfileData");
+    return value === "true"
+  } catch (err) {
+    console.log("Error!", err)
+    return false
+  }
+};

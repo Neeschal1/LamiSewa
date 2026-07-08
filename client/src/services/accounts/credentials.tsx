@@ -25,12 +25,13 @@ const HandleAccountCredentials = async (
       console.log("\n\nStatus code: ", e.response?.status)
       if (e.response?.status === 400){
         return 400;
-      } else {
+      } 
+      if (e.response?.status === 409) {
         return 409;
       }
     }
   }
-  return 123;
+  return 500;
 };
 
 export default HandleAccountCredentials;

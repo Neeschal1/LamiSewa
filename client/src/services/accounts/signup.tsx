@@ -18,7 +18,10 @@ const HandleSignupService = async (
   await saveTokens(res.data.Message.Tokens.accesstoken);
   console.log("\n\nData: ", res.data)
   console.log("\n\nStatus: ", res.status)
-  return res.status;
+  return {
+    status: res.status,
+    accessToken: res.data.Message.Tokens.accesstoken,
+  };
 };
 
 export default HandleSignupService;

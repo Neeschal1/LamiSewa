@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "@/src/auth/AuthContext";
 import Animated, {
   FadeInUp,
   FadeInDown,
@@ -52,6 +53,8 @@ const BasicInfo = () => {
     month: "",
     year: "",
   });
+
+  const { logout } = useAuth();
 
   const handleProcees = () => {
     if (!name || !date || !gender || !idOption) {

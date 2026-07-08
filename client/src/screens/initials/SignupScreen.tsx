@@ -52,25 +52,31 @@ const Signup = () => {
       console.log(mobile);
 
       try {
+        console.log("Logic ongoing...")
         setLoading(true)
         const data = {
           fullname: name,
           email: email,
           phonenumber: mobile,
         };
+        console.log("First step completed...")
         await saveData(data);
+        console.log("Second step completed...")
         const response = await HandleAccountCredentials(name, mobile, email);
         if (response === 400){
+          console.log("400 response status logic...")
           setCheckFilledState(true)
           setShowMessage("User with that email address already exists!")
           return;
         } 
         if (response === 409){
+          console.log("409 response status logic...")
           setCheckFilledState(true)
           setShowMessage("User with that phone number already exists!")
           return;
         } 
-        if (response === 123){
+        if (response === 500){
+          console.log("500 response status logic...")
           setCheckFilledState(true)
           setShowMessage("Something occured. Try again!")
           return;

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Animated, {
   FadeInUp,
   FadeInDown,
@@ -27,10 +27,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import HandleSignupService from "@/src/services/accounts/signup";
 import { getData } from "@/src/storage/Ids";
 import axios from "axios";
+import { StoreStringDataAsync } from "@/src/storage/ProfileData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "@/src/auth/AuthContext";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
 const Password = () => {
+  const { login } = useAuth();
+
   const [password, setPassword] = useState<string>("");
   const [seePassword, setSeePassword] = useState<boolean>(false);
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -42,7 +47,14 @@ const Password = () => {
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const handleOkay = () => {
+  // const [access, setAccess] = useState<string>("");
+  const accessTokenRef = useRef<string | null>(null);
+
+  const handleOkay = async () => {
+    await AsyncStorage.setItem("profilestatus", "incomplete");
+    if (accessTokenRef.current) {
+      await login(accessTokenRef.current);
+    }
     setShowSuccessModal(false);
   };
 
@@ -77,11 +89,12 @@ const Password = () => {
         phoneNumber,
         password,
       );
-      if (response === 201) {
+      if (response.status === 201) {
         setUnMatched(false);
         setLoading(false);
         setShowMessage("");
         setShowSuccessModal(true);
+        accessTokenRef.current = response.accessToken;
       }
     } catch (e) {
       console.log("Error occured: ", e);
@@ -161,7 +174,10 @@ const Password = () => {
               <Animated.View
                 entering={FadeInDown.delay(200).duration(400).springify()}
               >
-                <PrimaryButton action={handleContinue} text="Continue" />
+                <PrimaryButton
+                  action={handleContinue}
+                  text={loading ? "Loading..." : "Continue"}
+                />
               </Animated.View>
             </View>
             <Modal
@@ -190,7 +206,6 @@ const Password = () => {
                   <PrimaryButton
                     text="Okay :)"
                     action={handleOkay}
-                    screen="BasicInfo"
                   />
                 </View>
               </View>
