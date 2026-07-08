@@ -31,3 +31,20 @@ export const clearData = async () => {
     return `Deleting id unsuccessful :(, ${err}`
   }
 };
+
+export const saveDataString = async (data: string) => {
+  try {
+    await SecureStore.setItemAsync("usersid", data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getDataString = async () => {
+  try {
+    const usersID = await SecureStore.getItemAsync("usersid");
+    return usersID
+  } catch (err) {
+    console.log(err);
+  }
+};

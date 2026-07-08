@@ -33,3 +33,8 @@ class VerifyOTPSerializer(serializers.Serializer):
 
 class FindAccountSerializer(serializers.Serializer):
     contactNumber = serializers.CharField()
+    
+    
+class CodeVerificationForForgotPasswordSerializers(serializers.Serializer):
+    id = serializers.CharField()
+    code = serializers.CharField()

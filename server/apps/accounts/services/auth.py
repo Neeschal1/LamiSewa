@@ -131,8 +131,25 @@ class UserAuth:
                 print("Saved value:", cache.get(f"users_info_{userinfo.email}")) 
             if not result["success"]:
                 return Response({"Message": result["error"]},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            return Response({"Message": "OTP sent successfully!"},status=status.HTTP_200_OK)
+            return Response({"Message": "OTP sent successfully!", "User Detail": f"{userinfo.pk}"},status=status.HTTP_200_OK)
         
         return Response({"Message": "User with the entered contact number does not exists!"}, status=status.HTTP_400_BAD_REQUEST)
         
+    
+    def _codeverification(self, usersid, code) -> Response:
+        userinfo = User.objects.get(id = usersid)
+        print("\n\nEmail from request:", userinfo.email)
+        print("\nCache key:", f"users_info_{userinfo.email}")
+        print("\nCache value:", cache.get(f"users_info_{userinfo.email}\n\n")) 
+            
+        storedotpcode = cache.get(f"users_info_{userinfo.email}")
+
+        if code == storedotpcode["otpcode"]:
+            return Response({"Message": "Credentials successfully verified!"}, status=status.HTTP_200_OK)
+                
+        if storedotpcode["success"] == False:
+            return Response({"Message": "OTP has expired or was not found. Please request a new one."}, status=status.HTTP_400_BAD_REQUEST)
+                
+        return Response({"Message": "The OTP you entered is incorrect. Please try again."}, status=status.HTTP_400_BAD_REQUEST)
+                
             

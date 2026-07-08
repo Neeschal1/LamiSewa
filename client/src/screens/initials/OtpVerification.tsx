@@ -1,5 +1,11 @@
-import { View, Image, TextInput,   KeyboardAvoidingView, ScrollView,
-  Platform, } from "react-native";
+import {
+  View,
+  Image,
+  TextInput,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
@@ -19,6 +25,7 @@ import {
   TextualButton,
   SubTitle,
 } from "@/src/components/systemComponentsLayout";
+import { getDataString } from "@/src/storage/Ids";
 
 const confusedImage = require("@/src/assets/images/confused.png");
 
@@ -27,9 +34,9 @@ const OtpVerification = () => {
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [checkOTPState, setCheckOTPState] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
 
-useEffect(() => {
+  useEffect(() => {
     if (timer === 0) return;
 
     const interval = setInterval(() => {
@@ -39,19 +46,26 @@ useEffect(() => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const handleOTPAction = () => {
+  const handleOTPAction = async () => {
     const otpCode = otp.join("");
     if (otpCode.length != 6) {
       setCheckOTPState(true);
       setShowMessage("Enter complete OTP codes!");
     } else {
       setCheckOTPState(false);
-      let stringOTP = ""
-      for(let i=0; i<otp.length; i++){
-        stringOTP += otp[i]
-      }
-      const numberOTP = Number(stringOTP)
-      console.log("Your Entered OTP: ", numberOTP);
+    }
+    let stringOTP = "";
+    for (let i = 0; i < otp.length; i++) {
+      stringOTP += otp[i];
+    }
+    try {
+      setLoading(true);
+      const userid = await getDataString()
+      const useridnumber = Number(userid)
+      console.log("User's ID: ", userid, "UserID Number: ", useridnumber, "Datatype: ", typeof(useridnumber))
+    } catch (e) {
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,7 +134,10 @@ useEffect(() => {
               <Animated.View
                 entering={FadeInDown.delay(200).duration(400).springify()}
               >
-                <PrimaryButton action={handleOTPAction} text={loading ? "Loading..." : "Continue"} />
+                <PrimaryButton
+                  action={handleOTPAction}
+                  text={loading ? "Loading..." : "Continue"}
+                />
               </Animated.View>
               {timer === 0 && (
                 <View className="flex flex-column items-center gap-2">
@@ -130,12 +147,12 @@ useEffect(() => {
               )}
             </View>
           </View>
-        <Animated.View
-                    entering={FadeInDown.delay(200).duration(400).springify()}
-                    className="flex items-center w-full"
-                  >
-                    <Description text="LamiSewa © 2026. All rights reserved." />
-                  </Animated.View>
+          <Animated.View
+            entering={FadeInDown.delay(200).duration(400).springify()}
+            className="flex items-center w-full"
+          >
+            <Description text="LamiSewa © 2026. All rights reserved." />
+          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

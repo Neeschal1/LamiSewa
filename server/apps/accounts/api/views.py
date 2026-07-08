@@ -67,3 +67,15 @@ class FindAccountSerializerView(viewsets.ViewSet):
         if serializers.is_valid(raise_exception=True):
             phonenumber = serializers.validated_data['contactNumber']
             return UserAuth()._findaccount(phonenumber)
+        
+
+class CodeVerificationForForgotPasswordSerializersView(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+    
+    @swagger_auto_schema(request_body=CodeVerificationForForgotPasswordSerializers)
+    def create(self, request):
+        serializers = CodeVerificationForForgotPasswordSerializers(data=request.data)
+        if serializers.is_valid(raise_exception=True):
+            usersid = serializers.validated_data['id']
+            userscode = serializers.validated_data['code']
+            return UserAuth()._codeverification(usersid, userscode)
