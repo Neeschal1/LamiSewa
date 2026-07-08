@@ -9,6 +9,7 @@ router.register('account-signup', UserAccountSignupSerializersView, basename="us
 router.register('account-login', UserAccountLoginSerializerView, basename="accountlogin")
 router.register('account-credentials-verification', UserAccountCredentialsSetupSerializerView, basename="accountcredentials")
 router.register('account-credentials-otp-verification', VerifyOTPSerializerView, basename="otpverification")
+router.register('account-forgot-password-find-account', FindAccountSerializerView, basename="findaccount")
 
 urlpatterns = [
     path('', include(router.urls))

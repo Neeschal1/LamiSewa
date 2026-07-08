@@ -6,6 +6,8 @@ import {
   SignupVerification,
   ForgotPassword,
   Password,
+  SetNewPassword,
+  OtpVerification,
 } from "@/src/screens/initials/initialScreensLayout";
 import { RootStackParamList } from "../components/componentsType";
 
@@ -21,6 +23,8 @@ const UnauthenticatedNavigation = () => {
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={optionsScreens} />
+      <Stack.Screen name="SetNewPassword" component={SetNewPassword} options={optionsScreens} />
+      <Stack.Screen name="OtpVerification" component={OtpVerification} options={optionsScreens} />
       <Stack.Screen name="SignupVerification" component={SignupVerification} options={optionsScreens} />
       <Stack.Screen name="Password" component={Password} options={optionsScreens} />
     </Stack.Navigator>

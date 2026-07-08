@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuth } from "@/src/auth/AuthContext";
 import Animated, {
   FadeInUp,
   FadeInDown,
@@ -30,6 +29,7 @@ import {
   PrimaryButton,
   Title,
 } from "@/src/components/systemComponentsLayout";
+import { useAuth } from "@/src/auth/AuthContext";
 
 const BasicInfo = () => {
   const [error, setError] = useState<boolean>(false);
@@ -64,6 +64,10 @@ const BasicInfo = () => {
     }
     setError(false);
     setErrorMessage("");
+  };
+
+  const handleLogOut = async () => {
+    await logout();
   };
 
   return (
@@ -202,6 +206,11 @@ const BasicInfo = () => {
                   screen="CasualInfo"
                 />
               </Animated.View>
+              <View>
+                <TouchableOpacity onPress={handleLogOut}>
+                  <Text>LOGOUT!!!!!!!!!!!!!!!!!</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </ScrollView>

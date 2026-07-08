@@ -29,3 +29,7 @@ class UserAccountCredentialsSetupSerializer(serializers.Serializer):
 class VerifyOTPSerializer(serializers.Serializer):
     otp = serializers.CharField()
     email = serializers.EmailField()
+    
+
+class FindAccountSerializer(serializers.Serializer):
+    contactNumber = serializers.CharField()

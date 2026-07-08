@@ -109,5 +109,30 @@ class UserAuth:
             return Response({"Message": "OTP has expired or was not found. Please request a new one."}, status=status.HTTP_400_BAD_REQUEST)
             
         return Response({"Message": "The OTP you entered is incorrect. Please try again."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    def _findaccount(self, username: str) -> Response:
+        user = User.objects.filter(username = username).exists()
+        if user == True:
+            print("\n\n\nSending OTP for Forgot Password...")
+            type="Account Activation/Verification"
+            # sms = SendOTP()
+            # result = sms._send_sms(phonenumber, name, type)   
+            
+            otp = str(random.randint(100000, 999999))
+            result = {"success": True, "otpcode": otp}
+            
+            print(f"\n\n\n{result}\n\n\n")
+            
+            if result["success"] == True:
+                userinfo = User.objects.get(username = username)
+                cache.set(f"users_info_{userinfo.email}", result, timeout=120)     
+                print("Saved key:", f"users_info_{userinfo.email}")
+                print("Saved value:", cache.get(f"users_info_{userinfo.email}")) 
+            if not result["success"]:
+                return Response({"Message": result["error"]},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"Message": "OTP sent successfully!"},status=status.HTTP_200_OK)
+        
+        return Response({"Message": "User with the entered contact number does not exists!"}, status=status.HTTP_400_BAD_REQUEST)
         
             

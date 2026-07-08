@@ -56,3 +56,14 @@ class VerifyOTPSerializerView(viewsets.ViewSet):
             mail = serializers.validated_data['email']
             otpcode = serializers.validated_data['otp']
             return UserAuth()._verifyotpcode(mail, otpcode)
+        
+
+class FindAccountSerializerView(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+    
+    @swagger_auto_schema(request_body=FindAccountSerializer)
+    def create(self, request):
+        serializers = FindAccountSerializer(data=request.data)
+        if serializers.is_valid(raise_exception=True):
+            phonenumber = serializers.validated_data['contactNumber']
+            return UserAuth()._findaccount(phonenumber)
