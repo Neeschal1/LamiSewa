@@ -72,7 +72,9 @@ class UserAuth:
                             "refreshtoken": refresh_token}}, 
                         "Total number of users": number_of_users}, 
                     status = status.HTTP_201_CREATED)
-                
+
+            return Response({"Message": "OTP has expired or was not found. Please request a new one."}, status=status.HTTP_400_BAD_REQUEST)
+           
         except Exception as e:
             return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
     
@@ -172,7 +174,9 @@ class UserAuth:
                     return Response({"Message": "OTP has expired or was not found. Please request a new one."}, status=status.HTTP_400_BAD_REQUEST)
 
                 if code == storedotpcode["otpcode"]:
+                    cache.set(f'users_account_reset_password_status_{user.username}', {"status": True}, timeout=300) 
                     return Response({"Message": "Credentials successfully verified!"}, status=status.HTTP_200_OK)
+                
                 return Response({"Message": "The OTP you entered is incorrect. Please try again."}, status=status.HTTP_400_BAD_REQUEST)
             
             return Response({"Message": "User does not exists!"}, status=status.HTTP_404_NOT_FOUND)
@@ -189,9 +193,14 @@ class UserAuth:
                 return Response({"Message": "Failed to reset your password!"}, status=status.HTTP_404_NOT_FOUND)
             
             if user:
-                user.set_password(password)
-                user.save()
-                return Response({"Message": "User's password reset successfully :)"}, status=status.HTTP_200_OK)
-
+                stored_otp_code_for_password_reset = cache.get(f'users_account_reset_password_status_{user.username}') 
+                if stored_otp_code_for_password_reset["status"] == True:
+                    user.set_password(password)
+                    user.save()
+                    cache.delete(f'users_account_reset_password_status_{user.username}')
+                    return Response({"Message": "User's password reset successfully :)"}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"Message": "OTP has expired or was not found. Please request a new one."}, status=status.HTTP_400_BAD_REQUEST)
+            
         except Exception as e:
                 return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)

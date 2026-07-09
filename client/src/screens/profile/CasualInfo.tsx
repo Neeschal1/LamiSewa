@@ -106,7 +106,7 @@ const CasualInfo = () => {
       <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
-        style={{ flex: 1 }}
+        style={{ flex: 1, marginTop: 40 }}
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
@@ -114,7 +114,7 @@ const CasualInfo = () => {
           showsVerticalScrollIndicator={false}
         >
           <View className="flex-1 items-center justify-center p-screen bg-background gap-large">
-            <StatusBar hidden translucent />
+            <StatusBar hidden={false} translucent />
             <Animated.View
               entering={FadeInUp.delay(200).duration(300)}
               className="flex items-center gap-mid"
@@ -202,11 +202,13 @@ const CasualInfo = () => {
             </Animated.View>
           </View>
         </ScrollView>
-        <Animated.View
-              entering={FadeInDown.delay(200).duration(300)} className="flex items-center w-full">
-          <Description text="LamiSewa © 2026. All rights reserved." />
-        </Animated.View>
       </KeyboardAvoidingView>
+      <Animated.View
+        entering={FadeInDown.delay(200).duration(300)}
+        className="flex items-center w-full"
+      >
+        <Description text="LamiSewa © 2026. All rights reserved." />
+      </Animated.View>
     </SafeAreaView>
   );
 };

@@ -79,7 +79,7 @@ const PersonalInfo: FC = () => {
           showsVerticalScrollIndicator={false}
         >
           <View className="flex-1 items-center justify-center p-screen bg-background gap-large pt-extralarge">
-            <StatusBar hidden translucent />
+            <StatusBar hidden={false} translucent />
             <Animated.View
               key={errorMessage}
               entering={BounceIn.delay(200).duration(300)}
