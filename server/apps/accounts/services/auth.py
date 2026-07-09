@@ -26,7 +26,6 @@ class UserAuth:
         
         return Response({"Message":"Invalid Credentials. So Sorry :("}, status=status.HTTP_401_UNAUTHORIZED)
     
-    
 
     def _signup(self, firstname: str, email: str, username: str, password: str, number_of_users: int) -> Response:
         if (User.objects.filter(email=email).exists()):
@@ -153,3 +152,15 @@ class UserAuth:
         return Response({"Message": "The OTP you entered is incorrect. Please try again."}, status=status.HTTP_400_BAD_REQUEST)
                 
             
+    def _resetpassword(self, userid: int, password: str) -> Response:
+        try:
+            user = User.objects.get(id=userid)
+            user.set_password(password)
+            user.save()
+            return Response({"Message": "User's password reset successfully :)"}, status=status.HTTP_200_OK)
+
+        except User.DoesNotExist:
+            return Response({"Message": "Failed to reset your password!"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)

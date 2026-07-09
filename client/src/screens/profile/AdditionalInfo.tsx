@@ -52,19 +52,19 @@ const AdditionalInfo: FC = () => {
   return (
     <SafeAreaView
       edges={["bottom"]}
-      className="bg-background flex flex-1 items-center"
+      className="bg-background flex flex-1 items-center justify-center"
     >
       <KeyboardAvoidingView
         behavior="padding"
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 80}
-        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        style={{ flex: 1, marginTop: 20 }}
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 flex items-center justify-start p-screen bg-background gap-large">
+          <View className="flex-1 flex items-center justify-center p-screen bg-background gap-large">
             <StatusBar hidden translucent />
             <Animated.View
               key={errorMessage}
@@ -149,14 +149,14 @@ const AdditionalInfo: FC = () => {
               />
             </Animated.View>
           </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
           <Animated.View
             entering={FadeInUp.delay(200).duration(400).springify()}
             className="flex items-center w-full"
           >
             <Description text="LamiSewa © 2026. All rights reserved." />
           </Animated.View>
-        </ScrollView>
-      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

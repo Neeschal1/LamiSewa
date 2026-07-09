@@ -81,6 +81,10 @@ const Signup = () => {
           setShowMessage("Something occured. Try again!")
           return;
         }
+        if (response === null){
+          setCheckFilledState(true)
+          setShowMessage("Unstable connection. Make sure you are \nconnected with the internet and try again!")
+        }
         navigation.navigate("SignupVerification");
         setLoading(false)
       } catch (e) {

@@ -79,3 +79,16 @@ class CodeVerificationForForgotPasswordSerializersView(viewsets.ViewSet):
             usersid = serializers.validated_data['id']
             userscode = serializers.validated_data['code']
             return UserAuth()._codeverification(usersid, userscode)
+        
+
+class ResetPasswordSerializersView(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+    
+    @swagger_auto_schema(request_body=ResetPasswordSerializers)
+    def create(self, request):
+        serializers = ResetPasswordSerializers(data=request.data)
+        if serializers.is_valid(raise_exception=True):
+            passcode = serializers.validated_data['password']
+            id = serializers.validated_data['userid']
+            return UserAuth()._resetpassword(id, passcode)
+    

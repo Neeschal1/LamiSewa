@@ -53,7 +53,7 @@ const CareerInfo: FC = () => {
     <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1">
       <KeyboardAvoidingView
         behavior="padding"
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 80}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
         style={{ flex: 1 }}
       >
         <ScrollView
@@ -61,7 +61,7 @@ const CareerInfo: FC = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 flex items-center justify-start p-screen bg-background gap-large">
+          <View className="flex-1 flex items-center justify-center p-screen bg-background gap-large">
             <StatusBar hidden translucent />
             <Animated.View
               key={errorMessage}

@@ -67,11 +67,11 @@ const PersonalInfo: FC = () => {
   };
 
   return (
-    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1 items-center justify-center">
+    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1 ">
       <KeyboardAvoidingView
         behavior="padding"
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 80}
-        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        style={{ flex: 1, marginTop: 10 }}
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}

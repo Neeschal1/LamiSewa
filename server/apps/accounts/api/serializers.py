@@ -38,3 +38,8 @@ class FindAccountSerializer(serializers.Serializer):
 class CodeVerificationForForgotPasswordSerializers(serializers.Serializer):
     id = serializers.CharField()
     code = serializers.CharField()
+    
+
+class ResetPasswordSerializers(serializers.Serializer):
+    userid = serializers.IntegerField()
+    password = serializers.CharField()

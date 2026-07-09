@@ -30,6 +30,8 @@ export default ProfileScreenNavigation
 
 const ProfileScreens = (title: string) => ({
   headerShown: true,
+  headerBackVisible: false,
+  gestureEnabled: false,
   headerTransparent: true,
   headerStyle: {backgroundColor: "#F6F5FF", width: '100%', alignItems: 'center', justifyContent: 'center', flex: 1},
   headerTitle: () => <Title text={title} />,

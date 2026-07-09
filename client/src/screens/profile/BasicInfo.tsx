@@ -7,7 +7,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
   FadeInUp,
@@ -30,6 +30,7 @@ import {
   Title,
 } from "@/src/components/systemComponentsLayout";
 import { useAuth } from "@/src/auth/AuthContext";
+import { getData } from "@/src/storage/Ids";
 
 const BasicInfo = () => {
   const [error, setError] = useState<boolean>(false);
@@ -214,13 +215,13 @@ const BasicInfo = () => {
             </View>
           </View>
         </ScrollView>
+      </KeyboardAvoidingView>
         <Animated.View
           entering={FadeInDown.delay(200).duration(400).springify()}
           className="flex items-center mb-1 gap-mid"
         >
           <Description text="LamiSewa © 2026. All rights reserved." />
         </Animated.View>
-      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
