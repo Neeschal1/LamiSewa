@@ -47,7 +47,11 @@ export type RootStackParamList = {
   FinalVerification: undefined;
   Intro: undefined;
   Verify: undefined;
-  
+
+  // Extras
+  OnboardingScreen: undefined;
+  CreateProfile: undefined;
+  Language: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
