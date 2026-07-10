@@ -25,7 +25,7 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HandleSignupService from "@/src/services/accounts/signup";
-import { getData } from "@/src/storage/Ids";
+import { getData, saveDataString } from "@/src/storage/Ids";
 import axios from "axios";
 import { StoreStringDataAsync } from "@/src/storage/ProfileData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -51,7 +51,7 @@ const Password = () => {
   const accessTokenRef = useRef<string | null>(null);
 
   const handleOkay = async () => {
-    await AsyncStorage.setItem("profilestatus", "incomplete");
+    await AsyncStorage.setItem("profilestatus", "username");
     if (accessTokenRef.current) {
       await login(accessTokenRef.current);
     }
@@ -108,6 +108,8 @@ const Password = () => {
       setLoading(false);
     }
   };
+
+
 
   return (
     <SafeAreaView className="bg-background items-center justify-center flex flex-1">

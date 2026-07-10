@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 import LottieView from "lottie-react-native";
@@ -6,14 +6,13 @@ import { SubHeading, SubText } from "@/src/components/systemComponentsLayout";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
+import Splash from "../initials/SplashScreen";
 
 const dating = require("@/src/assets/animations/dating.json");
 const chatting = require("@/src/assets/animations/chatting.json");
 const marriage = require("@/src/assets/animations/marriage.json");
 
-const navigatingScreen = () => {
-
-};
+const navigatingScreen = () => {};
 
 const SkipButton = ({ onPress }: any) => (
   <TouchableOpacity
@@ -22,7 +21,7 @@ const SkipButton = ({ onPress }: any) => (
     onPress={async () => {
       await AsyncStorage.setItem("onboardingState", "completed");
       onPress();
-      navigatingScreen()
+      navigatingScreen();
     }}
   >
     <SubText text="Skip" />
@@ -46,7 +45,7 @@ const DoneButton = ({ onPress }: any) => (
     onPress={async () => {
       await AsyncStorage.setItem("onboardingState", "completed");
       onPress();
-      navigatingScreen()
+      navigatingScreen();
     }}
   >
     <SubHeading text="Done" />
@@ -65,19 +64,32 @@ const Dot = ({ selected }: { selected: boolean }) => {
 
 const OnboardingScreen: FC = () => {
   const navigation = useNavigation<NavigationProps>();
-  navigation.navigate("Welcome")
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showSplash) {
+    return <Splash />;
+  }
 
   return (
     <View className="flex-1 bg-background">
       <Onboarding
         showSkip
-         onSkip={async () => {
-    await AsyncStorage.setItem("onboardingState", "completed");
-    navigation.replace("Welcome");
-  }}
-  onDone={async () => {
-    await AsyncStorage.setItem("onboardingState", "completed");
-    navigation.replace("Welcome");}}
+        onSkip={async () => {
+          await AsyncStorage.setItem("onboardingState", "completed");
+          navigation.replace("Welcome");
+        }}
+        onDone={async () => {
+          await AsyncStorage.setItem("onboardingState", "completed");
+          navigation.replace("Welcome");
+        }}
         bottomBarHighlight={false}
         controlStatusBar={false}
         SkipButtonComponent={SkipButton}

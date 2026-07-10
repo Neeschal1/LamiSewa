@@ -14,36 +14,41 @@ class UserProfileService:
 
 
     def _createprofileid(self, request) -> Response:
-        profiledata = UserProfileSerializer(data=request.data)
-        if profiledata.is_valid(raise_exception=True):
-            id = profiledata.validated_data["userid"]
-            username = profiledata.validated_data["username"]
+        try:
+            profiledata = UserProfileSerializer(data=request.data)
+            if profiledata.is_valid(raise_exception=True):
+                id = profiledata.validated_data["userid"]
+                username = profiledata.validated_data["username"]
 
-        while True:
-            profile_id = self._generate_profile_id()
-            if not UserProfile.objects.filter(profileid=profile_id).exists():
-                break
+            while True:
+                profile_id = self._generate_profile_id()
+                if not UserProfile.objects.filter(profileid=profile_id).exists():
+                    break
+               
+            unique_username = UserProfile.objects.filter(username = username).exists()
+            if unique_username == True:
+                return Response({"Message": "User with that username already exists!"}, status=status.HTTP_409_CONFLICT)
 
-        profile = UserProfile.objects.create(
-            userid=id,
-            username=username,
-            profileid=profile_id,
-        )
-        
-        # SendOTP()._send_sms(phonenumber, profile.userid.first_name, "verification") 
+            profile = UserProfile.objects.create(
+                userid=id,
+                username=username,
+                profileid=profile_id,
+            )
 
-        return Response(
-            {
-                "message": f"Successfully created {profile.userid.first_name}'s Profile.",
-                "data": {
-                    "user_account_id": profile.userid.pk,
-                    "user_profile_id": profile.pk,
-                    "username": profile.username,
-                    "profileid": profile.profileid,
+            return Response(
+                {
+                    "message": f"Successfully created {profile.userid.first_name}'s Profile.",
+                    "data": {
+                        "user_account_id": profile.userid.pk,
+                        "user_profile_id": profile.pk,
+                        "username": profile.username,
+                        "profileid": profile.profileid,
+                    },
                 },
-            },
-            status=status.HTTP_201_CREATED,
-        )
+                status=status.HTTP_201_CREATED,
+            )
+        except Exception as e:
+                return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
 
 
     def _updateprofileid(self, request, pk) -> Response:

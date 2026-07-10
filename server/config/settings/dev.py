@@ -14,7 +14,7 @@ SECRET_KEY = Config.SECRET_KEY
 
 
 # Allowed hosts to access this backend system
-ALLOWED_HOSTS = [os.getenv('DOMAIN_NAME_1'), Config.DOMAIN_NAME_2, Config.DOMAIN_NAME_3, "192.168.1.78" ]
+ALLOWED_HOSTS = [os.getenv('DOMAIN_NAME_1'), Config.DOMAIN_NAME_2, Config.DOMAIN_NAME_3, "192.168.1.78", "192.168.1.76" ]
 
 
 # Root URL to hit, i. e. url of project of an entire application

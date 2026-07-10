@@ -5,6 +5,7 @@ import {
   Platform,
   ScrollView,
   StatusBar,
+  TouchableOpacity,
 } from "react-native";
 import Animated, {
   FadeInUp,
@@ -14,14 +15,70 @@ import Animated, {
 import React, { FC, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
+  Description,
   ErrorText,
   InputFields,
+  PrimaryButton,
   Title,
 } from "@/src/components/systemComponentsLayout";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
+import { clearData, getData, getDataString } from "@/src/storage/Ids";
+import UserProfileService from "@/src/services/profile/userinfo";
+import axios from "axios";
+import { clearToken } from "@/src/storage/Tokens";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "@/src/auth/AuthContext";
 
 const UserInfo: FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const navigation = useNavigation<NavigationProps>();
+
+  const handleProceed = async () => {
+    const userid = Number(await getDataString());
+    const stringid = await getDataString()
+
+    console.log("Number Users ID: ", userid)
+    console.log("String Users ID: ", stringid)
+    
+    if (userName === ""){
+      setError(true);
+      setErrorMessage("Username cannot be empty!")
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await UserProfileService(stringid, userName);
+
+      if (res["status"] === 201) {
+        setLoading(false);
+        navigation.navigate("BasicInfo");
+      }
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        const data = e.response?.data;
+        const status = e.response?.status;
+
+        // console.log("Data: ", data);
+        // console.log("Status: ", status);
+
+        if (status === 409 || status === 417) {
+          setError(true);
+          setErrorMessage(data);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const { logout } = useAuth();
+
   return (
     <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1 ">
       <KeyboardAvoidingView
@@ -36,12 +93,14 @@ const UserInfo: FC = () => {
         >
           <View className="flex-1 items-center justify-center p-screen bg-background gap-large pt-extralarge">
             <StatusBar hidden translucent />
-            <Animated.View
-              key={errorMessage}
-              entering={BounceIn.delay(200).duration(300)}
-            >
-              <ErrorText text={`${errorMessage}`} />
-            </Animated.View>
+            {error ? (
+              <Animated.View
+                key={errorMessage}
+                entering={BounceIn.delay(200).duration(300)}
+              >
+                <ErrorText text={`${errorMessage}`} />
+              </Animated.View>
+            ) : null}
             <View className="flex gap-mid items-start">
               <Animated.View
                 entering={FadeInUp.delay(200).duration(400).springify()}
@@ -55,10 +114,53 @@ const UserInfo: FC = () => {
                   board="default"
                 />
               </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(200).duration(400).springify()}
+                className="items-start w-full"
+              >
+                <PrimaryButton
+                  action={handleProceed}
+                  // screen="BasicInfo"
+                  text={loading ? "Loading..." : "Proceed"}
+                />
+                <View className="flex flex-row gap-4">
+                  <TouchableOpacity
+                    className="px-2 py-3 bg-black rounded-2xl"
+                    onPress={async () => {
+                      await clearToken();
+                      await AsyncStorage.removeItem("onboardingState");
+                    }}
+                  >
+                    <Text className="text-white">Delete all token</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className="px-2 py-3 bg-black rounded-2xl"
+                    onPress={async () => {
+                      await logout();
+                    }}
+                  >
+                    <Text className="text-white">Logout</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className="px-2 py-3 bg-black rounded-2xl"
+                    onPress={async () => {
+                      await clearData();
+                    }}
+                  >
+                    <Text className="text-white">Clear ID</Text>
+                  </TouchableOpacity>
+                </View>
+              </Animated.View>
             </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <Animated.View
+        entering={FadeInDown.delay(200).duration(400).springify()}
+        className="flex items-center w-full"
+      >
+        <Description text="LamiSewa © 2026. All rights reserved." />
+      </Animated.View>
     </SafeAreaView>
   );
 };

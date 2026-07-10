@@ -38,5 +38,4 @@ const ProfileScreens = (title: string) => ({
   headerStyle: {backgroundColor: "#F6F5FF", width: '100%', alignItems: 'center', justifyContent: 'center', flex: 1},
   headerTitle: () => <Title text={title} />,
   headerTitleAlign: "center" as const,
-  // headerTintColor: "#000000",
 });

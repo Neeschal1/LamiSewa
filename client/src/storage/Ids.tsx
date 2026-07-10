@@ -26,7 +26,7 @@ export const getData = async () => {
 
 export const clearData = async () => {
   try {
-    await SecureStore.deleteItemAsync("userid");
+    await SecureStore.deleteItemAsync("usersid");
   } catch (err) {
     return `Deleting id unsuccessful :(, ${err}`
   }

@@ -8,6 +8,7 @@ const HandleAccountCredentials = async (
   username: string,
   email: string,
 ) => {
+  console.log("Reached here!!!")
   try {
     const credentialsData: any = {
       fullname: name,
@@ -18,11 +19,12 @@ const HandleAccountCredentials = async (
       API.ACCOUNTS.ACCOUNTCREDENTIALS,
       credentialsData,
     );
-    console.log(res.data);
+    console.log("ResponseData: ", res.data);
     return res.status
   } catch (e) {
     if (axios.isAxiosError(e)) {
       console.log("\n\nStatus code: ", e.response?.status)
+      
       if (e.response?.status === 400){
         return 400;
       } 

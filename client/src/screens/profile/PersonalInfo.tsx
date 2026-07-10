@@ -167,12 +167,12 @@ const PersonalInfo: FC = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-          <Animated.View
-            entering={FadeInDown.delay(200).duration(400).springify()}
-            className="flex items-center w-full"
-          >
-            <Description text="LamiSewa © 2026. All rights reserved." />
-          </Animated.View>
+      <Animated.View
+        entering={FadeInDown.delay(200).duration(400).springify()}
+        className="flex items-center w-full"
+      >
+        <Description text="LamiSewa © 2026. All rights reserved." />
+      </Animated.View>
     </SafeAreaView>
   );
 };

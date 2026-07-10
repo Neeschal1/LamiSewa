@@ -4,18 +4,28 @@ import { useFonts } from "expo-font";
 import StackNavigation from '../src/constants/Navigation'
 import { AuthProvider } from "@/src/auth/AuthProvider";
 import { useEffect } from "react";
+import { AppState } from "react-native"
 import * as NavigationBar from "expo-navigation-bar";
 
 export default function RootLayout() {
 
    useEffect(() => {
-    const hideNavBar = async () => {
-      await NavigationBar.setBehaviorAsync("overlay-swipe");
+  const hideBar = async () => {
+    try {
       await NavigationBar.setVisibilityAsync("hidden");
-    };
+    } catch {}
+  };
 
-    hideNavBar();
-  }, []);
+  hideBar();
+
+  const sub = AppState.addEventListener("change", state => {
+    if (state === "active") {
+      hideBar();
+    }
+  });
+
+  return () => sub.remove();
+}, []);
   
   const [fontsLoaded] = useFonts(Fonts);
 

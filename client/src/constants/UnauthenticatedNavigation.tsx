@@ -8,6 +8,7 @@ import {
   Password,
   SetNewPassword,
   OtpVerification,
+  Splash,
 } from "@/src/screens/initials/initialScreensLayout";
 import { RootStackParamList } from "../components/componentsType";
 import {
@@ -46,6 +47,7 @@ const UnauthenticatedNavigation = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Welcome" component={Welcome} />
+      <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen options={{ animation: "fade" }} name="OnboardingScreen" component={OnboardingScreen}/>

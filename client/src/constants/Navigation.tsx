@@ -15,7 +15,7 @@ const StackNavigation = () => {
   useEffect(() => {
     const load = async () => {
       const state = await AsyncStorage.getItem("profilestatus");
-      setProfileCompleted(state === "completed");
+      setProfileCompleted(state === "username");
     };
 
     if (token) {
