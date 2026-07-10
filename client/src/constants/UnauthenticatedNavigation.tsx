@@ -15,14 +15,13 @@ import {
   Language,
 } from "@/src/screens/extras/ExtraScreenLayout";
 import { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const UnauthenticatedNavigation = () => {
-  const [initialScreen, setInitialScreen] = useState<
-    keyof RootStackParamList | null
-  >(null);
+  const [initialScreen, setInitialScreen] = useState<keyof RootStackParamList | null >(null);
 
   useEffect(() => {
     const OnboardingScreenState = async () => {
@@ -38,7 +37,7 @@ const UnauthenticatedNavigation = () => {
   }, []);
 
   if (initialScreen === null) {
-    return "Welcome"; 
+    return (<View className="flex-1 justify-center items-center"><ActivityIndicator size="large" /></View>);
   }
 
   return (
