@@ -51,7 +51,7 @@ const Password = () => {
   const accessTokenRef = useRef<string | null>(null);
 
   const handleOkay = async () => {
-    await AsyncStorage.setItem("profilestatus", "username");
+    await AsyncStorage.setItem("profilestatus", "incomplete");
     if (accessTokenRef.current) {
       await login(accessTokenRef.current);
     }

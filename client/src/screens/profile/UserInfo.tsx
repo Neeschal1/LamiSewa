@@ -7,6 +7,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
+import LottieView from "lottie-react-native";
 import Animated, {
   FadeInUp,
   FadeInDown,
@@ -19,6 +20,7 @@ import {
   ErrorText,
   InputFields,
   PrimaryButton,
+  SubTitle,
   Title,
 } from "@/src/components/systemComponentsLayout";
 import { useNavigation } from "expo-router";
@@ -29,6 +31,8 @@ import axios from "axios";
 import { clearToken } from "@/src/storage/Tokens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/src/auth/AuthContext";
+
+const createProfileAnimation = require("@/src/assets/animations/createProfile.json")
 
 const UserInfo: FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -91,8 +95,20 @@ const UserInfo: FC = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 items-center justify-center p-screen bg-background gap-large pt-extralarge">
+          <View className="flex-1 items-center justify-start mt-20 p-screen bg-background gap-large pt-extralarge">
             <StatusBar hidden translucent />
+            <Animated.View entering={FadeInUp.delay(200).duration(400).springify()} className="flex items-center">
+              <SubTitle text="Let's create your Profile before continuing..." />
+              <LottieView
+                source={createProfileAnimation}
+                autoPlay
+                loop
+                style={{
+                  width: 250,
+                  height: 250,
+                }}
+              />
+            </Animated.View>
             {error ? (
               <Animated.View
                 key={errorMessage}
@@ -123,7 +139,7 @@ const UserInfo: FC = () => {
                   // screen="BasicInfo"
                   text={loading ? "Loading..." : "Proceed"}
                 />
-                <View className="flex flex-row gap-4">
+                {/* <View className="flex flex-row gap-4">
                   <TouchableOpacity
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {
@@ -149,7 +165,7 @@ const UserInfo: FC = () => {
                   >
                     <Text className="text-white">Clear ID</Text>
                   </TouchableOpacity>
-                </View>
+                </View> */}
               </Animated.View>
             </View>
           </View>
