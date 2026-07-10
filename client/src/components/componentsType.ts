@@ -22,6 +22,7 @@ export type RootStackParamList = {
   Search: undefined; 
 
   // profile
+  UserInfo: undefined;
   BasicInfo: undefined;
   AdditionalInfo: undefined;
   CareerInfo: undefined;

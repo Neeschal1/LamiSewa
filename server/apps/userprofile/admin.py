@@ -6,12 +6,12 @@ from .models.entities import *
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = [
         "profileid",
-        "phonenumber",
+        "username",
         "userid",
     ]
     search_fields = [
         "profileid",
-        "phonenumber",
+        "username",
         "userid__username",
         "userid__email",
         "userid__first_name",

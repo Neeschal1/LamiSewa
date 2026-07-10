@@ -17,7 +17,7 @@ class UserProfileService:
         profiledata = UserProfileSerializer(data=request.data)
         if profiledata.is_valid(raise_exception=True):
             id = profiledata.validated_data["userid"]
-            phonenumber = profiledata.validated_data["phonenumber"]
+            username = profiledata.validated_data["username"]
 
         while True:
             profile_id = self._generate_profile_id()
@@ -26,11 +26,11 @@ class UserProfileService:
 
         profile = UserProfile.objects.create(
             userid=id,
-            phonenumber=phonenumber,
+            username=username,
             profileid=profile_id,
         )
         
-        SendOTP()._send_sms(phonenumber, profile.userid.first_name, "verification") 
+        # SendOTP()._send_sms(phonenumber, profile.userid.first_name, "verification") 
 
         return Response(
             {
@@ -38,7 +38,7 @@ class UserProfileService:
                 "data": {
                     "user_account_id": profile.userid.pk,
                     "user_profile_id": profile.pk,
-                    "phonenumber": profile.phonenumber,
+                    "username": profile.username,
                     "profileid": profile.profileid,
                 },
             },
@@ -72,7 +72,7 @@ class UserProfileService:
                     "message": "User's data retrieved!",
                     "data": {
                         "User ProfileID": profiledata.profileid,
-                        "Phone Number": serializer.data["phonenumber"],
+                        "Username": serializer.data["username"],
                     },
                 },
                 status=status.HTTP_200_OK,

@@ -6,6 +6,7 @@ import {
   HobbiesInfo,
   PersonalInfo,
   CasualInfo,
+  UserInfo
 } from "@/src/screens/profile/profileScreenLayout";
 import { RootStackParamList } from "../components/componentsType";
 import { View } from "react-native"; 
@@ -15,13 +16,14 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const ProfileScreenNavigation = () => {
     return (
-        <Stack.Navigator initialRouteName="BasicInfo" screenOptions={{headerShown: false}}>
-          <Stack.Screen name="BasicInfo" component={BasicInfo} options={ProfileScreens("Basic Info(1/6)")} />
-          <Stack.Screen name="CasualInfo" component={CasualInfo} options={ProfileScreens("Casual Info(2/6)")} />
-          <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} options={ProfileScreens("Additional Info(4/6)")} />
-          <Stack.Screen name="CareerInfo" component={CareerInfo} options={ProfileScreens("Career Info(5/6)")} />
-          <Stack.Screen name="HobbiesInfo" component={HobbiesInfo} options={ProfileScreens("Hobbies Info(6/6)")} />
-          <Stack.Screen name="PersonalInfo" component={PersonalInfo} options={ProfileScreens("Personal Info(3/6)")} />
+        <Stack.Navigator initialRouteName="UserInfo" screenOptions={{headerShown: false}}>
+          <Stack.Screen name="UserInfo" component={UserInfo} options={ProfileScreens("User Info(1/7)")} />
+          <Stack.Screen name="BasicInfo" component={BasicInfo} options={ProfileScreens("Basic Info(2/7)")} />
+          <Stack.Screen name="CasualInfo" component={CasualInfo} options={ProfileScreens("Casual Info(3/7)")} />
+          <Stack.Screen name="PersonalInfo" component={PersonalInfo} options={ProfileScreens("Personal Info(4/7)")} />
+          <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} options={ProfileScreens("Additional Info(5/7)")} />
+          <Stack.Screen name="CareerInfo" component={CareerInfo} options={ProfileScreens("Career Info(6/7)")} />
+          <Stack.Screen name="HobbiesInfo" component={HobbiesInfo} options={ProfileScreens("Hobbies Info(7/7)")} />
         </Stack.Navigator>
     )
 }

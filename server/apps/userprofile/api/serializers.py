@@ -4,10 +4,10 @@ from rest_framework import serializers
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ["userid", "phonenumber"]
+        fields = ["userid", "username"]
         extra_kwargs = {
             "userid": {"required": True, "write_only": True},
-            "phonenumber": {"required": True},
+            "username": {"required": True},
             "profileid": {"read_only": True},
         }
         
