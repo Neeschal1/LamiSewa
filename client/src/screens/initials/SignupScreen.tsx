@@ -112,6 +112,7 @@ const Signup = () => {
       if (axios.isAxiosError(e)) {
         const status = e.response?.status;
         const response = e.response?.data;
+        console.log("Status: ", status, "\nData: ", response)
         setCheckFilledState(true)
         setShowMessage(response)
       }

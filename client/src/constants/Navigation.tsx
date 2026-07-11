@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../auth/useAuth";
-import {
-  FetchProfileState,
-  GetStringDataAsync,
-} from "../storage/ProfileDataAsync";
-import { getTokens } from "../storage/SecureTokens";
 import AuthenticatedNavigation from "./AuthenticatedNavigation";
 import ProfileScreenNavigation from "./ProfileScreenNavigation";
 import UnauthenticatedNavigation from "./UnauthenticatedNavigation";

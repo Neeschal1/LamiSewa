@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getTokens } from "../storage/SecureTokens";
+import { getAccessTokens } from "../storage/SecureTokens";
 
 const api = axios.create({
   baseURL: `${process.env.EXPO_PUBLIC_DJANGO_DEVELOPMENT_SERVER_URL}`,
@@ -8,7 +8,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async (config) => {
-    const token = await getTokens();
+    const token = await getAccessTokens();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

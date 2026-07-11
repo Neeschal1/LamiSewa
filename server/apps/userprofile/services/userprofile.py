@@ -17,7 +17,7 @@ class UserProfileService:
         try:
             profiledata = UserProfileSerializer(data=request.data)
             if profiledata.is_valid(raise_exception=True):
-                id = profiledata.validated_data["userid"]
+                useremail = profiledata.validated_data["useremail"]
                 username = profiledata.validated_data["username"]
 
             while True:
@@ -27,10 +27,12 @@ class UserProfileService:
                
             unique_username = UserProfile.objects.filter(username = username).exists()
             if unique_username == True:
+                user = User.objects.get(email = useremail)
                 return Response({"Message": "User with that username already exists!"}, status=status.HTTP_409_CONFLICT)
 
             profile = UserProfile.objects.create(
-                userid=id,
+                userid = user.pk,
+                useremail=useremail,
                 username=username,
                 profileid=profile_id,
             )
@@ -39,8 +41,6 @@ class UserProfileService:
                 {
                     "message": f"Successfully created {profile.userid.first_name}'s Profile.",
                     "data": {
-                        "user_account_id": profile.userid.pk,
-                        "user_profile_id": profile.pk,
                         "username": profile.username,
                         "profileid": profile.profileid,
                     },

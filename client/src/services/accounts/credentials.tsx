@@ -24,6 +24,7 @@ const HandleAccountCredentials = async (
   } catch (e) {
     if (axios.isAxiosError(e)) {
       console.log("\n\nStatus code: ", e.response?.status);
+      console.log("\n\Issue data: ", e.response?.data);
 
       if (e.response?.status === 400) {
         return 400;

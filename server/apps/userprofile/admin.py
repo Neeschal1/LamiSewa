@@ -5,12 +5,12 @@ from .models.entities import *
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = [
-        "profileid",
+        "useremail",
         "username",
-        "userid",
+        "profileid",
     ]
     search_fields = [
-        "profileid",
+        "useremail",
         "username",
         "userid__username",
         "userid__email",

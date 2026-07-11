@@ -27,7 +27,7 @@ import Animated, {
 import { clearToken } from "@/src/storage/SecureTokens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/src/auth/AuthContext";
-import { clearData } from "@/src/storage/SecureCredentials";
+import { DeleteStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const Welcomecontents = require("@/src/assets/images/welcomeBanner.png");
 const logo = require("@/src/assets/images/mainLogo.png");
@@ -62,7 +62,7 @@ const Welcome: FC = () => {
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {
                       await clearToken();
-                      await AsyncStorage.removeItem("onboardingState");
+                      await DeleteStringDataAsync("onboardingState")
                     }}
                   >
                     <Text className="text-white">Delete all token</Text>
@@ -75,15 +75,15 @@ const Welcome: FC = () => {
                   >
                     <Text className="text-white">Logout</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {
                       await clearData();
                     }}
                   >
                     <Text className="text-white">Clear ID</Text>
-                  </TouchableOpacity>
-                </View> */}
+                  </TouchableOpacity> */}
+                {/* </View> */} 
           </Animated.View>
           <Animated.View
             entering={FadeInDown.delay(200).duration(600).springify()}

@@ -6,6 +6,7 @@ from env_config import Config
 
 class UserProfile(models.Model):
     userid = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    useremail = models.CharField(max_length=50, unique=True)
     username = models.CharField(max_length=15, unique=True)
     profileid = models.CharField(max_length=20, unique=True)
     

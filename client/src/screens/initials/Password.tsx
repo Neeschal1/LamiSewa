@@ -34,7 +34,7 @@ import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 import { useAuth } from "@/src/auth/AuthContext";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import { saveTokens } from "@/src/storage/SecureTokens";
+import { getAccessTokens, saveTokens } from "@/src/storage/SecureTokens";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
@@ -132,6 +132,7 @@ const Password = () => {
         const refreshToken = response["data"]["Message"]["Tokens"]["refreshtoken"]
         await saveTokens(accessToken, refreshToken)
         const decoded = jwtDecode<AccessTokenPayload>(accessToken);
+        accessTokenRef.current = accessToken
         console.log("\nDecoded Users id: ", decoded.user_id);
         console.log("\nDecoded expiry date: ", decoded.exp);
         console.log("\nDecoded token type: ", decoded.token_type);
