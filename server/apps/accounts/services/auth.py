@@ -66,12 +66,10 @@ class UserAuth:
                 return Response({
                     "Message":{
                         "Account Detail": f"Account created successfully for {user.first_name}", 
-                        "UserID": user.pk, 
                         "Tokens": {
                             "accesstoken":access_token, 
-                            "refreshtoken": refresh_token}}, 
-                        "Total number of users": number_of_users}, 
-                    status = status.HTTP_201_CREATED)
+                            "refreshtoken": refresh_token}}
+                    }, status = status.HTTP_201_CREATED)
 
             return Response({"Message": "OTP has expired or was not found. Please request a new one."}, status=status.HTTP_400_BAD_REQUEST)
            
@@ -162,12 +160,12 @@ class UserAuth:
             return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
         
     
-    def _codeverification(self, usersid: int, code: str) -> Response:
+    def _codeverification(self, username: str, code: str) -> Response:
         try:
-            userinfo = User.objects.filter(id = usersid).exists()
+            userinfo = User.objects.filter(username = username).exists()
           
             if userinfo == True:
-                user = User.objects.get(id = usersid)
+                user = User.objects.get(username = username)
                 storedotpcode = cache.get(f"users_info_{user.username}")
                 
                 if storedotpcode is None:
@@ -179,21 +177,21 @@ class UserAuth:
                 
                 return Response({"Message": "The OTP you entered is incorrect. Please try again."}, status=status.HTTP_400_BAD_REQUEST)
             
-            return Response({"Message": "User does not exists!"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"Message": "If an account exists, an OTP has been sent."}, status=status.HTTP_404_NOT_FOUND)
         
         except Exception as e:
             return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
                 
             
-    def _resetpassword(self, userid: int, password: str) -> Response:
+    def _resetpassword(self, username: str, password: str) -> Response:
         try:
             try:
-                user = User.objects.get(id=userid)
+                user = User.objects.get(username=username)
             except User.DoesNotExist:
                 return Response({"Message": "Failed to reset your password!"}, status=status.HTTP_404_NOT_FOUND)
             
             if user:
-                stored_otp_code_for_password_reset = cache.get(f'users_account_reset_password_status_{user.username}') 
+                stored_otp_code_for_password_reset = cache.get(f'users_account_reset_password_status_{user.email}') 
                 if stored_otp_code_for_password_reset["status"] == True:
                     user.set_password(password)
                     user.save()

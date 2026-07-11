@@ -10,6 +10,7 @@ import {
   Text,
 } from "react-native";
 import React, { useRef, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 import Animated, {
   FadeInUp,
   FadeInDown,
@@ -34,6 +35,13 @@ import { useAuth } from "@/src/auth/AuthContext";
 const logo = require("@/src/assets/images/mainLogo.png");
 
 const Password = () => {
+  type AccessTokenPayload = {
+    user_id: number;
+    exp: number;
+    iat: number;
+    token_type: string;
+  };
+
   const { login } = useAuth();
 
   const [password, setPassword] = useState<string>("");
@@ -95,6 +103,10 @@ const Password = () => {
         setShowMessage("");
         setShowSuccessModal(true);
         accessTokenRef.current = response.accessToken;
+        const decoded = jwtDecode<AccessTokenPayload>(response.accessToken);
+        console.log("\nDecoded Users id: ", decoded.user_id)
+        console.log("\nDecoded expiry date: ", decoded.exp)
+        console.log("\nDecoded token type: ", decoded.token_type)
       }
     } catch (e) {
       console.log("Error occured: ", e);
@@ -108,8 +120,6 @@ const Password = () => {
       setLoading(false);
     }
   };
-
-
 
   return (
     <SafeAreaView className="bg-background items-center justify-center flex flex-1">
@@ -205,10 +215,7 @@ const Password = () => {
                       </View>
                     </View>
                   </View>
-                  <PrimaryButton
-                    text="Okay :)"
-                    action={handleOkay}
-                  />
+                  <PrimaryButton text="Okay :)" action={handleOkay} />
                 </View>
               </View>
             </Modal>

@@ -139,7 +139,7 @@ const UserInfo: FC = () => {
                   // screen="BasicInfo"
                   text={loading ? "Loading..." : "Proceed"}
                 />
-                {/* <View className="flex flex-row gap-4">
+                 <View className="flex flex-row gap-4">
                   <TouchableOpacity
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {
@@ -165,7 +165,7 @@ const UserInfo: FC = () => {
                   >
                     <Text className="text-white">Clear ID</Text>
                   </TouchableOpacity>
-                </View> */}
+                </View> 
               </Animated.View>
             </View>
           </View>

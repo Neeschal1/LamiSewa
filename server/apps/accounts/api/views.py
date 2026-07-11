@@ -76,9 +76,9 @@ class CodeVerificationForForgotPasswordSerializersView(viewsets.ViewSet):
     def create(self, request):
         serializers = CodeVerificationForForgotPasswordSerializers(data=request.data)
         if serializers.is_valid(raise_exception=True):
-            usersid = serializers.validated_data['id']
+            usersphonenumber = serializers.validated_data['contactNumber']
             userscode = serializers.validated_data['code']
-            return UserAuth()._codeverification(usersid, userscode)
+            return UserAuth()._codeverification(usersphonenumber, userscode)
         
 
 class ResetPasswordSerializersView(viewsets.ViewSet):
@@ -88,7 +88,7 @@ class ResetPasswordSerializersView(viewsets.ViewSet):
     def create(self, request):
         serializers = ResetPasswordSerializers(data=request.data)
         if serializers.is_valid(raise_exception=True):
+            usersphonenumber = serializers.validated_data['contactNumber']
             passcode = serializers.validated_data['password']
-            id = serializers.validated_data['userid']
-            return UserAuth()._resetpassword(id, passcode)
+            return UserAuth()._resetpassword(usersphonenumber, passcode)
     
