@@ -124,7 +124,7 @@ const Login: FC = () => {
               width: "90%",
               alignItems: "center",
               paddingHorizontal: 20,
-              marginTop: keyboardVisible ? -100 : null,
+              marginTop: keyboardVisible ? -100 : undefined,
             }}
           >
             <ErrorText text={errorMessage} />
@@ -132,12 +132,11 @@ const Login: FC = () => {
         )}
       </ImageBackground>
       <KeyboardAvoidingView
-        behavior="padding"
         className="flex-1"
         style={{
           marginTop: keyboardVisible ? -50 : null,
         }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View className="flex w-full p-screen gap-extralarge rounded-3xl items-center mt-[-100px] bg-background">
           <ScrollView

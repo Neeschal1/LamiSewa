@@ -1,5 +1,5 @@
 import { View, StatusBar } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
 import {
   Description,
@@ -20,6 +20,7 @@ import { saveData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import axios from "axios";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 
 const facebookLogo = require("@/src/assets/images/facebook.png");
 const googleLogo = require("@/src/assets/images/google.png");
@@ -36,77 +37,96 @@ const Signup = () => {
   const [showMessage, setShowMessage] = useState<string>("");
   const [isSelected, setIsSelection] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
 
-  const handleButtonPress = async () => {
-    if (name === "" || email === "" || phone === "") {
-      setCheckFilledState(true);
-      setShowMessage("Fill up all the credentials first!");
-    } else if (isSelected === false) {
-      setCheckFilledState(true);
-      setShowMessage("Oops! You forgot to mark the checkbox");
-    } else {
-      setCheckFilledState(false);
-      const mobile = country["callingCode"][0] + "" + phone;
-      console.log(mobile);
-
-      try {
-        console.log("Logic ongoing...");
-        setLoading(true);
-        const data = {
-          fullname: name,
-          email: email,
-          phonenumber: mobile,
-        };
-        console.log("First step completed...");
-        await saveData(data);
-        console.log("Second step completed...");
-        const response = await HandleAccountCredentials(name, mobile, email);
-        if (response === 400) {
-          console.log("400 response status logic...");
-          setCheckFilledState(true);
-          setShowMessage("User with that email address already exists!");
-          return;
-        }
-        if (response === 409) {
-          console.log("409 response status logic...");
-          setCheckFilledState(true);
-          setShowMessage("User with that phone number already exists!");
-          return;
-        }
-        if (response === 500) {
-          console.log("500 response status logic...");
-          setCheckFilledState(true);
-          setShowMessage("Something occured. Try again!");
-          return;
-        }
-        if (response === null) {
-          setCheckFilledState(true);
-          setShowMessage(
-            "Unstable connection. Make sure you are \nconnected with the internet and try again!",
-          );
-        }
-        navigation.navigate("SignupVerification");
-        setLoading(false);
-      } catch (e) {
-        console.log("Error occured: ", e);
-        if (axios.isAxiosError(e)) {
-          const status = e.response?.status;
-          const response = e.response?.data;
-          console.log("Error Status: ", status);
-          console.log("Error Response: ", response);
-        }
-      } finally {
-        setLoading(false);
+  useEffect(() => {
+    const disableButton = () => {
+      if (email.trim() == "" || name.trim() == "" || phone.trim() == "" || isSelected === false) {
+        setDisabilityStatus(true);
+      } else {
+        setDisabilityStatus(false);
       }
+    };
+    disableButton();
+  }, [email, name, phone, isSelected]);
+
+  const handleButtonPress = async () => {
+    setCheckFilledState(false);
+    const mobile = country["callingCode"][0] + "" + phone;
+
+    try {
+      setLoading(true);
+      const response = await HandleAccountCredentials(name, mobile, email);
+
+      if (response === 400) {
+        setCheckFilledState(true);
+        setShowMessage("User with that email address already exists!");
+        setTimeout(() => {
+          setCheckFilledState(false);
+          setShowMessage("");
+        }, 5000);
+        return;
+      }
+
+      if (response === 409) {
+        setCheckFilledState(true);
+        setShowMessage("User with that phone number already exists!");
+        setTimeout(() => {
+          setCheckFilledState(false);
+          setShowMessage("");
+        }, 5000);
+        return;
+      }
+
+      if (response === 500) {
+        setCheckFilledState(true);
+        setShowMessage("Something occured. Try again!");
+        setTimeout(() => {
+          setCheckFilledState(false);
+          setShowMessage("");
+        }, 5000);
+        return;
+      }
+
+      if (response === null) {
+        setCheckFilledState(true);
+        setShowMessage("Unstable connection. Make sure you are \nconnected with the internet and try again!",);
+        setTimeout(() => {
+          setCheckFilledState(false);
+          setShowMessage("");
+        }, 5000);
+        return;
+      }
+
+      const data = {
+        fullname: name,
+        email: email,
+        contactnumber: mobile,
+      };
+      await saveData(data);
+      navigation.navigate("SignupVerification");
+      setLoading(false);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        const status = e.response?.status;
+        const response = e.response?.data;
+        setCheckFilledState(true)
+        setShowMessage(response)
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <SafeAreaView className="flex flex-1 bg-background">
       <StatusBar hidden={false} translucent />
-      <View className="flex-1 bg-background w-full items-start p-screen justify-center gap-extralarge">
+      <View
+        pointerEvents={loading ? "none" : "auto"}
+        className="flex-1 bg-background w-full items-start p-screen justify-center gap-extralarge"
+      >
         <View className="flex gap-large">
           <Animated.View
             entering={FadeInUp.delay(200).duration(400).springify()}
@@ -198,7 +218,8 @@ const Signup = () => {
         >
           <PrimaryButton
             action={handleButtonPress}
-            text={loading ? "Loading..." : "Proceed"}
+            text="Proceed"
+            disability={disabilityStatus}
           />
         </Animated.View>
 
@@ -252,6 +273,7 @@ const Signup = () => {
           </Animated.View>
         </View>
       </View>
+      {loading && <LottieLoadingAnimation />}
     </SafeAreaView>
   );
 };

@@ -5,14 +5,14 @@ import axios from "axios";
 
 const HandleAccountCredentials = async (
   name: string,
-  username: string,
+  phone: string,
   email: string,
 ) => {
   console.log("Reached here!!!");
   try {
     const credentialsData: any = {
       fullname: name,
-      username: username,
+      contactnumber: phone,
       email: email,
     };
     const res = await api.post(

@@ -6,7 +6,7 @@ import { SubHeading, SubText } from "@/src/components/systemComponentsLayout";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import Splash from "../initials/SplashScreen";
-import { GetStringDataAsync, StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const dating = require("@/src/assets/animations/dating.json");
 const chatting = require("@/src/assets/animations/chatting.json");
