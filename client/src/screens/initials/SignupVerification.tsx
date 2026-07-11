@@ -29,19 +29,19 @@ import HandleOTPVerification from "@/src/services/accounts/otpverification";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import axios from "axios";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 
 const mailInboxImage = require("@/src/assets/images/mails.png");
 
 const SignupVerification = () => {
   const [timer, setTimer] = useState<number>(120);
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
-  const [checkOTPState, setCheckOTPState] = useState<boolean>(false);
-  const [showMessage, setShowMessage] = useState<string>("");
 
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [disabilityStatus, setDisabilityStatus] = useState<boolean>(true);
 
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -58,18 +58,45 @@ const SignupVerification = () => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const handleOTPAction = async () => {
-    const otpCode = otp.join("");
-    if (otpCode.length != 6) {
-      setCheckOTPState(true);
-      setShowMessage("Enter complete OTP codes!");
-    } else {
-      setCheckOTPState(false);
+  
+  useEffect(() => {
+    const userdata = async () => {
+      const details = (await getData()) as {
+        fullname: string;
+        email: string;
+        contactnumber: string;
+      };
+      if (details) {
+        setPhoneNumber(details.contactnumber);
+        setName(details.fullname);
+        setEmail(details.email);
+      }
+    };
+
+    userdata();
+  }, []);
+
+
+  useEffect(()=>{
+    const disablePrimaryButton = () => {
+      const otpCode = otp.join("");
+      if (otpCode.length === 6) {
+        setDisabilityStatus(false)
+      } else {
+        setDisabilityStatus(true)
+      }
     }
+    disablePrimaryButton();
+  }, [otp])
+
+
+  const handleOTPAction = async () => {
+
     let stringOTP = "";
     for (let i = 0; i < otp.length; i++) {
       stringOTP += otp[i];
     }
+
     try {
       setLoading(true);
       const otpdata = HandleOTPVerification(email, stringOTP);
@@ -84,8 +111,8 @@ const SignupVerification = () => {
         const response = e.response?.data;
 
         if (status === 404 || status === 401 || status === 400) {
-          setCheckOTPState(true);
-          setShowMessage(response["Message"]);
+          setError(true);
+          setErrorMessage(response["Message"]);
           setTimeout(() => {
             setError(false);
             setErrorMessage("");
@@ -99,25 +126,9 @@ const SignupVerification = () => {
     }
   };
 
-  useEffect(() => {
-    const userdata = async () => {
-      const details = (await getData()) as {
-        fullname: string;
-        email: string;
-        phonenumber: string;
-      };
-      if (details) {
-        setPhoneNumber(details.phonenumber);
-        setName(details.fullname);
-        setEmail(details.email);
-      }
-    };
-
-    userdata();
-  }, []);
-
   const handleResend = async () => {
     setTimer(120);
+    setOtp(["", "", "", "", "", ""]);
     HandleAccountCredentials(name, phoneNumber, email);
   };
 
@@ -171,18 +182,19 @@ const SignupVerification = () => {
                 </View>
               </Animated.View>
               <Animated.View
-                key={showMessage}
+                key={errorMessage}
                 entering={BounceIn.delay(200).duration(300)}
-                className="ml-[-20px] flex items-center text-center justify-center w-full"
+                className="flex items-center text-center justify-center w-full"
               >
-                {checkOTPState ? <ErrorText text={showMessage} /> : null}
+                {error ? <View className="flex w-full items-center justify-center"><ErrorText text={errorMessage} /></View> : null}
               </Animated.View>
               <Animated.View
                 entering={FadeInDown.delay(200).duration(400).springify()}
               >
                 <PrimaryButton
                   action={handleOTPAction}
-                  text={loading ? "Loading..." : "Continue"}
+                  text="Continue"
+                  disability={disabilityStatus}
                 />
               </Animated.View>
               {timer === 0 && (
@@ -195,6 +207,7 @@ const SignupVerification = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      {loading && <LottieLoadingAnimation />}
     </SafeAreaView>
   );
 };
