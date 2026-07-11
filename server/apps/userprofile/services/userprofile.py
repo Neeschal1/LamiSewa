@@ -27,6 +27,7 @@ class UserProfileService:
                     break
                
             unique_username = UserProfile.objects.filter(username = username).exists()
+            
             if unique_username == True:
                 return Response({"Message": "User with that username already exists!"}, status=status.HTTP_409_CONFLICT)
             

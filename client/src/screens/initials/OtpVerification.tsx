@@ -24,11 +24,12 @@ import {
   TextualButton,
   SubTitle,
 } from "@/src/components/systemComponentsLayout";
-import { getDataString } from "@/src/storage/SecureCredentials";
+import {  } from "@/src/storage/SecureCredentials";
 import HandleForgotPasswordOTPVerification from "@/src/services/accounts/forgotpasswordotp";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import axios from "axios";
+import { GetStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const confusedImage = require("@/src/assets/images/confused.png");
 
@@ -68,23 +69,23 @@ const OtpVerification = () => {
     }
     try {
       setLoading(true);
-      const userid = Number(await getDataString());
-      console.log(
-        "User's ID: ",
-        userid,
-        "Datatype: ",
-        typeof userid,
-        "Entered OTP: ",
-        stringOTP,
-        "Type of entered otp: ",
-        typeof stringOTP,
-      );
-      const res = await HandleForgotPasswordOTPVerification(userid, stringOTP);
-      if (res["status"] === 200) {
-        setLoading(false);
-        console.log("Data: ", res["data"]);
-        navigation.navigate("SetNewPassword");
-      }
+      // const userid = Number(await GetStringDataAsync());
+      // console.log(
+      //   "User's ID: ",
+      //   userid,
+      //   "Datatype: ",
+      //   typeof userid,
+      //   "Entered OTP: ",
+      //   stringOTP,
+      //   "Type of entered otp: ",
+      //   typeof stringOTP,
+      // );
+      // const res = await HandleForgotPasswordOTPVerification(userid, stringOTP);
+      // if (res["status"] === 200) {
+      //   setLoading(false);
+      //   console.log("Data: ", res["data"]);
+      //   navigation.navigate("SetNewPassword");
+      // }
     } catch (e) {
       if (axios.isAxiosError(e)) {
         const status = e.response?.status;

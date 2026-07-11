@@ -1,8 +1,15 @@
 import * as SecureStore from 'expo-secure-store'
 
-export const saveTokens = async(access: string, refresh: string) => {
+export const saveTokens = async(access: string) => {
     try {
         await SecureStore.setItemAsync('accessToken', access);
+    } catch (err) {
+        return err
+    }
+}
+
+export const saveRefreshTokens = async(refresh: string) => {
+    try {
         await SecureStore.setItemAsync('refreshToken', refresh);
     } catch (err) {
         return err

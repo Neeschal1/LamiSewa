@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { clearToken, getTokens, saveTokens } from "../storage/SecureTokens";
+import { clearToken, getAccessTokens, saveTokens } from "../storage/SecureTokens";
 import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -12,18 +12,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const loadingTokens = async () => {
     try {
-      const storedToken = await getTokens();
+      const storedToken = await getAccessTokens();
       setToken(storedToken);
     } catch (error) {
       setToken(null);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const login = async (newToken: string) => {
-    await saveTokens(newToken);
-    setToken(newToken);
+  }; 
+ 
+  const login = async (accessToken: string) => {
+    await saveTokens(accessToken); 
+    setToken(accessToken);
   };
 
   const logout = async () => {

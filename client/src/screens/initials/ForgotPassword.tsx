@@ -29,7 +29,7 @@ import FindAccountService from "@/src/services/accounts/findaccount";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import axios from "axios";
-import { saveDataString } from "@/src/storage/SecureCredentials";
+// import { saveDataString } from "@/src/storage/SecureCredentials";
 
 const forgotImage = require("@/src/assets/images/confused.png");
 
@@ -53,7 +53,7 @@ const ForgotPassword = () => {
       setLoading(true);
       const res = await FindAccountService(contact);
       if (res.status === 200) {
-        await saveDataString(res["data"]["User Detail"]);
+        // await saveDataString(res["data"]["User Detail"]);
         navigation.navigate("OtpVerification");
       }
     } catch (e) {

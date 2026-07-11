@@ -43,8 +43,8 @@ const UserInfo: FC = () => {
   const navigation = useNavigation<NavigationProps>();
 
   const handleProceed = async () => {
-    const userscredentials = await getData()
-    const usersemail = userscredentials["email"]
+    const userscredentials = await getData();
+    const usersemail = userscredentials["email"];
 
     if (userName === "") {
       setError(true);
@@ -68,9 +68,24 @@ const UserInfo: FC = () => {
         console.log("Data: ", data);
         console.log("Status: ", status);
 
-        if (status === 409 || status === 417) {
+        if (status === 409) {
           setError(true);
-          setErrorMessage(data);
+          setErrorMessage("User with that username already exists!");
+          setTimeout(() => {
+            setError(false);
+            setErrorMessage("");
+          }, 5000);
+          return;
+        }
+
+        if (status === 417) {
+          setError(true);
+          setErrorMessage("Something went wrong!");
+          setTimeout(() => {
+            setError(false);
+            setErrorMessage("");
+          }, 5000);
+          return;
         }
       }
     } finally {
@@ -92,7 +107,7 @@ const UserInfo: FC = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 items-center justify-start mt-20 p-screen bg-background gap-large pt-extralarge">
+          <View className="flex-1 items-center justify-center mt-20 p-screen bg-background gap-large pt-extralarge">
             <StatusBar hidden translucent />
             <Animated.View
               entering={FadeInUp.delay(200).duration(400).springify()}
@@ -139,7 +154,7 @@ const UserInfo: FC = () => {
                   // screen="BasicInfo"
                   text={loading ? "Loading..." : "Proceed"}
                 />
-                <View className="flex flex-row gap-4">
+                {/* <View className="flex flex-row gap-4">
                   <TouchableOpacity
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {
@@ -165,7 +180,7 @@ const UserInfo: FC = () => {
                   >
                     <Text className="text-white">Clear ID</Text>
                   </TouchableOpacity> */}
-                </View>
+                {/* </View> */}
               </Animated.View>
             </View>
           </View>

@@ -77,8 +77,8 @@ const Login: FC = () => {
     setLoading(true);
     try {
       if (email && password) {
-        const accessToken = await HandleLoginService(email, password);
-        await login(accessToken);
+        const Token = await HandleLoginService(email, password);
+        await login(Token.accesstoken);
       }
     } catch (e) {
       if (axios.isAxiosError(e)) {
