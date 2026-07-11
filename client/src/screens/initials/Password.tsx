@@ -9,7 +9,9 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
+import { Ionicons } from "@expo/vector-icons";
 import { jwtDecode } from "jwt-decode";
 import Animated, {
   FadeInUp,
@@ -26,15 +28,31 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HandleSignupService from "@/src/services/accounts/signup";
-import { getData, saveDataString } from "@/src/storage/SecureCredentials";
+import { getData } from "@/src/storage/SecureCredentials";
 import axios from "axios";
 import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/src/auth/AuthContext";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
+import { saveTokens } from "@/src/storage/SecureTokens";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
 const Password = () => {
+  const { login } = useAuth();
+
+  const [password, setPassword] = useState<string>("");
+  const [seePassword, setSeePassword] = useState<boolean>(false);
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [seeConfirmPassword, setSeeConfirmPassword] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrormessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [notVerified, setNotVerified] = useState<boolean>(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
+  const navigation = useNavigation<NavigationProps>();
+
   type AccessTokenPayload = {
     user_id: number;
     exp: number;
@@ -42,24 +60,27 @@ const Password = () => {
     token_type: string;
   };
 
-  const { login } = useAuth();
-
-  const [password, setPassword] = useState<string>("");
-  const [seePassword, setSeePassword] = useState<boolean>(false);
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [seeConfirmPassword, setSeeConfirmPassword] = useState<boolean>(false);
-
-  const [unMatched, setUnMatched] = useState<boolean>(false);
-  const [showMessage, setShowMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-  // const [access, setAccess] = useState<string>("");
   const accessTokenRef = useRef<string | null>(null);
 
+  useEffect(() => {
+    const disabledPrimaryButton = () => {
+      if (password.trim() === "" || confirmPassword.trim() === "") {
+        setDisabilityStatus(true);
+      } else {
+        setDisabilityStatus(false);
+      }
+    };
+    disabledPrimaryButton();
+  }, [password, confirmPassword]);
+
   const handleOkay = async () => {
-    await AsyncStorage.setItem("profilestatus", "incomplete");
+    if (notVerified) {
+      navigation.navigate("Signup");
+      setShowSuccessModal(false);
+      return;
+    }
+
+    await StoreStringDataAsync("profilestatus", "incomplete");
     if (accessTokenRef.current) {
       await login(accessTokenRef.current);
     }
@@ -70,19 +91,23 @@ const Password = () => {
     const pass = password.trim();
     const confirmpass = confirmPassword.trim();
 
-    if (!pass || !confirmpass) {
-      setUnMatched(true);
-      setShowMessage("Please fill in both password fields.");
-      return;
-    } else if (pass.length < 8) {
-      setUnMatched(true);
-      setShowMessage("Password must be at least 8 characters long!");
+    if (pass.length < 8) {
+      setError(true);
+      setErrormessage("Password must be at least 8 characters long!");
+      setTimeout(() => {
+        setError(false);
+        setErrormessage("");
+      }, 5000);
       return;
     } else if (pass != confirmpass) {
-      setUnMatched(true);
-      setShowMessage(
+      setError(true);
+      setErrormessage(
         "Your password and confirm password doesn't \nmatch. Please check them again and try again!",
       );
+      setTimeout(() => {
+        setError(false);
+        setErrormessage("");
+      }, 5000);
       return;
     }
     try {
@@ -90,20 +115,23 @@ const Password = () => {
       const data = await getData();
       const email = data["email"];
       const name = data["fullname"];
-      const phoneNumber = data["phonenumber"];
-      const response = await HandleSignupService(
+      const phoneNumber = data["contactnumber"];
+      const response = await HandleSignupService( 
         name,
         email,
         phoneNumber,
         password,
       );
       if (response.status === 201) {
-        setUnMatched(false);
+        setError(false);
         setLoading(false);
-        setShowMessage("");
+        setErrormessage("");
         setShowSuccessModal(true);
-        accessTokenRef.current = response.accessToken;
-        const decoded = jwtDecode<AccessTokenPayload>(response.accessToken);
+        console.log("Response from server: ", response["data"]);
+        const accessToken = response["data"]["Message"]["Tokens"]["accesstoken"]
+        const refreshToken = response["data"]["Message"]["Tokens"]["refreshtoken"]
+        await saveTokens(accessToken, refreshToken)
+        const decoded = jwtDecode<AccessTokenPayload>(accessToken);
         console.log("\nDecoded Users id: ", decoded.user_id);
         console.log("\nDecoded expiry date: ", decoded.exp);
         console.log("\nDecoded token type: ", decoded.token_type);
@@ -115,6 +143,10 @@ const Password = () => {
         const response = e.response?.data;
         console.log("Error Status: ", status);
         console.log("Error Response: ", response);
+        if (status === 401) {
+          setNotVerified(true);
+          setShowSuccessModal(true);
+        }
       }
     } finally {
       setLoading(false);
@@ -126,6 +158,7 @@ const Password = () => {
       <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+        className="flex-1 flex items-center justify-end"
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
@@ -140,13 +173,13 @@ const Password = () => {
               >
                 <MainScreenName text="Password" />
                 <View className="mt-[-10px]">
-                  {unMatched ? (
+                  {error ? (
                     <Animated.View
-                      key={showMessage}
+                      key={errorMessage}
                       entering={BounceIn.delay(200).duration(300)}
                       className="flex align-start"
                     >
-                      <ErrorText text={`${showMessage}`} />
+                      <ErrorText text={`${errorMessage}`} />
                     </Animated.View>
                   ) : (
                     <Description text="Choose a stronger password to stay secure." />
@@ -188,7 +221,8 @@ const Password = () => {
               >
                 <PrimaryButton
                   action={handleContinue}
-                  text={loading ? "Loading..." : "Continue"}
+                  text="Sign up"
+                  disability={disabilityStatus}
                 />
               </Animated.View>
             </View>
@@ -206,28 +240,45 @@ const Password = () => {
                 }}
               >
                 <View className="bg-white py-4 mx-screen rounded-3xl w-full p-screen items-center gap-large">
-                  <View className="flex items-center">
-                    <Image className="h-40 w-40" source={logo} />
-                    <View className="mt-[-30px] w-full flex items-center">
-                      <MainScreenName text="Success!" />
-                      <View className="mt-[-10px]">
-                        <Description text="Your Account has been Created Successfully" />
+                  {notVerified ? (
+                    <View className="flex items-center gap-8">
+                      <Ionicons name="sad-outline" size={32} color="#FF000E" />
+                      <View className="mt-[-30px] w-full flex items-center">
+                        <MainScreenName text="Timeout" />
+                        <View className="mt-[-10px] w-full items-center">
+                          <Description text="You exceeded the time to choose a password. Signup your credentials again to continue!" />
+                        </View>
                       </View>
+                      <PrimaryButton
+                        text="Take me to Signup Screen"
+                        action={handleOkay}
+                      />
                     </View>
-                  </View>
-                  <PrimaryButton text="Okay :)" action={handleOkay} />
+                  ) : (
+                    <View className="flex items-center gap-mid">
+                      <Image className="h-40 w-40" source={logo} />
+                      <View className="mt-[-30px] w-full flex items-center">
+                        <MainScreenName text="Success!" />
+                        <View className="mt-[-10px]">
+                          <Description text="Your Account has been Created Successfully" />
+                        </View>
+                      </View>
+                      <PrimaryButton text="Okay :)" action={handleOkay} />
+                    </View>
+                  )}
                 </View>
               </View>
             </Modal>
           </View>
-          <Animated.View
-            entering={FadeInDown.delay(200).duration(400).springify()}
-            className="flex items-center w-full"
-          >
-            <Description text="LamiSewa © 2026. All rights reserved." />
-          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <Animated.View
+        entering={FadeInDown.delay(200).duration(400).springify()}
+        className="flex items-center w-full"
+      >
+        <Description text="LamiSewa © 2026. All rights reserved." />
+      </Animated.View>
+      {loading && <LottieLoadingAnimation />}
     </SafeAreaView>
   );
 };

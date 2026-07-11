@@ -44,6 +44,7 @@ const UnauthenticatedNavigation = () => {
   return (
     <Stack.Navigator
       initialRouteName={initialScreen}
+      // initialRouteName="Password"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Welcome" component={Welcome} />
