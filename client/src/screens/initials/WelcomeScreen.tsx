@@ -5,7 +5,7 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
-  Text
+  Text,
 } from "react-native";
 import {
   Description,
@@ -24,10 +24,10 @@ import Animated, {
   withTiming,
   BounceIn,
 } from "react-native-reanimated";
-import { clearToken } from "@/src/storage/Tokens";
+import { clearToken } from "@/src/storage/SecureTokens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/src/auth/AuthContext";
-import { clearData } from "@/src/storage/Ids";
+import { clearData } from "@/src/storage/SecureCredentials";
 
 const Welcomecontents = require("@/src/assets/images/welcomeBanner.png");
 const logo = require("@/src/assets/images/mainLogo.png");
@@ -45,13 +45,17 @@ const Welcome: FC = () => {
         source={Welcomecontents}
       >
         <View className="flex justify-center items-center mb-mid gap-small">
-          <Animated.View entering={FadeInUp.delay(400).duration(800).springify()}>
+          <Animated.View
+            entering={FadeInUp.delay(400).duration(800).springify()}
+          >
             <Image
-            style={{ width: screenwidth * 0.7, height: screenheight * 0.143 }}
-            source={logo}
-          />
+              style={{ width: screenwidth * 0.7, height: screenheight * 0.143 }}
+              source={logo}
+            />
           </Animated.View>
-          <Animated.View entering={FadeInUp.delay(200).duration(600).springify()}>
+          <Animated.View
+            entering={FadeInUp.delay(200).duration(600).springify()}
+          >
             <PrimaryButton screen="Signup" text="Let's Begin" />
             {/* <View className="flex flex-row gap-4">
                   <TouchableOpacity
@@ -81,12 +85,17 @@ const Welcome: FC = () => {
                   </TouchableOpacity>
                 </View> */}
           </Animated.View>
-          <Animated.View entering={FadeInDown.delay(200).duration(600).springify()}  className="flex flex-row gap-2 justify-center items-center">
+          <Animated.View
+            entering={FadeInDown.delay(200).duration(600).springify()}
+            className="flex flex-row gap-2 justify-center items-center"
+          >
             <SubTitle text="Already have an account?" />
             <TextualButton text="Login" screen="Login" />
           </Animated.View>
         </View>
-        <Animated.View entering={FadeInDown.delay(400).duration(800).springify()}>
+        <Animated.View
+          entering={FadeInDown.delay(400).duration(800).springify()}
+        >
           <Description text="LamiSewa © 2026. All rights reserved." />
         </Animated.View>
       </ImageBackground>

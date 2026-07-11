@@ -1,7 +1,7 @@
 import { API } from "@/src/constants/apiEndpoints";
 import api from "../api";
-import { saveTokens } from "@/src/storage/Tokens";
-import { saveDataString } from "@/src/storage/Ids";
+import { saveTokens } from "@/src/storage/SecureTokens";
+import { saveDataString } from "@/src/storage/SecureCredentials";
 
 const HandleSignupService = async (
   name: string,
@@ -17,7 +17,7 @@ const HandleSignupService = async (
   };
   const res = await api.post(API.ACCOUNTS.SIGNUP, signupData);
   await saveTokens(res.data.Message.Tokens.accesstoken);
-  await saveDataString(`${res.data.Message.UserID}`)
+  await saveDataString(`${res.data.Message.UserID}`);
   return {
     status: res.status,
     accessToken: res.data.Message.Tokens.accesstoken,

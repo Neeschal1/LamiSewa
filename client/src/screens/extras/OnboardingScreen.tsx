@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 import LottieView from "lottie-react-native";
 import { SubHeading, SubText } from "@/src/components/systemComponentsLayout";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import Splash from "../initials/SplashScreen";
+import { GetStringDataAsync, StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const dating = require("@/src/assets/animations/dating.json");
 const chatting = require("@/src/assets/animations/chatting.json");
@@ -19,7 +19,7 @@ const SkipButton = ({ onPress }: any) => (
     className="px-mid py-small"
     activeOpacity={0.8}
     onPress={async () => {
-      await AsyncStorage.setItem("onboardingState", "completed");
+      await StoreStringDataAsync("onboardingState", "completed");
       onPress();
       navigatingScreen();
     }}
@@ -43,7 +43,9 @@ const DoneButton = ({ onPress }: any) => (
     className="bg-primaryred rounded-full px-8 py-5"
     activeOpacity={0.8}
     onPress={async () => {
-      await AsyncStorage.setItem("onboardingState", "completed");
+      await StoreStringDataAsync("onboardingState", "completed");
+      const data = await GetStringDataAsync("onboardingState")
+      console.log("Asyncstore state: ", data)
       onPress();
       navigatingScreen();
     }}
@@ -83,11 +85,11 @@ const OnboardingScreen: FC = () => {
       <Onboarding
         showSkip
         onSkip={async () => {
-          await AsyncStorage.setItem("onboardingState", "completed");
+          await StoreStringDataAsync("onboardingState", "completed");
           navigation.replace("Welcome");
         }}
         onDone={async () => {
-          await AsyncStorage.setItem("onboardingState", "completed");
+          await StoreStringDataAsync("onboardingState", "completed");
           navigation.replace("Welcome");
         }}
         bottomBarHighlight={false}
@@ -125,8 +127,7 @@ const OnboardingScreen: FC = () => {
               />
             ),
             title: "Start Meaningful Conversations",
-            subtitle:
-              "Connect with verified people and begin genuine conversations that matter.",
+            subtitle: "Connect with verified people and begin genuine conversations that matter.",
           },
           {
             backgroundColor: "#FFF4F8",
@@ -142,8 +143,7 @@ const OnboardingScreen: FC = () => {
               />
             ),
             title: "Discover Your Perfect Match",
-            subtitle:
-              "Explore compatible profiles based on your interests, values, and lifestyle.",
+            subtitle: "Explore compatible profiles based on your interests, values, and lifestyle.",
           },
           {
             backgroundColor: "#F5FFF8",
@@ -159,8 +159,7 @@ const OnboardingScreen: FC = () => {
               />
             ),
             title: "Build a Lifetime Together",
-            subtitle:
-              "Take the next step toward a meaningful relationship and a brighter future.",
+            subtitle: "Take the next step toward a meaningful relationship and a brighter future.",
           },
         ]}
       />

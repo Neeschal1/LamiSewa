@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
 import CountryPicker, { CountryCode } from "react-native-country-picker-modal";
 import HandleAccountCredentials from "@/src/services/accounts/credentials";
-import { saveData } from "@/src/storage/Ids";
+import { saveData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import axios from "axios";
@@ -35,7 +35,7 @@ const Signup = () => {
   const [checkFilledState, setCheckFilledState] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<string>("");
   const [isSelected, setIsSelection] = useState(false);
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -52,41 +52,43 @@ const Signup = () => {
       console.log(mobile);
 
       try {
-        console.log("Logic ongoing...")
-        setLoading(true)
+        console.log("Logic ongoing...");
+        setLoading(true);
         const data = {
           fullname: name,
           email: email,
           phonenumber: mobile,
         };
-        console.log("First step completed...")
+        console.log("First step completed...");
         await saveData(data);
-        console.log("Second step completed...")
+        console.log("Second step completed...");
         const response = await HandleAccountCredentials(name, mobile, email);
-        if (response === 400){
-          console.log("400 response status logic...")
-          setCheckFilledState(true)
-          setShowMessage("User with that email address already exists!")
-          return;
-        } 
-        if (response === 409){
-          console.log("409 response status logic...")
-          setCheckFilledState(true)
-          setShowMessage("User with that phone number already exists!")
-          return;
-        } 
-        if (response === 500){
-          console.log("500 response status logic...")
-          setCheckFilledState(true)
-          setShowMessage("Something occured. Try again!")
+        if (response === 400) {
+          console.log("400 response status logic...");
+          setCheckFilledState(true);
+          setShowMessage("User with that email address already exists!");
           return;
         }
-        if (response === null){
-          setCheckFilledState(true)
-          setShowMessage("Unstable connection. Make sure you are \nconnected with the internet and try again!")
+        if (response === 409) {
+          console.log("409 response status logic...");
+          setCheckFilledState(true);
+          setShowMessage("User with that phone number already exists!");
+          return;
+        }
+        if (response === 500) {
+          console.log("500 response status logic...");
+          setCheckFilledState(true);
+          setShowMessage("Something occured. Try again!");
+          return;
+        }
+        if (response === null) {
+          setCheckFilledState(true);
+          setShowMessage(
+            "Unstable connection. Make sure you are \nconnected with the internet and try again!",
+          );
         }
         navigation.navigate("SignupVerification");
-        setLoading(false)
+        setLoading(false);
       } catch (e) {
         console.log("Error occured: ", e);
         if (axios.isAxiosError(e)) {
@@ -96,7 +98,7 @@ const Signup = () => {
           console.log("Error Response: ", response);
         }
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
   };
@@ -194,7 +196,10 @@ const Signup = () => {
         <Animated.View
           entering={FadeInDown.delay(1000).duration(400).springify()}
         >
-          <PrimaryButton action={handleButtonPress} text={loading ? "Loading..." : "Proceed"} />
+          <PrimaryButton
+            action={handleButtonPress}
+            text={loading ? "Loading..." : "Proceed"}
+          />
         </Animated.View>
 
         <View className="flex w-full items-center justify-center gap-mid">

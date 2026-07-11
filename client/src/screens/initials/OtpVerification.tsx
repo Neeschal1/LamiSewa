@@ -24,7 +24,7 @@ import {
   TextualButton,
   SubTitle,
 } from "@/src/components/systemComponentsLayout";
-import { getDataString } from "@/src/storage/Ids";
+import { getDataString } from "@/src/storage/SecureCredentials";
 import HandleForgotPasswordOTPVerification from "@/src/services/accounts/forgotpasswordotp";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
@@ -82,7 +82,7 @@ const OtpVerification = () => {
       const res = await HandleForgotPasswordOTPVerification(userid, stringOTP);
       if (res["status"] === 200) {
         setLoading(false);
-        console.log("Data: ", res["data"])
+        console.log("Data: ", res["data"]);
         navigation.navigate("SetNewPassword");
       }
     } catch (e) {

@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { clearToken, getTokens, saveTokens } from "../storage/Tokens";
+import { clearToken, getTokens, saveTokens } from "../storage/SecureTokens";
 import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {

@@ -13,11 +13,10 @@ import {
 import { RootStackParamList } from "../components/componentsType";
 import {
   OnboardingScreen,
-  Language,
 } from "@/src/screens/extras/ExtraScreenLayout";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GetStringDataAsync } from "../storage/ProfileDataAsync";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,7 +25,7 @@ const UnauthenticatedNavigation = () => {
 
   useEffect(() => {
     const OnboardingScreenState = async () => {
-      const screenName = await AsyncStorage.getItem("onboardingState");
+      const screenName = await GetStringDataAsync("onboardingState");
       if (screenName === "completed") {
         setInitialScreen("Welcome");
         return;

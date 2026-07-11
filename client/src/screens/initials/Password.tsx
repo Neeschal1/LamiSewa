@@ -26,9 +26,9 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HandleSignupService from "@/src/services/accounts/signup";
-import { getData, saveDataString } from "@/src/storage/Ids";
+import { getData, saveDataString } from "@/src/storage/SecureCredentials";
 import axios from "axios";
-import { StoreStringDataAsync } from "@/src/storage/ProfileData";
+import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/src/auth/AuthContext";
 
@@ -104,9 +104,9 @@ const Password = () => {
         setShowSuccessModal(true);
         accessTokenRef.current = response.accessToken;
         const decoded = jwtDecode<AccessTokenPayload>(response.accessToken);
-        console.log("\nDecoded Users id: ", decoded.user_id)
-        console.log("\nDecoded expiry date: ", decoded.exp)
-        console.log("\nDecoded token type: ", decoded.token_type)
+        console.log("\nDecoded Users id: ", decoded.user_id);
+        console.log("\nDecoded expiry date: ", decoded.exp);
+        console.log("\nDecoded token type: ", decoded.token_type);
       }
     } catch (e) {
       console.log("Error occured: ", e);

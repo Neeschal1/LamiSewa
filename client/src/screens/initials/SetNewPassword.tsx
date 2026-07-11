@@ -28,7 +28,7 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HandleResetPasswordService from "@/src/services/accounts/resetpassword";
-import { getDataString } from "@/src/storage/Ids";
+import { getDataString } from "@/src/storage/SecureCredentials";
 import axios from "axios";
 
 const logo = require("@/src/assets/images/mainLogo.png");
@@ -49,7 +49,7 @@ const SetNewPassword = () => {
     const confirmpass = confirmPassword.trim();
 
     const userid = Number(await getDataString());
-    console.log("Users ID: ", userid)
+    console.log("Users ID: ", userid);
 
     if (!pass || !confirmpass) {
       setUnMatched(true);
@@ -80,20 +80,20 @@ const SetNewPassword = () => {
         setShowSuccessModal(true);
       }
     } catch (e) {
-      if(axios.isAxiosError(e)){
-        const data = e.response?.data
-        const status = e.response?.status
-        console.log("Status from reset password: ", status)
-        console.log("\Data from reset password: ", data)
-        if (status === 400){
+      if (axios.isAxiosError(e)) {
+        const data = e.response?.data;
+        const status = e.response?.status;
+        console.log("Status from reset password: ", status);
+        console.log("\Data from reset password: ", data);
+        if (status === 400) {
           setUnMatched(true);
           setShowMessage(data);
         }
-        if (status === 404){
+        if (status === 404) {
           setUnMatched(true);
           setShowMessage(data);
         }
-        if (status === 417){
+        if (status === 417) {
           setUnMatched(true);
           setShowMessage(data);
         }

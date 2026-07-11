@@ -25,14 +25,18 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import { clearData, getData, getDataString } from "@/src/storage/Ids";
+import {
+  clearData,
+  getData,
+  getDataString,
+} from "@/src/storage/SecureCredentials";
 import UserProfileService from "@/src/services/profile/userinfo";
 import axios from "axios";
-import { clearToken } from "@/src/storage/Tokens";
+import { clearToken } from "@/src/storage/SecureTokens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/src/auth/AuthContext";
 
-const createProfileAnimation = require("@/src/assets/animations/createProfile.json")
+const createProfileAnimation = require("@/src/assets/animations/createProfile.json");
 
 const UserInfo: FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -44,14 +48,14 @@ const UserInfo: FC = () => {
 
   const handleProceed = async () => {
     const userid = Number(await getDataString());
-    const stringid = await getDataString()
+    const stringid = await getDataString();
 
-    console.log("Number Users ID: ", userid)
-    console.log("String Users ID: ", stringid)
-    
-    if (userName === ""){
+    console.log("Number Users ID: ", userid);
+    console.log("String Users ID: ", stringid);
+
+    if (userName === "") {
       setError(true);
-      setErrorMessage("Username cannot be empty!")
+      setErrorMessage("Username cannot be empty!");
       return;
     }
 
@@ -97,7 +101,10 @@ const UserInfo: FC = () => {
         >
           <View className="flex-1 items-center justify-start mt-20 p-screen bg-background gap-large pt-extralarge">
             <StatusBar hidden translucent />
-            <Animated.View entering={FadeInUp.delay(200).duration(400).springify()} className="flex items-center">
+            <Animated.View
+              entering={FadeInUp.delay(200).duration(400).springify()}
+              className="flex items-center"
+            >
               <SubTitle text="Let's create your Profile before continuing..." />
               <LottieView
                 source={createProfileAnimation}
@@ -139,7 +146,7 @@ const UserInfo: FC = () => {
                   // screen="BasicInfo"
                   text={loading ? "Loading..." : "Proceed"}
                 />
-                 <View className="flex flex-row gap-4">
+                <View className="flex flex-row gap-4">
                   <TouchableOpacity
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {
@@ -165,7 +172,7 @@ const UserInfo: FC = () => {
                   >
                     <Text className="text-white">Clear ID</Text>
                   </TouchableOpacity>
-                </View> 
+                </View>
               </Animated.View>
             </View>
           </View>

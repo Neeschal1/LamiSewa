@@ -23,7 +23,7 @@ import {
   TextualButton,
   SubTitle,
 } from "@/src/components/systemComponentsLayout";
-import { getData } from "@/src/storage/Ids";
+import { getData } from "@/src/storage/SecureCredentials";
 import HandleAccountCredentials from "@/src/services/accounts/credentials";
 import HandleOTPVerification from "@/src/services/accounts/otpverification";
 import { useNavigation } from "expo-router";
@@ -41,10 +41,10 @@ const SignupVerification = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const [error, setError] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string>("")
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -70,13 +70,13 @@ const SignupVerification = () => {
     for (let i = 0; i < otp.length; i++) {
       stringOTP += otp[i];
     }
-    try{
-      setLoading(true)
+    try {
+      setLoading(true);
       const otpdata = HandleOTPVerification(email, stringOTP);
-      const statuscode = (await otpdata).status
-      if (statuscode === 200){
+      const statuscode = (await otpdata).status;
+      if (statuscode === 200) {
         navigation.navigate("Password");
-        setLoading(false)
+        setLoading(false);
       }
     } catch (e) {
       if (axios.isAxiosError(e)) {
@@ -95,7 +95,7 @@ const SignupVerification = () => {
         console.log("Issue: ", e);
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -180,7 +180,10 @@ const SignupVerification = () => {
               <Animated.View
                 entering={FadeInDown.delay(200).duration(400).springify()}
               >
-                <PrimaryButton action={handleOTPAction} text={loading ? "Loading..." : "Continue"} />
+                <PrimaryButton
+                  action={handleOTPAction}
+                  text={loading ? "Loading..." : "Continue"}
+                />
               </Animated.View>
               {timer === 0 && (
                 <View className="flex flex-column items-center gap-2">
