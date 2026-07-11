@@ -25,11 +25,7 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import {
-  clearData,
-  getData,
-  getDataString,
-} from "@/src/storage/SecureCredentials";
+import { getData } from "@/src/storage/SecureCredentials";
 import UserProfileService from "@/src/services/profile/userinfo";
 import axios from "axios";
 import { clearToken } from "@/src/storage/SecureTokens";
@@ -47,11 +43,8 @@ const UserInfo: FC = () => {
   const navigation = useNavigation<NavigationProps>();
 
   const handleProceed = async () => {
-    const userid = Number(await getDataString());
-    const stringid = await getDataString();
-
-    console.log("Number Users ID: ", userid);
-    console.log("String Users ID: ", stringid);
+    const userscredentials = await getData()
+    const usersemail = userscredentials["email"]
 
     if (userName === "") {
       setError(true);
@@ -61,7 +54,7 @@ const UserInfo: FC = () => {
 
     try {
       setLoading(true);
-      const res = await UserProfileService(stringid, userName);
+      const res = await UserProfileService(usersemail, userName);
 
       if (res["status"] === 201) {
         setLoading(false);
@@ -72,8 +65,8 @@ const UserInfo: FC = () => {
         const data = e.response?.data;
         const status = e.response?.status;
 
-        // console.log("Data: ", data);
-        // console.log("Status: ", status);
+        console.log("Data: ", data);
+        console.log("Status: ", status);
 
         if (status === 409 || status === 417) {
           setError(true);
@@ -164,14 +157,14 @@ const UserInfo: FC = () => {
                   >
                     <Text className="text-white">Logout</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {
                       await clearData();
                     }}
                   >
                     <Text className="text-white">Clear ID</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               </Animated.View>
             </View>

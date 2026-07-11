@@ -5,6 +5,7 @@ from rest_framework import status, validators
 import random
 from .smsservice import SendOTP
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 
 
 class UserProfileService:
@@ -27,11 +28,11 @@ class UserProfileService:
                
             unique_username = UserProfile.objects.filter(username = username).exists()
             if unique_username == True:
-                user = User.objects.get(email = useremail)
                 return Response({"Message": "User with that username already exists!"}, status=status.HTTP_409_CONFLICT)
-
+            
+            user = User.objects.get(email = useremail)
             profile = UserProfile.objects.create(
-                userid = user.pk,
+                userid = user,
                 useremail=useremail,
                 username=username,
                 profileid=profile_id,
