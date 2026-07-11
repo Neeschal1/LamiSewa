@@ -44,8 +44,6 @@ const DoneButton = ({ onPress }: any) => (
     activeOpacity={0.8}
     onPress={async () => {
       await StoreStringDataAsync("onboardingState", "completed");
-      const data = await GetStringDataAsync("onboardingState")
-      console.log("Asyncstore state: ", data)
       onPress();
       navigatingScreen();
     }}

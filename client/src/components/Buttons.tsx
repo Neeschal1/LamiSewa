@@ -11,7 +11,12 @@ import { useNavigation } from "@react-navigation/native";
 const screenheight = Dimensions.get("window").height;
 const screenwidth = Dimensions.get("window").width;
 
-export const PrimaryButton: FC<ButtonProps> = ({ text, action, screen }) => {
+export const PrimaryButton: FC<ButtonProps> = ({
+  text,
+  action,
+  screen,
+  disability,
+}) => {
   const navigation = useNavigation<NavigationProps>();
 
   const handleButtonPress = () => {
@@ -25,7 +30,13 @@ export const PrimaryButton: FC<ButtonProps> = ({ text, action, screen }) => {
   };
 
   return (
-    <TouchableOpacity onPress={handleButtonPress}>
+    <TouchableOpacity
+      style={{
+        opacity: disability ? 0.5 : 1,
+      }}
+      disabled={disability}
+      onPress={handleButtonPress}
+    >
       <LinearGradient
         colors={["#FC404E", "#4987F6"]}
         start={{ x: 0, y: 0 }}
@@ -76,16 +87,16 @@ export const SocialButton: FC<SocialButtonProps> = ({
   logo,
 }) => {
   const handleButtonPress = () => {
-    if(action){
+    if (action) {
       action();
-      return
+      return;
     }
   };
   return (
     <TouchableOpacity
-      style={{ 
-        width: screenwidth * 0.886, 
-        height: screenheight * 0.061 
+      style={{
+        width: screenwidth * 0.886,
+        height: screenheight * 0.061,
       }}
       className={`flex rounded-xl flex-row gap-4 items-center justify-center ${btnname === "facebook" ? "bg-primaryblue" : "bg-[#383838]"}`}
       onPress={handleButtonPress}

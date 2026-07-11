@@ -23,6 +23,14 @@ export const GetStringDataAsync = async ( key: string ) => {
   }
 };
 
+export const DeleteStringDataAsync = async ( key: string ) => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (err) {
+    return `${err}`;
+  }
+};
+
 
 
 export const StoreObjectDataAsync: FC<ProfileData> = async ({ key, value }) => {

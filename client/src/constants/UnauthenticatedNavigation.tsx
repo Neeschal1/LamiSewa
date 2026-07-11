@@ -16,7 +16,7 @@ import {
 } from "@/src/screens/extras/ExtraScreenLayout";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { GetStringDataAsync } from "../storage/ProfileDataAsync";
+import { DeleteStringDataAsync, GetStringDataAsync } from "../storage/ProfileDataAsync";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -32,6 +32,7 @@ const UnauthenticatedNavigation = () => {
       } else {
         setInitialScreen("OnboardingScreen");
       }
+      await DeleteStringDataAsync("onboardingState")
     };
     OnboardingScreenState();
   }, []);

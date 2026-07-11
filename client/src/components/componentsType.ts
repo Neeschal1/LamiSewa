@@ -64,7 +64,8 @@ export interface TextProps {
 export interface ButtonProps {
   text: string | number;
   action?: () => void;
-  screen?: keyof RootStackParamList | string;
+  screen?: keyof RootStackParamList;
+  disability?: boolean;
 }
 
 export interface SocialButtonProps {
