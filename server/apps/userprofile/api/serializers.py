@@ -55,6 +55,7 @@ class UsersAdditionalInfoSerializer(serializers.ModelSerializer):
             "weight": {"required": True},
             "religion": {"required": True},
             "diet": {"required": True},
+            "community": {"required": True},
         }
         
 

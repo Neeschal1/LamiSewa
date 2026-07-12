@@ -22,7 +22,7 @@ class Career:
                     "Profile Info": {
                         "Name": userinfo.userprofileid.userid.first_name,
                         "ProfileID": userinfo.userprofileid.profileid,
-                        "PhoneNumber": userinfo.userprofileid.phonenumber,
+                        "UsersEmail": userinfo.userprofileid.useremail,
                     },
                     "data": UsersCareerSerializer(userinfo).data,
                 },

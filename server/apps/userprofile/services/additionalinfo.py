@@ -13,6 +13,7 @@ class AdditionalInfo:
                 userprofileid=user.validated_data["userprofileid"],
                 height=user.validated_data["height"],
                 weight=user.validated_data["weight"],
+                community=user.validated_data["community"],
                 religion=user.validated_data["religion"],
                 diet=user.validated_data["diet"],
             )
@@ -22,7 +23,7 @@ class AdditionalInfo:
                     "Profile Info": {
                         "Name": userinfo.userprofileid.userid.first_name,
                         "ProfileID": userinfo.userprofileid.profileid,
-                        "PhoneNumber": userinfo.userprofileid.phonenumber,
+                        "UsersEmail": userinfo.userprofileid.useremail,
                     },
                     "data": UsersAdditionalInfoSerializer(userinfo).data,
                 },

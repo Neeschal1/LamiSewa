@@ -6,7 +6,8 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import Animated, {
   FadeInUp,
   FadeInDown,
@@ -22,10 +23,15 @@ import {
   Title,
 } from "@/src/components/systemComponentsLayout";
 import { CommunityItems, DietItems } from "@/src/utils/objects";
+import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
 
 const AdditionalInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
 
   const [religion, setReligion] = useState<string>("");
   const [height, setHeight] = useState<string>("");
@@ -39,14 +45,50 @@ const AdditionalInfo: FC = () => {
   const [dietOpen, setDietOpen] = useState(false);
   const [dietItem, setDietItem] = useState(DietItems);
 
-  const handleProceed = () => {
-    if (!religion || !height || !weight || !community || !diet) {
-      setError(true);
-      setErrorMessage("Please fill up all the details first!");
-      return;
-    }
+  const navigation = useNavigation<NavigationProps>();
+
+  useEffect(() => {
+    const PrimaryButtonState = () => {
+      if (
+        religion.trim() === "" ||
+        height.trim() === "" ||
+        weight.trim() === "" ||
+        community?.trim() === "" ||
+        diet?.trim() === ""
+      ) {
+        setDisabilityStatus(true);
+      } else {
+        setDisabilityStatus(false);
+      }
+    };
+    PrimaryButtonState();
+  }, []);
+
+  const handleProceed = async () => {
     setError(false);
     setErrorMessage("");
+    try {
+      setLoading(true);
+      const userprofileadditionalinfodata = {
+        height: height,
+        weight: weight,
+        religion: religion,
+        diet: diet,
+        community: community,
+      };
+      await saveJsonData("additionalinfo", userprofileadditionalinfodata);
+
+      const fetchuserspersonalinfodata = await getJsonData("additionalinfo");
+      console.log("User's additional data: \n", fetchuserspersonalinfodata);
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      navigation.navigate("CareerInfo");
+    } catch (err) {
+      console.log("Error occured!", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -145,18 +187,19 @@ const AdditionalInfo: FC = () => {
               <PrimaryButton
                 action={handleProceed}
                 text="Proceed"
-                screen="CareerInfo"
+                disability={disabilityStatus}
               />
             </Animated.View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-          <Animated.View
-            entering={FadeInUp.delay(200).duration(400).springify()}
-            className="flex items-center w-full"
-          >
-            <Description text="LamiSewa © 2026. All rights reserved." />
-          </Animated.View>
+      <Animated.View
+        entering={FadeInUp.delay(200).duration(400).springify()}
+        className="flex items-center w-full"
+      >
+        <Description text="LamiSewa © 2026. All rights reserved." />
+      </Animated.View>
+      {loading && <LottieLoadingAnimation />}
     </SafeAreaView>
   );
 };

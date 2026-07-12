@@ -52,6 +52,25 @@ RELIGION_CHOICE = [
     ('BUDDHIST', 'Buddhist'),
 ]
 
+COMMUNITY_CHOICE = [
+    ('BRAHMIN', 'Brahmin'),
+    ('CHHETRI', 'Chhetri'),
+    ('NEWAR', 'Newar'),
+    ('GURUNG', 'Gurung'),
+    ('MAGAR', 'Magar'),
+    ('TAMANG', 'Tamang'),
+    ('RAI', 'Rai'),
+    ('LIMBU', 'Limbu'),
+    ('SHERPA', 'Sherpa'),
+    ('THARU', 'Tharu'),
+    ('YADAV', 'Yadav'),
+    ('MADHESHI', 'Madheshi'),
+    ('DALIT', 'Dalit'),
+    ('THAKURI', 'Thakuri'),
+    ('MUSLIM', 'Muslim'),
+    ('OTHER', 'Other'),
+]
+
 QUALIFICATION_DEGREES = [
     ('SEE', 'SEE / SLC'),
     ('PLUS_TWO', '+2 / Higher Secondary'),

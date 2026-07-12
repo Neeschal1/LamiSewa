@@ -47,6 +47,7 @@ class UsersAdditionalInfo(models.Model):
     weight = models.CharField(max_length=10, blank=False)
     religion = models.CharField(max_length=30, choices=RELIGION_CHOICE)
     diet = models.CharField(max_length=20, default="Non-Vegeratian")
+    community = models.CharField(max_length=20, choices=COMMUNITY_CHOICE)
             
     def __str__(self):
         return f"Additional info of: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
