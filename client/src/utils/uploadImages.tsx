@@ -1,8 +1,4 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, Image, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-
-const ProfilePicture = async (imageUri: string): Promise<string | null> => {
+const UploadImages = async (imageUri: string): Promise<string | null> => {
   const cloudName = `${process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME}`;
   const uploadPreset = `${process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET}`;;
 
@@ -26,9 +22,8 @@ const ProfilePicture = async (imageUri: string): Promise<string | null> => {
     console.log('Cloudinary response:', JSON.stringify(data));
     return data.secure_url ?? null;
   } catch (error) {
-    console.error('Upload failed:', error);
     return null;
   }
 };
 
-export default ProfilePicture
+export default UploadImages;

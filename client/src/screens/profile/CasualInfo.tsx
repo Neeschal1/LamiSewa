@@ -11,12 +11,13 @@ import {
   ScrollView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import Animated, {
   FadeInUp,
   FadeInDown,
   BounceIn,
 } from "react-native-reanimated";
-import ProfilePicture from "@/src/utils/profilePicture";
+import UploadImages from "@/src/utils/uploadImages";
 import {
   Description,
   ErrorText,
@@ -25,22 +26,26 @@ import {
   InputFields,
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
 
 const CasualInfo = () => {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [localUri, setLocalUri] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
 
   const [error, setError] = useState<string | null | boolean>(null);
-
-  const [issue, setIssue] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const [nickName, setNickName] = useState<string>("");
   const [bio, setBio] = useState<string>("");
   const [bioError, setBioError] = useState<string>("");
+
+  const navigation = useNavigation<NavigationProps>();
 
   useEffect(() => {
     const BioLength = () => {
@@ -48,6 +53,21 @@ const CasualInfo = () => {
     };
     BioLength();
   }, [bio]);
+
+  useEffect(() => {
+    const disablePrimaryButton = () => {
+      if (
+        nickName.trim() === "" ||
+        bio.trim() === "" ||
+        imageUrl.trim() == ""
+      ) {
+        setDisabilityStatus(true);
+      } else {
+        setDisabilityStatus(false);
+      }
+    };
+    disablePrimaryButton();
+  }, [nickName, bio]);
 
   const pickAndUpload = async () => {
     setError(null);
@@ -68,10 +88,11 @@ const CasualInfo = () => {
       setLocalUri(uri);
       setLoading(true);
 
-      const url = await ProfilePicture(uri);
+      const url = await UploadImages(uri);
 
       if (url) {
         setImageUrl(url);
+        console.log("Image URL: ", url);
       } else {
         setError("Upload failed. Please try again.");
       }
@@ -85,14 +106,29 @@ const CasualInfo = () => {
     );
   };
 
-  const handleProcees = () => {
-    if (!nickName || !bio || !imageUrl || bio.length > 40) {
-      setIssue(true);
-      setErrorMessage("Please fill up all the details first!");
-      return;
-    }
-    setIssue(false);
+  const handleProcees = async () => {
+    setError(false);
     setErrorMessage("");
+    try {
+      setLoading(true)
+      const userprofilebasicinfodata = {
+        nickname: nickName,
+        profile_picture: imageUrl,
+        bio: bio,
+      };
+      await saveJsonData("casualinfo", userprofilebasicinfodata);
+
+      const fetchusersbasicinfodata = await getJsonData("casualinfo");
+      console.log("User's data: ", fetchusersbasicinfodata);
+
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      navigation.navigate("PersonalInfo");
+    } catch (err) {
+      console.log("Error: ", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const imageSource = imageUrl
@@ -146,7 +182,7 @@ const CasualInfo = () => {
               ) : (
                 <View className="flex w-full items-center justify-center">
                   <Title text="Select Image" />
-                  {issue ? (
+                  {error ? (
                     <Animated.View
                       key={errorMessage}
                       entering={BounceIn.delay(200).duration(300)}
@@ -197,7 +233,7 @@ const CasualInfo = () => {
               <PrimaryButton
                 action={handleProcees}
                 text="Proceed"
-                screen="PersonalInfo"
+                disability={disabilityStatus}
               />
             </Animated.View>
           </View>
@@ -209,6 +245,7 @@ const CasualInfo = () => {
       >
         <Description text="LamiSewa © 2026. All rights reserved." />
       </Animated.View>
+      {loading && <LottieLoadingAnimation />}
     </SafeAreaView>
   );
 };

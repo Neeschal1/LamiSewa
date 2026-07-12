@@ -27,3 +27,31 @@ export const deleteData = async () => {
     return null;
   }
 };
+
+export const saveJsonData = async (key: string, value: any) => {
+  try {
+    await SecureStore.setItemAsync(key, JSON.stringify(value));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getJsonData = async (key: string) => {
+  try {
+    const data = await SecureStore.getItemAsync(key);
+    if (!data) return null;
+    return JSON.parse(data);
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export const deleteJsonData = async (key: string) => {
+  try {
+    await SecureStore.deleteItemAsync(key);
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};

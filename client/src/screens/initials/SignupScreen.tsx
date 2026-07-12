@@ -62,7 +62,7 @@ const Signup = () => {
 
       if (response === 400) {
         setCheckFilledState(true);
-        setShowMessage("User with that email address already exists!");
+        setShowMessage("User with that email address or phone number \nalready exists. Try choosing other credentials!");
         setTimeout(() => {
           setCheckFilledState(false);
           setShowMessage("");
@@ -72,7 +72,7 @@ const Signup = () => {
 
       if (response === 409) {
         setCheckFilledState(true);
-        setShowMessage("User with that phone number already exists!");
+        setShowMessage("User with that email address or phone number \nalready exists. Try choosing other credentials!");
         setTimeout(() => {
           setCheckFilledState(false);
           setShowMessage("");

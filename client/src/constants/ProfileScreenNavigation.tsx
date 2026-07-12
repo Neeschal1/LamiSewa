@@ -42,8 +42,8 @@ const ProfileScreenNavigation = () => {
 
   return (
     <Stack.Navigator 
-    initialRouteName="BasicInfo" 
-    // initialRouteName={startScreen} 
+    // initialRouteName="BasicInfo" 
+    initialRouteName={startScreen} 
     screenOptions={{ headerShown: false }}>
       <Stack.Screen name="UserInfo" component={UserInfo} options={ProfileScreens("User Info(1/7)")} />
       <Stack.Screen name="BasicInfo" component={BasicInfo} options={ProfileScreens("Basic Info(2/7)")} />

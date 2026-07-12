@@ -33,7 +33,14 @@ import {
 import { useAuth } from "@/src/auth/AuthContext";
 import { clearToken } from "@/src/storage/SecureTokens";
 import { DeleteStringDataAsync } from "@/src/storage/ProfileDataAsync";
-import { getData, saveData } from "@/src/storage/SecureCredentials";
+import {
+  deleteData,
+  deleteJsonData,
+  getData,
+  getJsonData,
+  saveData,
+  saveJsonData,
+} from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 
@@ -88,30 +95,38 @@ const BasicInfo = () => {
   const handleProcees = async () => {
     setError(false);
     setErrorMessage("");
+    await deleteData();
+    await deleteJsonData("basicinfo");
+    const fetchuserinfodata = await getData();
+    console.log("User's data: ", fetchuserinfodata);
+    try {
+      setLoading(true)
+      const userprofilebasicinfodata = {
+        fullname: name,
+        profile_handler: idOption,
+        gender: gender,
+        date_of_birth: date,
+      };
+      await saveJsonData("basicinfo", userprofilebasicinfodata);
 
-    const userprofilebasicinfodata = {
-      fullname: name,
-      profile_handler: idOption,
-      gender: gender,
-      date_of_birth: date,
-    };
-    await saveData(userprofilebasicinfodata);
+      const fetchusersbasicinfodata = await getJsonData("basicinfo");
+      console.log("User's data: ", fetchusersbasicinfodata);
 
-    const fetchusersbasicinfodata = await getData() 
-    console.log("User's data: ", fetchusersbasicinfodata)
-    
-    setTimeout(() => {
-      setError(false);
-      setErrorMessage("");
-    }, 2000);
-    setLoading(false);
-    navigation.navigate("CasualInfo")
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      navigation.navigate("CasualInfo");
+    } catch (err) {
+      console.log("Error: ", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogOut = async () => {
     await logout();
     await clearToken();
-    await DeleteStringDataAsync("onboardingState");
+    // await DeleteStringDataAsync("onboardingState");
+    // await DeleteStringDataAsync("UserInfoScreenStatus");
   };
 
   return (
@@ -250,11 +265,11 @@ const BasicInfo = () => {
                   disability={disabilityStatus}
                 />
               </Animated.View>
-              {/* <View>
+              <View>
                 <TouchableOpacity onPress={handleLogOut}>
                   <Text>LOGOUT!!!!!!!!!!!!!!!!!</Text>
                 </TouchableOpacity>
-              </View> */}
+              </View>
             </View>
           </View>
         </ScrollView>

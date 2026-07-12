@@ -15,7 +15,7 @@ const HandleLoginService = async (email: string, password: string) => {
   await saveRefreshTokens(res["data"]["Tokens"]["refreshtoken"]);
 
   const profilescreenstatus = res["data"]["UserprofileStatus"]
-  if (profilescreenstatus === false){
+  if (profilescreenstatus === true){
     await StoreStringDataAsync("UserInfoScreenStatus", "Completed")
   } else {
     await DeleteStringDataAsync("UserInfoScreenStatus")
