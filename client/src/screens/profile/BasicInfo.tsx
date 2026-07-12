@@ -7,7 +7,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
   FadeInUp,
@@ -20,6 +20,7 @@ import {
   ProfileOptions,
   RelativeItems,
 } from "@/src/utils/objects";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import {
   CustomDropdown,
   Description,
@@ -32,10 +33,15 @@ import {
 import { useAuth } from "@/src/auth/AuthContext";
 import { clearToken } from "@/src/storage/SecureTokens";
 import { DeleteStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import { getData, saveData } from "@/src/storage/SecureCredentials";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
 
 const BasicInfo = () => {
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
 
   const [name, setName] = useState<string>("");
 
@@ -56,16 +62,50 @@ const BasicInfo = () => {
     year: "",
   });
 
+  const navigation = useNavigation<NavigationProps>();
+
+  useEffect(() => {
+    const disablePrimaryButton = () => {
+      if (
+        name.trim() === "" ||
+        gender.trim() === "" ||
+        date["day"].trim() === "" ||
+        date["month"].trim() === "" ||
+        date["year"].trim() === "" ||
+        value.trim() === "" ||
+        idOption.trim() === ""
+      ) {
+        setDisabilityStatus(true);
+      } else {
+        setDisabilityStatus(false);
+      }
+    };
+    disablePrimaryButton();
+  }, [name, gender, date]);
+
   const { logout } = useAuth();
 
-  const handleProcees = () => {
-    if (!name || !date || !gender || !idOption) {
-      setError(true);
-      setErrorMessage("Please fill up all the details first!");
-      return;
-    }
+  const handleProcees = async () => {
     setError(false);
     setErrorMessage("");
+
+    const userprofilebasicinfodata = {
+      fullname: name,
+      profile_handler: idOption,
+      gender: gender,
+      date_of_birth: date,
+    };
+    await saveData(userprofilebasicinfodata);
+
+    const fetchusersbasicinfodata = await getData() 
+    console.log("User's data: ", fetchusersbasicinfodata)
+    
+    setTimeout(() => {
+      setError(false);
+      setErrorMessage("");
+    }, 2000);
+    setLoading(false);
+    navigation.navigate("CasualInfo")
   };
 
   const handleLogOut = async () => {
@@ -75,18 +115,18 @@ const BasicInfo = () => {
   };
 
   return (
-    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1">
+    <SafeAreaView className="bg-background flex flex-1">
       <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
-        style={{ flex: 1 }}
+        style={{ flex: 1, height: "100%" }}
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 items-center justify-center p-screen bg-background gap-large">
+          <View className="flex-1 flex items-center justify-center p-screen bg-background gap-large">
             <StatusBar hidden translucent />
             <Animated.View
               key={errorMessage}
@@ -207,24 +247,25 @@ const BasicInfo = () => {
                 <PrimaryButton
                   action={handleProcees}
                   text="Proceed"
-                  screen="CasualInfo"
+                  disability={disabilityStatus}
                 />
               </Animated.View>
-              <View>
+              {/* <View>
                 <TouchableOpacity onPress={handleLogOut}>
                   <Text>LOGOUT!!!!!!!!!!!!!!!!!</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
           </View>
         </ScrollView>
-        <Animated.View
-          entering={FadeInDown.delay(200).duration(400).springify()}
-          className="flex items-center mb-1 gap-mid"
-        >
-          <Description text="LamiSewa © 2026. All rights reserved." />
-        </Animated.View>
       </KeyboardAvoidingView>
+      <Animated.View
+        entering={FadeInDown.delay(200).duration(400).springify()}
+        className="flex items-center mb-1 gap-mid"
+      >
+        <Description text="LamiSewa © 2026. All rights reserved." />
+      </Animated.View>
+      {loading && <LottieLoadingAnimation />}
     </SafeAreaView>
   );
 };
