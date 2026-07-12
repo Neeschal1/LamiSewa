@@ -10,7 +10,7 @@ class AdditionalInfo:
         user = UsersAdditionalInfoSerializer(data=request.data)
         if user.is_valid(raise_exception=True):
             userinfo = UsersAdditionalInfo.objects.create(
-                userprofileid=user.validated_data["userprofileid"],
+                userprofileid=request.user.profile,
                 height=user.validated_data["height"],
                 weight=user.validated_data["weight"],
                 community=user.validated_data["community"],

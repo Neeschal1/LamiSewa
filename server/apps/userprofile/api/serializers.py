@@ -47,7 +47,7 @@ class UsersPersonalInfoSerializer(serializers.ModelSerializer):
 class UsersAdditionalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersAdditionalInfo
-        fields = '__all__'
+        fields = ["height", "weight", "religion", "diet", "community"]
         extra_kwargs = {
             "userprofileid": {"write_only": True},
             "height": {"required": True},
