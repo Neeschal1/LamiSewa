@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .smsservice import SendOTP
+from apps.userprofile.models.entities import UserProfile
 import time
 from django.core.cache import cache
 import random
@@ -25,8 +26,10 @@ class UserAuth:
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
             
+            userinfo = UserProfile.objects.filter(useremail = user.email).exists()
+            
             if match_password:
-                return Response({"Message":"Login successful :)", "Tokens": {
+                return Response({"Message":"Login successful :)", "UserprofileStatus": userinfo, "Tokens": {
                     "accesstoken": access_token,
                     "refreshtoken": refresh_token
                 }})

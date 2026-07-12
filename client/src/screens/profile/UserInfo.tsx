@@ -31,7 +31,7 @@ import axios from "axios";
 import { clearToken } from "@/src/storage/SecureTokens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/src/auth/AuthContext";
-import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import { GetStringDataAsync, StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const createProfileAnimation = require("@/src/assets/animations/createProfile.json");
 
@@ -46,6 +46,7 @@ const UserInfo: FC = () => {
   const handleProceed = async () => {
     const userscredentials = await getData();
     const usersemail = userscredentials["email"];
+    console.log("Profile screen status: ", await GetStringDataAsync("UserInfoScreenStatus"))
 
     if (userName === "") {
       setError(true);
@@ -82,7 +83,7 @@ const UserInfo: FC = () => {
 
         if (status === 417) {
           setError(true);
-          setErrorMessage("Something went wrong!");
+          setErrorMessage("Please select a different username.");
           setTimeout(() => {
             setError(false);
             setErrorMessage("");
@@ -110,7 +111,7 @@ const UserInfo: FC = () => {
           showsVerticalScrollIndicator={false}
         >
           <View className="flex-1 items-center justify-center mt-20 p-screen bg-background gap-large pt-extralarge">
-            <StatusBar hidden translucent />
+            <StatusBar hidden={false} translucent />
             <Animated.View
               entering={FadeInUp.delay(200).duration(400).springify()}
               className="flex items-center"

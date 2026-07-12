@@ -30,6 +30,8 @@ import {
   Title,
 } from "@/src/components/systemComponentsLayout";
 import { useAuth } from "@/src/auth/AuthContext";
+import { clearToken } from "@/src/storage/SecureTokens";
+import { DeleteStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const BasicInfo = () => {
   const [error, setError] = useState<boolean>(false);
@@ -68,6 +70,8 @@ const BasicInfo = () => {
 
   const handleLogOut = async () => {
     await logout();
+    await clearToken();
+    await DeleteStringDataAsync("onboardingState");
   };
 
   return (

@@ -10,6 +10,7 @@ import {
   Platform,
 } from "react-native";
 import React, { FC, useEffect, useState } from "react";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import Animated, {
   FadeInUp,
   FadeInDown,
@@ -250,6 +251,7 @@ const Login: FC = () => {
           </View>
         </View>
       </KeyboardAvoidingView>
+      {loading && <LottieLoadingAnimation />}
     </View>
   );
 };

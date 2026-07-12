@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { clearToken, getAccessTokens, saveTokens } from "../storage/SecureTokens";
 import { AuthContext } from "./AuthContext";
+import { StoreStringDataAsync } from "../storage/ProfileDataAsync";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
@@ -22,7 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }; 
  
   const login = async (accessToken: string) => {
-    await saveTokens(accessToken); 
+    await saveTokens(accessToken);
     setToken(accessToken);
   };
 
