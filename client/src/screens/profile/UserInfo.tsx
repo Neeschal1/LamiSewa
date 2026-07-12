@@ -31,6 +31,7 @@ import axios from "axios";
 import { clearToken } from "@/src/storage/SecureTokens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/src/auth/AuthContext";
+import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const createProfileAnimation = require("@/src/assets/animations/createProfile.json");
 
@@ -58,6 +59,7 @@ const UserInfo: FC = () => {
 
       if (res["status"] === 201) {
         setLoading(false);
+        await StoreStringDataAsync("UserInfoScreenStatus", "Completed")
         navigation.navigate("BasicInfo");
       }
     } catch (e) {
@@ -154,7 +156,7 @@ const UserInfo: FC = () => {
                   // screen="BasicInfo"
                   text={loading ? "Loading..." : "Proceed"}
                 />
-                {/* <View className="flex flex-row gap-4">
+                <View className="flex flex-row gap-4">
                   <TouchableOpacity
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {
@@ -172,15 +174,7 @@ const UserInfo: FC = () => {
                   >
                     <Text className="text-white">Logout</Text>
                   </TouchableOpacity>
-                  {/* <TouchableOpacity
-                    className="px-2 py-3 bg-black rounded-2xl"
-                    onPress={async () => {
-                      await clearData();
-                    }}
-                  >
-                    <Text className="text-white">Clear ID</Text>
-                  </TouchableOpacity> */}
-                {/* </View> */}
+                 </View>
               </Animated.View>
             </View>
           </View>
