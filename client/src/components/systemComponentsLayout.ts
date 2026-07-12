@@ -1,5 +1,5 @@
 import { MainScreenName, Title, SubTitle, Description, ErrorText, SubText, Heading, SubHeading, Describe } from "./Texts";
-import { PrimaryButton, TextualButton, SocialButton } from "./Buttons"
+import { PrimaryButton, TextualButton, SocialButton, SecondaryButton } from "./Buttons"
 import { InputFields, InputPassword, OTPInputFields, DOBInput, CustomDropdown } from './InputFields'
 import { toastConfig } from "./ToastConfig"
 
@@ -19,6 +19,7 @@ export {
     //Buttons
     PrimaryButton,
     TextualButton,
+    SecondaryButton,
 
     //InputFields
     InputFields,

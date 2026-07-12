@@ -42,7 +42,7 @@ const ProfileScreenNavigation = () => {
 
   return (
     <Stack.Navigator 
-    initialRouteName="AdditionalInfo" 
+    initialRouteName="HobbiesInfo" 
     // initialRouteName={startScreen} 
     screenOptions={{ headerShown: false }}>
       <Stack.Screen name="UserInfo" component={UserInfo} options={ProfileScreens("User Info(1/7)")} />
@@ -60,7 +60,7 @@ export default ProfileScreenNavigation;
 
 const ProfileScreens = (title: string) => ({
   headerShown: true,
-  headerBackVisible: false,
+  headerBackVisible: true,
   gestureEnabled: false,
   headerTransparent: true,
   headerStyle: {

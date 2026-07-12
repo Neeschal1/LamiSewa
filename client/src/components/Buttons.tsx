@@ -1,4 +1,4 @@
-import { TouchableOpacity, Dimensions, Text, Image } from "react-native";
+import { TouchableOpacity, Dimensions, Text, Image, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { act, FC } from "react";
 import {
@@ -53,6 +53,56 @@ export const PrimaryButton: FC<ButtonProps> = ({
         <Text className="text-white text-subheading font-Poppinsmedium">
           {text}
         </Text>
+      </LinearGradient>
+    </TouchableOpacity>
+  );
+};
+
+export const SecondaryButton: FC<ButtonProps> = ({
+  text,
+  action,
+  screen,
+  disability,
+}) => {
+  const navigation = useNavigation<NavigationProps>();
+
+  const handleButtonPress = () => {
+    if (screen) {
+      navigation.navigate(screen);
+    }
+    if (action) {
+      action();
+      return;
+    }
+  };
+
+  return (
+    <TouchableOpacity
+      style={{
+        opacity: disability ? 0.5 : 1,
+      }}
+      disabled={disability}
+      onPress={handleButtonPress}
+    >
+      <LinearGradient
+        colors={["#FC404E", "#4987F6"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={{
+          width: screenwidth * 0.886,
+          height: screenheight * 0.061,
+          borderRadius: 12,
+          backgroundColor: "#000",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 1.2
+        }}
+      >
+        <View className="flex flex-1 bg-white justify-center items-center w-full rounded-xl">
+          <Text className="text-dark text-subheading font-Poppinsmedium">
+          {text}
+        </Text>
+        </View>
       </LinearGradient>
     </TouchableOpacity>
   );

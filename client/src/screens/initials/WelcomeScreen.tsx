@@ -57,7 +57,7 @@ const Welcome: FC = () => {
             entering={FadeInUp.delay(200).duration(600).springify()}
           >
             <PrimaryButton screen="Signup" text="Let's Begin" />
-            {/* <View className="flex flex-row gap-4">
+            <View className="flex flex-row gap-4">
                   <TouchableOpacity
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {
@@ -82,8 +82,8 @@ const Welcome: FC = () => {
                     }}
                   >
                     <Text className="text-white">Clear ID</Text>
-                  </TouchableOpacity> */}
-                {/* </View> */} 
+                  </TouchableOpacity> */} 
+                 </View> 
           </Animated.View>
           <Animated.View
             entering={FadeInDown.delay(200).duration(600).springify()}

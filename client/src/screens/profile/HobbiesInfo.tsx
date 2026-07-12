@@ -5,9 +5,9 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
-  Image
+  Image,
 } from "react-native";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   ErrorText,
@@ -16,6 +16,7 @@ import {
   PrimaryButton,
   Description,
   MainScreenName,
+  SecondaryButton,
 } from "@/src/components/systemComponentsLayout";
 import {
   CreativeHobbies,
@@ -28,6 +29,8 @@ import {
   TechnologyHobbies,
   TravelAndAdventureHobbies,
 } from "@/src/utils/objects";
+import { useAuth } from "@/src/auth/AuthContext";
+import { clearToken } from "@/src/storage/SecureTokens";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
@@ -35,7 +38,19 @@ const HobbiesInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [hobbies, setHobbies] = useState<string[]>([]);
-  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false)
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
+
+  useEffect(()=>{
+    const handlePrimaryButton = () => {
+      if (hobbies.length != 5){
+        setDisabilityStatus(true)
+      } else {
+        setDisabilityStatus(false)
+      }
+    }
+    handlePrimaryButton()
+  }, [hobbies])
 
   const toggleHobby = (option: string) => {
     if (hobbies.includes(option)) {
@@ -54,32 +69,28 @@ const HobbiesInfo: FC = () => {
   };
 
   const handleProceed = () => {
-    if (hobbies.length != 5){
-      setError(true);
-      setErrorMessage("You must select any 5 hobbies in order to proceed!");
-      return;
-    }
     setShowSuccessModal(true);
     return;
-  }
+  };
 
-  const handleOkay = () => {
+  const { logout } = useAuth();
+
+  const handleOkay = async () => {
+    await logout();
+    await clearToken();
     console.log("Okay :) Your hobbies are: ", hobbies);
-    setShowSuccessModal(false)
-  }
+    setShowSuccessModal(false);
+  };
 
   return (
-    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1">
-      <StatusBar hidden translucent />
-      <View className="items-center mb-[-20px] py-3">
+    <SafeAreaView className="bg-background flex flex-1">
+      <StatusBar hidden={false} translucent />
+      <View className="items-center mt-20 justify-center py-3">
         <SubTitle text={`What are your hobbies? ${hobbies.length}/5`} />
         {error ? <ErrorText text={`${errorMessage} `} /> : null}
       </View>
-      <View className="flex items-center">
-        <SubTitle text={``} />
-      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="flex-1 items-center justify-start p-screen bg-background gap-large">
+        <View className="flex-1 items-center justify-center p-screen bg-background gap-large">
           <View className="flex w-full">
             <Title text="Creative:" />
             <View className="flex-row flex-wrap gap-3 mt-2">
@@ -317,7 +328,7 @@ const HobbiesInfo: FC = () => {
         </View>
       </ScrollView>
       <View className="flex items-center mb-1 gap-mid">
-        <PrimaryButton action={handleProceed} text="Proceed" />
+        <PrimaryButton disability={disabilityStatus} action={handleProceed} text="Proceed" />
         <Description text="LamiSewa © 2026. All rights reserved." />
       </View>
       <Modal
@@ -343,7 +354,19 @@ const HobbiesInfo: FC = () => {
                 </View>
               </View>
             </View>
-            <PrimaryButton text="Okay :)" action={handleOkay} screen="SubscriptionDetails" />
+            <View className="flex flex-col gap-mid">
+              <PrimaryButton
+                text="Okay :)"
+                action={handleOkay}
+                screen="SubscriptionDetails"
+              />
+              <SecondaryButton
+                action={() => {
+                  setShowSuccessModal(false);
+                }}
+                text="Cancel"
+              />
+            </View>
           </View>
         </View>
       </Modal>

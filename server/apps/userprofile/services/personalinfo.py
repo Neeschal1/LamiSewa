@@ -10,7 +10,7 @@ class PersonalInfo:
         user = UsersPersonalInfoSerializer(data=request.data)
         if user.is_valid(raise_exception=True):
             userinfo = UsersPersonalInfo.objects.create(
-                userprofileid=user.validated_data["userprofileid"],
+                userprofileid=request.user.profile,
                 maritalstatus=user.validated_data["maritalstatus"],
                 gotra=user.validated_data["gotra"],
                 current_living_country=user.validated_data["current_living_country"],

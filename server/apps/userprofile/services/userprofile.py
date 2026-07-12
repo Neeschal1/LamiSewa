@@ -43,6 +43,7 @@ class UserProfileService:
                 {
                     "message": f"Successfully created {profile.userid.first_name}'s Profile.",
                     "data": {
+                        "userprofileID": profile.pk,
                         "username": profile.username,
                         "profileid": profile.profileid,
                     },

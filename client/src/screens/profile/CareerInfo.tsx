@@ -6,13 +6,14 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Animated, {
   FadeInUp,
   FadeInDown,
   BounceIn,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import {
   CustomDropdown,
   Description,
@@ -22,10 +23,15 @@ import {
   Title,
 } from "@/src/components/systemComponentsLayout";
 import { DegreeItems, WorkingItems } from "@/src/utils/objects";
+import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
 
 const CareerInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [degree, setDegree] = useState<string | null>(null);
   const [degreeOpen, setDegreeOpen] = useState(false);
@@ -39,14 +45,44 @@ const CareerInfo: FC = () => {
   const [companyName, setCompanyName] = useState<string>("");
   const [profession, setProfession] = useState<string>("");
 
-  const handleProceed = () => {
-    if (!degree || !working || !college || !profession || !companyName) {
-      setError(true);
-      setErrorMessage("Please fill up all the details first!");
-      return;
-    }
+  const navigation = useNavigation<NavigationProps>();
+
+  useEffect(() => {
+    const PrimaryButtonState = () => {
+      if (!degree || !working || !college || !profession || !companyName) {
+        setDisabilityStatus(true);
+      } else {
+        setDisabilityStatus(false);
+      }
+    };
+    PrimaryButtonState();
+  }, []);
+
+  const handleProceed = async () => {
     setError(false);
     setErrorMessage("");
+    try {
+      setLoading(true);
+      const userprofilecareerinfodata = {
+        highest_qualification: degree,
+        college_name: college,
+        working_as: working,
+        occupation: profession,
+        company_or_organization_name: companyName,
+      };
+      await saveJsonData("careerinfo", userprofilecareerinfodata);
+
+      const fetchuserscareerinfodata = await getJsonData("careerinfo");
+      console.log("User's career data: ", fetchuserscareerinfodata);
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      navigation.navigate("HobbiesInfo");
+    } catch (err) {
+      console.log("Error occured!", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -141,20 +177,21 @@ const CareerInfo: FC = () => {
               entering={FadeInDown.delay(300).duration(400).springify()}
             >
               <PrimaryButton
-                screen="HobbiesInfo"
+                disability={disabilityStatus}
                 action={handleProceed}
                 text="Proceed"
               />
             </Animated.View>
           </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
           <Animated.View
             entering={FadeInDown.delay(200).duration(400).springify()}
             className="flex items-center w-full"
           >
             <Description text="LamiSewa © 2026. All rights reserved." />
           </Animated.View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+      {loading && <LottieLoadingAnimation />}
     </SafeAreaView>
   );
 };
