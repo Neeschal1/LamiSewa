@@ -5,7 +5,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import {
   InputFields,
   Title,
@@ -25,10 +26,14 @@ import {
   MaritalStatusItems,
   ResidencyStatusItems,
 } from "@/src/utils/objects";
+import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
+import { useNavigation } from "expo-router";
+import { NavigationProps } from "@/src/components/componentsType";
 
 const PersonalInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
 
   const [livingCountry, setLivingCountry] = useState<string>("");
   const [district, setDistrict] = useState<string>("");
@@ -44,26 +49,53 @@ const PersonalInfo: FC = () => {
 
   const [residencyStatus, setResidencyStatus] = useState<string | null>(null);
   const [residencyStatusOpen, setResidencyStatusOpen] = useState(false);
-  const [residencyStatusItems, setResidencyStatusItems] =
-    useState(ResidencyStatusItems);
+  const [residencyStatusItems, setResidencyStatusItems] = useState(ResidencyStatusItems);
 
-  const [navigatingScreen, setNavigatingScreen] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigation = useNavigation<NavigationProps>()
 
-  const handleProceed = () => {
-    if (
-      !livingCountry ||
-      !district ||
-      !maritalStatus ||
-      !gotra ||
-      !residencyStatus
-    ) {
-      setError(true);
-      setErrorMessage("Please fill up all the details first!");
-      return;
-    }
+  useEffect(() => {
+    const disablePrimaryButton = () => {
+      if (
+        livingCountry.trim() === "" ||
+        district.trim() === "" ||
+        maritalStatus?.trim() === "" ||
+        gotra?.trim() === "" ||
+        residencyStatus?.trim() === ""
+      ) {
+        setDisabilityStatus(true);
+      } else {
+        setDisabilityStatus(false);
+      }
+    };
+    disablePrimaryButton();
+  }, [livingCountry, district, maritalStatus, gotra, residencyStatus]);
+
+  const handleProceed = async () => {
     setError(false);
     setErrorMessage("");
-    setNavigatingScreen("AdditionalInfo");
+    try {
+      setLoading(true);
+      const userprofilepersonalinfodata = {
+        maritalstatus: maritalStatus,
+        gotra: gotra,
+        current_living_country: livingCountry,
+        current_city: district,
+        residency_status: residencyStatus,
+      };
+      await saveJsonData("personalinfo", userprofilepersonalinfodata);
+
+      const fetchuserspersonalinfodata = await getJsonData("personalinfo");
+      console.log("User's personal data: ", fetchuserspersonalinfodata);
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      navigation.navigate("AdditionalInfo");
+    } catch (err) {
+      console.log("Error occured!", err)
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -161,7 +193,7 @@ const PersonalInfo: FC = () => {
               <PrimaryButton
                 action={handleProceed}
                 text="Proceed"
-                screen={navigatingScreen}
+                disability={disabilityStatus}
               />
             </Animated.View>
           </View>
@@ -173,6 +205,7 @@ const PersonalInfo: FC = () => {
       >
         <Description text="LamiSewa © 2026. All rights reserved." />
       </Animated.View>
+      {loading && <LottieLoadingAnimation />}
     </SafeAreaView>
   );
 };
