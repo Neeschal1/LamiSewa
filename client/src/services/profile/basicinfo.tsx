@@ -11,7 +11,6 @@ const UserBasicService = async (
   gender: string,
   dob: string,
 ) => {
-  console.log("Vitra samma ta pugyo!")
   const createBasicInfoUsersProfile: any = {
     fullname: name,
     nickname: nickName,
@@ -23,7 +22,6 @@ const UserBasicService = async (
     date_of_birth: dob,
   };
   const res = await api.post(API.PROFILE.BASICINFO, createBasicInfoUsersProfile);
-  console.log("Response from server, basicinfoservices bata: ", res.data)
   return res;
 };
 

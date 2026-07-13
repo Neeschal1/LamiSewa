@@ -1,17 +1,19 @@
 import { API } from "@/src/constants/apiEndpoints";
 import api from "../api";
-import { getJsonData } from "@/src/storage/SecureCredentials";
 
-const UserPersonalService = async (profile: number) => {
-  const fetchuserspersonalinfodata = await getJsonData("personalinfo");
-  console.log("User's personal data: ", fetchuserspersonalinfodata);
-  const usersPersonalInfo: any = {
-    userprofileid: profile,
-    maritalstatus: fetchuserspersonalinfodata["maritalStatus"],
-    gotra: fetchuserspersonalinfodata["gotra"],
-    current_living_country: fetchuserspersonalinfodata["livingCountry"],
-    current_city: fetchuserspersonalinfodata["district"],
-    residency_status: fetchuserspersonalinfodata["residencyStatus"],
+const UserPersonalService = async (
+  maritalStatus: string,
+  gotra: string,
+  currentlivingcountry: string,
+  currentcity: string,
+  residencystatus: string,
+) => {
+  const usersPersonalInfo = {
+    maritalstatus: maritalStatus,
+    gotra: gotra,
+    current_living_country: currentlivingcountry,
+    current_city: currentcity,
+    residency_status: residencystatus,
   };
   const res = await api.post(API.PROFILE.PERSONALINFO, usersPersonalInfo);
   return res;

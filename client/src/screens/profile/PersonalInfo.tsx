@@ -29,6 +29,9 @@ import {
 import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
+import UserPersonalService from "@/src/services/profile/personalinfo";
+import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import axios from "axios";
 
 const PersonalInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
@@ -38,21 +41,22 @@ const PersonalInfo: FC = () => {
   const [livingCountry, setLivingCountry] = useState<string>("");
   const [district, setDistrict] = useState<string>("");
 
-  const [gotra, setGotra] = useState<string | null>(null);
+  const [gotra, setGotra] = useState<string>("");
   const [gotraOption, setGotraOption] = useState(false);
   const [gotraItems, setGotraItems] = useState(GotraItems);
 
-  const [maritalStatus, setMaritalStatus] = useState<string | null>(null);
+  const [maritalStatus, setMaritalStatus] = useState<string>("");
   const [maritalStatusOpen, setMaritalStatusOpen] = useState(false);
   const [maritalStatusItems, setMaritalStatusItems] =
     useState(MaritalStatusItems);
 
-  const [residencyStatus, setResidencyStatus] = useState<string | null>(null);
+  const [residencyStatus, setResidencyStatus] = useState<string>("");
   const [residencyStatusOpen, setResidencyStatusOpen] = useState(false);
-  const [residencyStatusItems, setResidencyStatusItems] = useState(ResidencyStatusItems);
+  const [residencyStatusItems, setResidencyStatusItems] =
+    useState(ResidencyStatusItems);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const navigation = useNavigation<NavigationProps>()
+  const navigation = useNavigation<NavigationProps>();
 
   useEffect(() => {
     const disablePrimaryButton = () => {
@@ -76,23 +80,34 @@ const PersonalInfo: FC = () => {
     setErrorMessage("");
     try {
       setLoading(true);
-      const userprofilepersonalinfodata = {
-        maritalstatus: maritalStatus,
-        gotra: gotra,
-        current_living_country: livingCountry,
-        current_city: district,
-        residency_status: residencyStatus,
-      };
-      await saveJsonData("personalinfo", userprofilepersonalinfodata);
-
-      const fetchuserspersonalinfodata = await getJsonData("personalinfo");
-      console.log("User's personal data: ", fetchuserspersonalinfodata);
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
+      await UserPersonalService(
+        maritalStatus,
+        gotra,
+        livingCountry,
+        district,
+        residencyStatus,
+      );
+      await StoreStringDataAsync("UserProfileStatus", "PersonalInfoCompleted");
       navigation.navigate("AdditionalInfo");
     } catch (err) {
-      console.log("Error occured!", err)
+      if (axios.isAxiosError(err)) {
+        const statuscode = err?.response?.status;
+        const errormessage = err?.response?.data;
+        console.log("Status code: ", statuscode);
+        console.log("Errormessage: ", errormessage);
+        if (statuscode === 400) {
+          setError(true);
+          setErrorMessage(errormessage);
+        }
+        if (statuscode === 417) {
+          setError(true);
+          setErrorMessage("Something went wrong. Try again!");
+        }
+        setError(true);
+        setErrorMessage(
+          "Something went wrong. Maybe your internet connection is not stable!",
+        );
+      }
     } finally {
       setLoading(false);
     }

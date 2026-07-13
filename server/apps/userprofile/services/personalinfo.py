@@ -7,33 +7,36 @@ from django.shortcuts import get_object_or_404
 
 class PersonalInfo:
     def _createpersonalinfo(self, request) -> Response:
-        user = UsersPersonalInfoSerializer(data=request.data)
-        if user.is_valid(raise_exception=True):
-            userinfo = UsersPersonalInfo.objects.create(
-                userprofileid=request.user.profile,
-                maritalstatus=user.validated_data["maritalstatus"],
-                gotra=user.validated_data["gotra"],
-                current_living_country=user.validated_data["current_living_country"],
-                current_city=user.validated_data["current_city"],
-                residency_status=user.validated_data["residency_status"],
-            )
-            return Response(
-                {
-                    "message": f"Successfully created personal info.",
-                    "Profile Info": {
-                        "Name": userinfo.userprofileid.userid.first_name,
-                        "ProfileID": userinfo.userprofileid.profileid,
-                        "UsersEmail": userinfo.userprofileid.useremail,
+        try:
+            user = UsersPersonalInfoSerializer(data=request.data)
+            if user.is_valid(raise_exception=True):
+                userinfo = UsersPersonalInfo.objects.create(
+                    userprofileid=request.user.profile,
+                    maritalstatus=user.validated_data["maritalstatus"],
+                    gotra=user.validated_data["gotra"],
+                    current_living_country=user.validated_data["current_living_country"],
+                    current_city=user.validated_data["current_city"],
+                    residency_status=user.validated_data["residency_status"],
+                )
+                return Response(
+                    {
+                        "message": f"Successfully created personal info.",
+                        "Profile Info": {
+                            "Name": userinfo.userprofileid.userid.first_name,
+                            "ProfileID": userinfo.userprofileid.profileid,
+                            "UsersEmail": userinfo.userprofileid.useremail,
+                        },
+                        "data": UsersPersonalInfoSerializer(userinfo).data,
                     },
-                    "data": UsersPersonalInfoSerializer(userinfo).data,
-                },
-                status=status.HTTP_201_CREATED,
-            )
+                    status=status.HTTP_201_CREATED,
+                )
 
-        return Response(
-            {"message": "Couldn't create user's personal detail."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+            return Response(
+                {"message": "Couldn't create user's personal detail."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED) 
     
     
     def _updatepersonalinfo(self, request, pk) -> Response:

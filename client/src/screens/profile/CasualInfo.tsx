@@ -137,8 +137,12 @@ const CasualInfo = () => {
         setError(true)
         setErrorMessage(errormessage)
       }
+      if (statuscode === 417){
+        setError(true)
+        setErrorMessage("Something went wrong. Try again!")
+      }
       setError(true)
-      setErrorMessage("Something went wrong!")
+      setErrorMessage("Something went wrong. Maybe your internet connection is not stable!")
      }
     } finally {
       setLoading(false);
