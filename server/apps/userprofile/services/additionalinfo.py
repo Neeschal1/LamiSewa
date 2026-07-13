@@ -7,34 +7,37 @@ from django.shortcuts import get_object_or_404
 
 class AdditionalInfo:
     def _createadditionalinfo(self, request) -> Response:
-        user = UsersAdditionalInfoSerializer(data=request.data)
-        if user.is_valid(raise_exception=True):
-            userinfo = UsersAdditionalInfo.objects.create(
-                userprofileid=request.user.profile,
-                height=user.validated_data["height"],
-                weight=user.validated_data["weight"],
-                community=user.validated_data["community"],
-                religion=user.validated_data["religion"],
-                diet=user.validated_data["diet"],
-            )
-            return Response(
-                {
-                    "message": f"Successfully created additinoal info.",
-                    "Profile Info": {
-                        "Name": userinfo.userprofileid.userid.first_name,
-                        "ProfileID": userinfo.userprofileid.profileid,
-                        "UsersEmail": userinfo.userprofileid.useremail,
+        try:
+            user = UsersAdditionalInfoSerializer(data=request.data)
+            if user.is_valid(raise_exception=True):
+                userinfo = UsersAdditionalInfo.objects.create(
+                    userprofileid=request.user.profile,
+                    height=user.validated_data["height"],
+                    weight=user.validated_data["weight"],
+                    community=user.validated_data["community"],
+                    religion=user.validated_data["religion"],
+                    diet=user.validated_data["diet"],
+                )
+                return Response(
+                    {
+                        "message": f"Successfully created additinoal info.",
+                        "Profile Info": {
+                            "Name": userinfo.userprofileid.userid.first_name,
+                            "ProfileID": userinfo.userprofileid.profileid,
+                            "UsersEmail": userinfo.userprofileid.useremail,
+                        },
+                        "data": UsersAdditionalInfoSerializer(userinfo).data,
                     },
-                    "data": UsersAdditionalInfoSerializer(userinfo).data,
-                },
-                status=status.HTTP_201_CREATED,
+                    status=status.HTTP_201_CREATED,
+                )
+
+            return Response(
+                {"message": "Couldn't create user's additional detail."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-
-        return Response(
-            {"message": "Couldn't create user's additional detail."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
+        except Exception as e:
+            return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
+        
 
     def _updateadditionalinfo(self, request, pk) -> Response:
         userinfo = get_object_or_404(UsersAdditionalInfo, id=pk)

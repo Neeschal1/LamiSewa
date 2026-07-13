@@ -22,10 +22,18 @@ import {
   PrimaryButton,
   Title,
 } from "@/src/components/systemComponentsLayout";
-import { CommunityItems, DietItems } from "@/src/utils/objects";
-import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
+import {
+  CommunityItems,
+  DietItems,
+  HeightItems,
+  ReligionItems,
+  WeightItems,
+} from "@/src/utils/objects";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
+import UserAdditionalService from "@/src/services/profile/additionalinfo";
+import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import axios from "axios";
 
 const AdditionalInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
@@ -33,15 +41,23 @@ const AdditionalInfo: FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
 
-  const [religion, setReligion] = useState<string>("");
-  const [height, setHeight] = useState<string>("");
-  const [weight, setWeight] = useState<string>("");
-
-  const [community, setCommunity] = useState<string | null>(null);
+  const [community, setCommunity] = useState<string>("");
   const [communityOpen, setCommunityOpen] = useState(false);
   const [communityItem, setCommunityItem] = useState(CommunityItems);
 
-  const [diet, setDiet] = useState<string | null>(null);
+  const [height, setHeight] = useState<string>("");
+  const [heightOpen, setHeightOpen] = useState(false);
+  const [heightItem, setHeightItem] = useState(HeightItems);
+
+  const [weight, setWeight] = useState<string>("");
+  const [weightOpen, setWeightOpen] = useState(false);
+  const [weightItem, setWeightItem] = useState(WeightItems);
+
+  const [religion, setReligion] = useState<string>("");
+  const [religionOpen, setReligionOpen] = useState(false);
+  const [religionItem, setReligionItem] = useState(ReligionItems);
+
+  const [diet, setDiet] = useState<string>("");
   const [dietOpen, setDietOpen] = useState(false);
   const [dietItem, setDietItem] = useState(DietItems);
 
@@ -49,43 +65,53 @@ const AdditionalInfo: FC = () => {
 
   useEffect(() => {
     const PrimaryButtonState = () => {
-      if (
-        religion.trim() === "" ||
-        height.trim() === "" ||
-        weight.trim() === "" ||
-        community?.trim() === "" ||
-        diet?.trim() === ""
-      ) {
+      if (religion.trim() === "" ||height.trim() === "" ||weight.trim() === "" ||community?.trim() === "" ||diet?.trim() === "") {
         setDisabilityStatus(true);
       } else {
         setDisabilityStatus(false);
       }
     };
     PrimaryButtonState();
-  }, []);
+  }, [religion, height, weight, community, diet]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setErrorMessage("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [errorMessage]);
 
   const handleProceed = async () => {
     setError(false);
     setErrorMessage("");
     try {
       setLoading(true);
-      const userprofileadditionalinfodata = {
-        height: height,
-        weight: weight,
-        religion: religion,
-        diet: diet,
-        community: community,
-      };
-      await saveJsonData("additionalinfo", userprofileadditionalinfodata);
-
-      const fetchuserspersonalinfodata = await getJsonData("additionalinfo");
-      console.log("User's additional data: \n", fetchuserspersonalinfodata);
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
+      await UserAdditionalService(height, weight, religion, diet, community);
+      await StoreStringDataAsync(
+        "UserProfileStatus",
+        "AdditionalInfoCompleted",
+      );
       navigation.navigate("CareerInfo");
     } catch (err) {
-      console.log("Error occured!", err);
+      if (axios.isAxiosError(err)) {
+        const statuscode = err?.response?.status;
+        const errormessage = err?.response?.data;
+        console.log("Status code: ", statuscode);
+        console.log("Errormessage: ", errormessage);
+        if (statuscode === 400) {
+          setError(true);
+          setErrorMessage(errormessage);
+        }
+        if (statuscode === 417) {
+          setError(true);
+          setErrorMessage("Something went wrong. Try again!");
+        }
+        setError(true);
+        setErrorMessage(
+          "Something went wrong. Maybe your \ninternet connection is not stable!",
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -118,37 +144,49 @@ const AdditionalInfo: FC = () => {
               entering={FadeInUp.delay(200).duration(400).springify()}
               className="flex items-center gap-mid"
             >
-              <View className="items-start w-full">
-                <Title text="Religion:" />
-                <InputFields
-                  plchldr="eg: Hindu"
-                  state={religion}
-                  setState={setReligion}
-                  board="default"
-                />
-              </View>
               <Animated.View
-                entering={FadeInUp.delay(400).duration(400).springify()}
-                className="items-start w-full"
+                entering={FadeInDown.delay(400).duration(400).springify()}
+                style={{ zIndex: 1000 }}
+                className="w-full z-1"
               >
-                <Title text="Height:" />
-                <InputFields
-                  plchldr="eg: 5 ft 5 inch"
-                  state={height}
-                  setState={setHeight}
-                  board="default"
+                <Title text="Religion:" />
+                <CustomDropdown
+                  open={religionOpen}
+                  value={religion}
+                  items={religionItem}
+                  setOpen={setReligionOpen}
+                  setValue={setReligion}
+                  setItems={setReligionItem}
                 />
               </Animated.View>
               <Animated.View
-                entering={FadeInUp.delay(600).duration(400).springify()}
-                className="items-start w-full"
+                entering={FadeInDown.delay(400).duration(400).springify()}
+                style={{ zIndex: 1000 }}
+                className="w-full z-1"
+              >
+                <Title text="Height:" />
+                <CustomDropdown
+                  open={heightOpen}
+                  value={height}
+                  items={heightItem}
+                  setOpen={setHeightOpen}
+                  setValue={setHeight}
+                  setItems={setHeightItem}
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(400).springify()}
+                style={{ zIndex: 1000 }}
+                className="w-full z-1"
               >
                 <Title text="Weight:" />
-                <InputFields
-                  plchldr="eg: 50kg"
-                  state={weight}
-                  setState={setWeight}
-                  board="default"
+                <CustomDropdown
+                  open={weightOpen}
+                  value={weight}
+                  items={weightItem}
+                  setOpen={setWeightOpen}
+                  setValue={setWeight}
+                  setItems={setWeightItem}
                 />
               </Animated.View>
               <Animated.View

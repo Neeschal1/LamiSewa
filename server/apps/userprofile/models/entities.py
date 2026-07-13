@@ -43,8 +43,8 @@ class UsersPersonalInfo(models.Model):
 
 class UsersAdditionalInfo(models.Model):
     userprofileid = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='additional_info')
-    height = models.CharField(max_length=20, blank=False)
-    weight = models.CharField(max_length=10, blank=False)
+    height = models.CharField(max_length=20, blank=False, choices=HEIGHT_CHOICES)
+    weight = models.CharField(max_length=10, blank=False, choices=WEIGHT_CHOICES)
     religion = models.CharField(max_length=30, choices=RELIGION_CHOICE)
     diet = models.CharField(max_length=20, default="Non-Vegeratian")
     community = models.CharField(max_length=20, choices=COMMUNITY_CHOICE)
