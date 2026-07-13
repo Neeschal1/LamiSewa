@@ -4,7 +4,7 @@ import AuthenticatedNavigation from "./AuthenticatedNavigation";
 import ProfileScreenNavigation from "./ProfileScreenNavigation";
 import UnauthenticatedNavigation from "./UnauthenticatedNavigation";
 import Splash from "@/src/screens/initials/SplashScreen";
-import { GetStringDataAsync } from "../storage/ProfileDataAsync";
+import { DeleteStringDataAsync, GetStringDataAsync } from "../storage/ProfileDataAsync";
 
 const StackNavigation = () => {
   const { token, isLoading } = useAuth();
@@ -12,8 +12,10 @@ const StackNavigation = () => {
 
   useEffect(() => {
     const load = async () => {
-      const state = await GetStringDataAsync("profilestatus");
-      setProfileCompleted(state === "completed");
+      const state = await GetStringDataAsync("ProfileScreenStatus");
+      console.log("ProfileScreenStatus:", state);
+      // await DeleteStringDataAsync("ProfileScreenStatus")
+      setProfileCompleted(state === "AllCompleted");
     };
 
     if (token) {

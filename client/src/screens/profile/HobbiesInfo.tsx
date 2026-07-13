@@ -31,6 +31,9 @@ import {
 } from "@/src/utils/objects";
 import { useAuth } from "@/src/auth/AuthContext";
 import { clearToken } from "@/src/storage/SecureTokens";
+import axios from "axios";
+import UserHobbiesService from "@/src/services/profile/hobbies";
+import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
@@ -40,6 +43,8 @@ const HobbiesInfo: FC = () => {
   const [hobbies, setHobbies] = useState<string[]>([]);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
+
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(()=>{
     const handlePrimaryButton = () => {
@@ -76,10 +81,34 @@ const HobbiesInfo: FC = () => {
   const { logout } = useAuth();
 
   const handleOkay = async () => {
-    await logout();
-    await clearToken();
-    console.log("Okay :) Your hobbies are: ", hobbies);
-    setShowSuccessModal(false);
+    setError(false);
+    setErrorMessage("");
+    try {
+      setLoading(true);
+      await UserHobbiesService(hobbies[0], hobbies[1], hobbies[2], hobbies[3], hobbies[4]);
+      await StoreStringDataAsync("ProfileScreenStatus", "AllCompleted");
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const statuscode = err?.response?.status;
+        const errormessage = err?.response?.data;
+        console.log("Status code: ", statuscode);
+        console.log("Errormessage: ", errormessage);
+        if (statuscode === 400) {
+          setError(true);
+          setErrorMessage(errormessage);
+        }
+        if (statuscode === 417) {
+          setError(true);
+          setErrorMessage("Something went wrong. Try again!");
+        }
+        setError(true);
+        setErrorMessage(
+          "Something went wrong. Maybe your \ninternet connection is not stable!",
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -358,7 +387,6 @@ const HobbiesInfo: FC = () => {
               <PrimaryButton
                 text="Okay :)"
                 action={handleOkay}
-                screen="SubscriptionDetails"
               />
               <SecondaryButton
                 action={() => {

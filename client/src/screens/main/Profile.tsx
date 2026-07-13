@@ -30,6 +30,9 @@ import {
 } from "@/src/components/componentsType";
 import { useNavigation } from "expo-router";
 import { useAuth } from "@/src/auth/AuthContext";
+import { clearToken } from "@/src/storage/SecureTokens";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DeleteStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 type AccountType = {
   item: number;
@@ -294,6 +297,26 @@ const Profile: FC = () => {
               </TouchableOpacity>
             ))}
           </View>
+        </View>
+        <View className="flex flex-row gap-4">
+          <TouchableOpacity
+            className="px-2 py-3 bg-black rounded-2xl"
+            onPress={async () => {
+              await clearToken();
+              await AsyncStorage.removeItem("onboardingState");
+              await DeleteStringDataAsync("UserProfileStatus")
+            }}
+          >
+            <Text className="text-white">Delete all token</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="px-2 py-3 bg-black rounded-2xl"
+            onPress={async () => {
+              await logout();
+            }}
+          >
+            <Text className="text-white">Logout</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>

@@ -59,6 +59,14 @@ const PersonalInfo: FC = () => {
   const navigation = useNavigation<NavigationProps>();
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setErrorMessage("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [errorMessage]);
+
+  useEffect(() => {
     const disablePrimaryButton = () => {
       if (
         livingCountry.trim() === "" ||
@@ -114,7 +122,7 @@ const PersonalInfo: FC = () => {
   };
 
   return (
-    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1 ">
+    <SafeAreaView className="bg-background flex flex-1 ">
       <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
@@ -130,6 +138,9 @@ const PersonalInfo: FC = () => {
             <Animated.View
               key={errorMessage}
               entering={BounceIn.delay(200).duration(300)}
+              style={{
+                paddingTop: error ? 22 : 0,
+              }}
             >
               <ErrorText text={`${errorMessage}`} />
             </Animated.View>

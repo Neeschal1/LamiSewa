@@ -9,12 +9,12 @@ import {
   UserInfo,
 } from "@/src/screens/profile/profileScreenLayout";
 import { RootStackParamList } from "../components/componentsType";
-import { View } from "react-native";
 import { Title } from "../components/Texts";
 import { useEffect, useState } from "react";
 import {
   DeleteStringDataAsync,
   GetStringDataAsync,
+  StoreStringDataAsync,
 } from "../storage/ProfileDataAsync";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -25,13 +25,17 @@ const ProfileScreenNavigation = () => {
   useEffect(() => {
     const initialScreen = async () => {
       const screenName = await GetStringDataAsync("UserProfileStatus");
-      if (screenName === "CareerInfoCompleted") {
+      if (screenName === "HobbiesInfoCompleted") {
+        await DeleteStringDataAsync("UserProfileStatus");
+        await StoreStringDataAsync("ProfileScreenStatus", "AllCompleted")
+        return;
+      } else if (screenName === "CareerInfoCompleted") {
         await DeleteStringDataAsync("UserProfileStatus");
         setStartScreen("HobbiesInfo");
         return;
       } else if (screenName === "AdditionalInfoCompleted") {
         await DeleteStringDataAsync("UserProfileStatus");
-        setStartScreen("AdditionalInfo");
+        setStartScreen("CareerInfo");
         return;
       } else if (screenName === "PersonalInfoCompleted") {
         await DeleteStringDataAsync("UserProfileStatus");
@@ -58,8 +62,8 @@ const ProfileScreenNavigation = () => {
 
   return (
     <Stack.Navigator 
-    initialRouteName="UserInfo" 
-    // initialRouteName={startScreen} 
+    // initialRouteName="UserInfo"
+    initialRouteName={startScreen} 
     screenOptions={{ headerShown: false }}>
       <Stack.Screen name="UserInfo" component={UserInfo} options={ProfileScreens("User Info(1/7)")} />
       <Stack.Screen name="BasicInfo" component={BasicInfo} options={ProfileScreens("Basic Info(2/7)")} />

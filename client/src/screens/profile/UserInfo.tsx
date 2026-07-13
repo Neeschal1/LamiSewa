@@ -8,12 +8,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import LottieView from "lottie-react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import Animated, {
   FadeInUp,
   FadeInDown,
   BounceIn,
 } from "react-native-reanimated";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Description,
@@ -31,7 +32,10 @@ import axios from "axios";
 import { clearToken } from "@/src/storage/SecureTokens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/src/auth/AuthContext";
-import { GetStringDataAsync, StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import {
+  GetStringDataAsync,
+  StoreStringDataAsync,
+} from "@/src/storage/ProfileDataAsync";
 
 const createProfileAnimation = require("@/src/assets/animations/createProfile.json");
 
@@ -40,13 +44,36 @@ const UserInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
+
+  useEffect(() => {
+    const disablePrimaryButton = () => {
+      if (userName.trim() === "") {
+        setDisabilityStatus(true);
+      } else {
+        setDisabilityStatus(false);
+      }
+    };
+    disablePrimaryButton();
+  }, [userName]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setErrorMessage("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [errorMessage]);
 
   const handleProceed = async () => {
     const userscredentials = await getData();
     const usersemail = userscredentials["email"];
-    console.log("Profile screen status before userinfo screen validation: ", await GetStringDataAsync("UserProfileStatus"))
+    console.log(
+      "Profile screen status before userinfo screen validation: ",
+      await GetStringDataAsync("UserProfileStatus"),
+    );
 
     if (userName === "") {
       setError(true);
@@ -60,8 +87,11 @@ const UserInfo: FC = () => {
 
       if (res["status"] === 201) {
         setLoading(false);
-        await StoreStringDataAsync("UserProfileStatus", "UserInfoCompleted")
-        console.log("Profile screen status after validation: ", await GetStringDataAsync("UserProfileStatus"))
+        await StoreStringDataAsync("UserProfileStatus", "UserInfoCompleted");
+        console.log(
+          "Profile screen status after validation: ",
+          await GetStringDataAsync("UserProfileStatus"),
+        );
         navigation.navigate("BasicInfo");
       }
     } catch (e) {
@@ -128,14 +158,15 @@ const UserInfo: FC = () => {
                 }}
               />
             </Animated.View>
-            {error ? (
-              <Animated.View
-                key={errorMessage}
-                entering={BounceIn.delay(200).duration(300)}
-              >
-                <ErrorText text={`${errorMessage}`} />
-              </Animated.View>
-            ) : null}
+            <Animated.View
+              key={errorMessage}
+              entering={BounceIn.delay(200).duration(300)}
+              style={{
+                paddingTop: error ? 22 : 0,
+              }}
+            >
+              <ErrorText text={`${errorMessage}`} />
+            </Animated.View>
             <View className="flex gap-mid items-start">
               <Animated.View
                 entering={FadeInUp.delay(200).duration(400).springify()}
@@ -145,7 +176,10 @@ const UserInfo: FC = () => {
                 <InputFields
                   plchldr="eg: neeschal123"
                   state={userName}
-                  setState={setUserName}
+                  setState={(text: string) => {
+                    const sanitized = text.replace(/[^a-zA-Z0-9._]/g, "");
+                    setUserName(sanitized);
+                  }}
                   board="default"
                 />
               </Animated.View>
@@ -155,8 +189,8 @@ const UserInfo: FC = () => {
               >
                 <PrimaryButton
                   action={handleProceed}
-                  // screen="BasicInfo"
-                  text={loading ? "Loading..." : "Proceed"}
+                  disability={disabilityStatus}
+                  text="Proceed"
                 />
                 <View className="flex flex-row gap-4">
                   <TouchableOpacity
@@ -176,7 +210,7 @@ const UserInfo: FC = () => {
                   >
                     <Text className="text-white">Logout</Text>
                   </TouchableOpacity>
-                 </View>
+                </View>
               </Animated.View>
             </View>
           </View>
@@ -188,6 +222,7 @@ const UserInfo: FC = () => {
       >
         <Description text="LamiSewa © 2026. All rights reserved." />
       </Animated.View>
+      {loading && <LottieLoadingAnimation />}
     </SafeAreaView>
   );
 };

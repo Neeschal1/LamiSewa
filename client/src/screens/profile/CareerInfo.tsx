@@ -26,6 +26,9 @@ import { DegreeItems, WorkingItems } from "@/src/utils/objects";
 import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
+import UserCareerService from "@/src/services/profile/careerinfo";
+import axios from "axios";
+import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const CareerInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
@@ -33,11 +36,11 @@ const CareerInfo: FC = () => {
   const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [degree, setDegree] = useState<string | null>(null);
+  const [degree, setDegree] = useState<string>("");
   const [degreeOpen, setDegreeOpen] = useState(false);
   const [degreeItem, setDegreeItem] = useState(DegreeItems);
 
-  const [working, setWorking] = useState<string | null>(null);
+  const [working, setWorking] = useState<string>("");
   const [workingOpen, setWorkingOpen] = useState(false);
   const [workingItem, setWorkingItem] = useState(WorkingItems);
 
@@ -48,6 +51,14 @@ const CareerInfo: FC = () => {
   const navigation = useNavigation<NavigationProps>();
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setErrorMessage("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [errorMessage]);
+
+  useEffect(() => {
     const PrimaryButtonState = () => {
       if (!degree || !working || !college || !profession || !companyName) {
         setDisabilityStatus(true);
@@ -56,37 +67,48 @@ const CareerInfo: FC = () => {
       }
     };
     PrimaryButtonState();
-  }, []);
+  }, [degree, working, college, profession, companyName]);
 
   const handleProceed = async () => {
     setError(false);
     setErrorMessage("");
     try {
       setLoading(true);
-      const userprofilecareerinfodata = {
-        highest_qualification: degree,
-        college_name: college,
-        working_as: working,
-        occupation: profession,
-        company_or_organization_name: companyName,
-      };
-      await saveJsonData("careerinfo", userprofilecareerinfodata);
-
-      const fetchuserscareerinfodata = await getJsonData("careerinfo");
-      console.log("User's career data: ", fetchuserscareerinfodata);
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
+      await UserCareerService(
+        degree,
+        college,
+        working,
+        profession,
+        companyName,
+      );
+      await StoreStringDataAsync("UserProfileStatus", "CareerInfoCompleted");
       navigation.navigate("HobbiesInfo");
     } catch (err) {
-      console.log("Error occured!", err);
+      if (axios.isAxiosError(err)) {
+        const statuscode = err?.response?.status;
+        const errormessage = err?.response?.data;
+        console.log("Status code: ", statuscode);
+        console.log("Errormessage: ", errormessage);
+        if (statuscode === 400) {
+          setError(true);
+          setErrorMessage(errormessage);
+        }
+        if (statuscode === 417) {
+          setError(true);
+          setErrorMessage("Something went wrong. Try again!");
+        }
+        setError(true);
+        setErrorMessage(
+          "Something went wrong. Maybe your \ninternet connection is not stable!",
+        );
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView edges={["bottom"]} className="bg-background flex flex-1">
+    <SafeAreaView className="bg-background flex flex-1">
       <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
@@ -102,6 +124,9 @@ const CareerInfo: FC = () => {
             <Animated.View
               key={errorMessage}
               entering={BounceIn.delay(200).duration(300)}
+              style={{
+                paddingTop: error ? 22 : 0,
+              }}
             >
               <ErrorText text={`${errorMessage}`} />
             </Animated.View>
@@ -185,12 +210,12 @@ const CareerInfo: FC = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-          <Animated.View
-            entering={FadeInDown.delay(200).duration(400).springify()}
-            className="flex items-center w-full"
-          >
-            <Description text="LamiSewa © 2026. All rights reserved." />
-          </Animated.View>
+      <Animated.View
+        entering={FadeInDown.delay(200).duration(400).springify()}
+        className="flex items-center w-full"
+      >
+        <Description text="LamiSewa © 2026. All rights reserved." />
+      </Animated.View>
       {loading && <LottieLoadingAnimation />}
     </SafeAreaView>
   );

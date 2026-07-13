@@ -119,13 +119,34 @@ export const DietItems = [
 ];
 
 export const DegreeItems = [
-  { label: "Bachelors", value: "Bachelors" },
-  { label: "Masters", value: "Masters" },
+  { label: "SEE / SLC", value: "SEE" },
+  { label: "+2 / Higher Secondary", value: "PLUS_TWO" },
+  { label: "Diploma", value: "DIPLOMA" },
+  { label: "Bachelor's Degree", value: "BACHELORS" },
+  { label: "Master's Degree", value: "MASTERS" },
+  { label: "M.Phil", value: "M_PHIL" },
+  { label: "PhD / Doctorate", value: "PHD" },
+  { label: "Postdoctoral", value: "POSTDOC" },
+  { label: "Professional Certification", value: "PROFESSIONAL" },
+  { label: "Other", value: "OTHER" },
 ];
 
 export const WorkingItems = [
-  { label: "Private Company", value: "Bachelors" },
-  { label: "Governmental Office", value: "Governmental Office" },
+  { label: "Private Job", value: "PRIVATE" },
+  { label: "Government Job", value: "GOVERNMENT" },
+  { label: "Entrepreneur", value: "ENTREPRENEUR" },
+  { label: "Business Owner", value: "BUSINESS_OWNER" },
+  { label: "Self Employed", value: "SELF_EMPLOYED" },
+  { label: "Freelancer", value: "FREELANCER" },
+  { label: "Student", value: "STUDENT" },
+  { label: "Unemployed", value: "UNEMPLOYED" },
+  { label: "Retired", value: "RETIRED" },
+  { label: "Homemaker", value: "HOMEMAKER" },
+  { label: "Agriculture / Farming", value: "AGRICULTURE" },
+  { label: "Military / Armed Forces", value: "MILITARY" },
+  { label: "Non-Profit Organization", value: "NON_PROFIT" },
+  { label: "Religious Service", value: "RELIGIOUS_SERVICE" },
+  { label: "Other", value: "OTHER" },
 ];
 
 export const CreativeHobbies = [

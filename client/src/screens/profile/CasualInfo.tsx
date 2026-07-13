@@ -34,7 +34,8 @@ import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 import axios from "axios";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
-const defaultUserCoverPicture = "https://res-console.cloudinary.com/dlzx671ck/thumbnails/v1/image/upload/v1783946328/NjNlNTdhMGIwY2MyZGYyNDhmMWFkNWUzMTc3M2RiZWRfcWEyd3ls/drilldown"
+const defaultUserCoverPicture =
+  "https://res-console.cloudinary.com/dlzx671ck/thumbnails/v1/image/upload/v1783946328/NjNlNTdhMGIwY2MyZGYyNDhmMWFkNWUzMTc3M2RiZWRfcWEyd3ls/drilldown";
 
 const CasualInfo = () => {
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -112,38 +113,49 @@ const CasualInfo = () => {
       const fetchusersbasicinfodata = await getJsonData("basicinfo");
       console.log("User's data: ", fetchusersbasicinfodata);
 
-      const fullName = fetchusersbasicinfodata["fullname"]
-      const gender = fetchusersbasicinfodata["gender"]
-      const handlingProfile = fetchusersbasicinfodata["profile_handler"]
+      const fullName = fetchusersbasicinfodata["fullname"];
+      const gender = fetchusersbasicinfodata["gender"];
+      const handlingProfile = fetchusersbasicinfodata["profile_handler"];
 
-      const year = fetchusersbasicinfodata["date_of_birth"]["year"]
-      const month = fetchusersbasicinfodata["date_of_birth"]["month"]
-      const day = fetchusersbasicinfodata["date_of_birth"]["day"]
-      const datevalue = fetchusersbasicinfodata["date_of_birth"]["value"]
+      const year = fetchusersbasicinfodata["date_of_birth"]["year"];
+      const month = fetchusersbasicinfodata["date_of_birth"]["month"];
+      const day = fetchusersbasicinfodata["date_of_birth"]["day"];
+      const datevalue = fetchusersbasicinfodata["date_of_birth"]["value"];
 
-      const dob = `${year}-${month}-${day}`
+      const dob = `${year}-${month}-${day}`;
 
-      await UserBasicService(fullName, nickName, bio, imageUrl, defaultUserCoverPicture, handlingProfile, gender, dob)
+      await UserBasicService(
+        fullName,
+        nickName,
+        bio,
+        imageUrl,
+        defaultUserCoverPicture,
+        handlingProfile,
+        gender,
+        dob,
+      );
 
-      await StoreStringDataAsync("UserProfileStatus", "BasicInfoCompleted")
+      await StoreStringDataAsync("UserProfileStatus", "BasicInfoCompleted");
       navigation.navigate("PersonalInfo");
     } catch (err) {
-     if(axios.isAxiosError(err)){
-      const statuscode = err?.response?.status
-      const errormessage = err?.response?.data
-      console.log("Status code: ", statuscode)
-      console.log("Errormessage: ", errormessage)
-      if (statuscode === 400){
-        setError(true)
-        setErrorMessage(errormessage)
+      if (axios.isAxiosError(err)) {
+        const statuscode = err?.response?.status;
+        const errormessage = err?.response?.data;
+        console.log("Status code: ", statuscode);
+        console.log("Errormessage: ", errormessage);
+        if (statuscode === 400) {
+          setError(true);
+          setErrorMessage(errormessage);
+        }
+        if (statuscode === 417) {
+          setError(true);
+          setErrorMessage("Something went wrong. Try again!");
+        }
+        setError(true);
+        setErrorMessage(
+          "Something went wrong. Maybe your internet connection is not stable!",
+        );
       }
-      if (statuscode === 417){
-        setError(true)
-        setErrorMessage("Something went wrong. Try again!")
-      }
-      setError(true)
-      setErrorMessage("Something went wrong. Maybe your internet connection is not stable!")
-     }
     } finally {
       setLoading(false);
     }
@@ -169,6 +181,15 @@ const CasualInfo = () => {
         >
           <View className="flex-1 items-center justify-center p-screen bg-background gap-large">
             <StatusBar hidden={false} translucent />
+            <Animated.View
+              key={errorMessage}
+              entering={BounceIn.delay(200).duration(300)}
+              style={{
+                paddingTop: error ? 22 : 0,
+              }}
+            >
+              <ErrorText text={`${errorMessage}`} />
+            </Animated.View>
             <Animated.View
               entering={FadeInUp.delay(200).duration(300)}
               className="flex items-center gap-mid"

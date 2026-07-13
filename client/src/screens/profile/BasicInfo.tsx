@@ -100,20 +100,20 @@ const BasicInfo = () => {
     const fetchuserinfodata = await getData();
     console.log("User's data: ", fetchuserinfodata);
     try {
-      setLoading(true)
+      setLoading(true);
       const userprofilebasicinfodata = {
         fullname: name,
         profile_handler: idOption,
         gender: gender,
         date_of_birth: date,
-        datevalue: value
+        datevalue: value,
       };
       await saveJsonData("basicinfo", userprofilebasicinfodata);
 
       const fetchusersbasicinfodata = await getJsonData("basicinfo");
       console.log("User's data: ", fetchusersbasicinfodata);
 
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       navigation.navigate("CasualInfo");
     } catch (err) {
@@ -147,6 +147,9 @@ const BasicInfo = () => {
             <Animated.View
               key={errorMessage}
               entering={BounceIn.delay(200).duration(300)}
+              style={{
+                paddingTop: error ? 22 : 0,
+              }}
             >
               <ErrorText text={`${errorMessage}`} />
             </Animated.View>

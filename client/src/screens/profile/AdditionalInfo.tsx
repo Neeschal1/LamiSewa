@@ -65,7 +65,13 @@ const AdditionalInfo: FC = () => {
 
   useEffect(() => {
     const PrimaryButtonState = () => {
-      if (religion.trim() === "" ||height.trim() === "" ||weight.trim() === "" ||community?.trim() === "" ||diet?.trim() === "") {
+      if (
+        religion.trim() === "" ||
+        height.trim() === "" ||
+        weight.trim() === "" ||
+        community?.trim() === "" ||
+        diet?.trim() === ""
+      ) {
         setDisabilityStatus(true);
       } else {
         setDisabilityStatus(false);
@@ -137,6 +143,9 @@ const AdditionalInfo: FC = () => {
             <Animated.View
               key={errorMessage}
               entering={BounceIn.delay(200).duration(300)}
+              style={{
+                paddingTop: error ? 22 : 0,
+              }}
             >
               <ErrorText text={`${errorMessage}`} />
             </Animated.View>
