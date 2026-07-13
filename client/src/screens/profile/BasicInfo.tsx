@@ -106,6 +106,7 @@ const BasicInfo = () => {
         profile_handler: idOption,
         gender: gender,
         date_of_birth: date,
+        datevalue: value
       };
       await saveJsonData("basicinfo", userprofilebasicinfodata);
 
@@ -211,12 +212,12 @@ const BasicInfo = () => {
                 entering={FadeInUp.delay(600).duration(400).springify()}
                 className="items-start w-full"
               >
-                <Title text={`${name}'s Date of Birth:`} />
+                <Title text={`${name}'s Date of Birth (in AD):`} />
                 <View className="flex-row items-center w-full gap-3 mt-2">
                   <View className="flex-1">
                     <DOBInput dob={date} setDob={setDate} />
                   </View>
-                  <View style={{ width: 110 }}>
+                  {/* <View style={{ width: 110 }}>
                     <CustomDropdown
                       open={open}
                       value={value}
@@ -225,7 +226,7 @@ const BasicInfo = () => {
                       setValue={setValue}
                       setItems={setItems}
                     />
-                  </View>
+                  </View> */}
                 </View>
               </Animated.View>
 
@@ -238,16 +239,16 @@ const BasicInfo = () => {
                   {GenderOption.map((item) => (
                     <TouchableOpacity
                       key={item.index}
-                      onPress={() => setGender(item.option)}
+                      onPress={() => setGender(item.value)}
                       className={`px-6 py-3 rounded-2xl border ${
-                        gender === item.option
+                        gender === item.value
                           ? "bg-primaryblue border-primaryblue"
                           : "bg-background border-gray-300"
                       }`}
                     >
                       <Text
                         className={`font-Poppinsmedium ${
-                          gender === item.option ? "text-white" : "text-black"
+                          gender === item.value ? "text-white" : "text-black"
                         }`}
                       >
                         {item.option}

@@ -9,7 +9,7 @@ class Career:
         user = UsersCareerSerializer(data=request.data)
         if user.is_valid(raise_exception=True):
             userinfo = UsersCareer.objects.create(
-                userprofileid=user.validated_data["userprofileid"],
+                userprofileid=request.user.profile,
                 highest_qualification=user.validated_data["highest_qualification"],
                 college_name=user.validated_data["college_name"],
                 working_as=user.validated_data["working_as"],

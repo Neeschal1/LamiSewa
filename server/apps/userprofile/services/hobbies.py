@@ -9,7 +9,7 @@ class Hobbies:
         user = UsersHobbiesSerializer(data=request.data)
         if user.is_valid(raise_exception=True):
             userinfo = UsersHobbies.objects.create(
-                userprofileid=user.validated_data["userprofileid"],
+                userprofileid=request.user.profile,
                 hobby1=user.validated_data["hobby1"],
                 hobby2=user.validated_data["hobby2"],
                 hobby3=user.validated_data["hobby3"],

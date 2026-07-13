@@ -29,8 +29,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
+import UserBasicService from "@/src/services/profile/basicinfo";
+import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import axios from "axios";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
+const defaultUserCoverPicture = "https://res-console.cloudinary.com/dlzx671ck/thumbnails/v1/image/upload/v1783946328/NjNlNTdhMGIwY2MyZGYyNDhmMWFkNWUzMTc3M2RiZWRfcWEyd3ls/drilldown"
 
 const CasualInfo = () => {
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -98,34 +102,44 @@ const CasualInfo = () => {
       }
       setLoading(false);
     }
-    console.log(
-      "\n\nImage URL to store in database: ",
-      imageUrl,
-      "Local URL: ",
-      localUri,
-    );
   };
 
   const handleProcees = async () => {
     setError(false);
     setErrorMessage("");
     try {
-      setLoading(true)
-      const userprofilebasicinfodata = {
-        nickname: nickName,
-        profile_picture: imageUrl,
-        bio: bio,
-      };
-      await saveJsonData("casualinfo", userprofilebasicinfodata);
-
-      const fetchusersbasicinfodata = await getJsonData("casualinfo");
+      setLoading(true);
+      const fetchusersbasicinfodata = await getJsonData("basicinfo");
       console.log("User's data: ", fetchusersbasicinfodata);
 
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const fullName = fetchusersbasicinfodata["fullname"]
+      const gender = fetchusersbasicinfodata["gender"]
+      const handlingProfile = fetchusersbasicinfodata["profile_handler"]
 
+      const year = fetchusersbasicinfodata["date_of_birth"]["year"]
+      const month = fetchusersbasicinfodata["date_of_birth"]["month"]
+      const day = fetchusersbasicinfodata["date_of_birth"]["day"]
+      const datevalue = fetchusersbasicinfodata["date_of_birth"]["value"]
+
+      const dob = `${year}-${month}-${day}`
+
+      await UserBasicService(fullName, nickName, bio, imageUrl, defaultUserCoverPicture, handlingProfile, gender, dob)
+
+      await StoreStringDataAsync("UserProfileStatus", "BasicInfoCompleted")
       navigation.navigate("PersonalInfo");
     } catch (err) {
-      console.log("Error: ", err);
+     if(axios.isAxiosError(err)){
+      const statuscode = err?.response?.status
+      const errormessage = err?.response?.data
+      console.log("Status code: ", statuscode)
+      console.log("Errormessage: ", errormessage)
+      if (statuscode === 400){
+        setError(true)
+        setErrorMessage(errormessage)
+      }
+      setError(true)
+      setErrorMessage("Something went wrong!")
+     }
     } finally {
       setLoading(false);
     }

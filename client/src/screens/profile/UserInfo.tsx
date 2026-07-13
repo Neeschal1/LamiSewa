@@ -46,7 +46,7 @@ const UserInfo: FC = () => {
   const handleProceed = async () => {
     const userscredentials = await getData();
     const usersemail = userscredentials["email"];
-    console.log("Profile screen status before userinfo screen validation: ", await GetStringDataAsync("UserInfoScreenStatus"))
+    console.log("Profile screen status before userinfo screen validation: ", await GetStringDataAsync("UserProfileStatus"))
 
     if (userName === "") {
       setError(true);
@@ -60,8 +60,8 @@ const UserInfo: FC = () => {
 
       if (res["status"] === 201) {
         setLoading(false);
-        await StoreStringDataAsync("UserInfoScreenStatus", "Completed")
-        console.log("Profile screen status after validation: ", await GetStringDataAsync("UserInfoScreenStatus"))
+        await StoreStringDataAsync("UserProfileStatus", "UserInfoCompleted")
+        console.log("Profile screen status after validation: ", await GetStringDataAsync("UserProfileStatus"))
         navigation.navigate("BasicInfo");
       }
     } catch (e) {

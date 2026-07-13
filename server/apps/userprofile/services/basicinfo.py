@@ -11,7 +11,7 @@ class BasicInfo:
 
         if user.is_valid(raise_exception=True):
             userinfo = UsersBasicInfo.objects.create(
-                userprofileid=user.validated_data["userprofileid"],
+                userprofileid=request.user.profile,
                 fullname=user.validated_data["fullname"],
                 nickname=user.validated_data["nickname"],
                 profile_picture=user.validated_data["profile_picture"],
@@ -35,7 +35,7 @@ class BasicInfo:
             )
 
         return Response(
-            {"message": "Couldn't create user's basic detail."},
+            {"message": "Couldn't create user's detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
 

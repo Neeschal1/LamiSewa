@@ -8,9 +8,9 @@ export const ProfileOptions = [
 ];
 
 export const GenderOption = [
-  { index: 1, option: "Male" },
-  { index: 2, option: "Female" },
-  { index: 3, option: "Others" },
+  { index: 1, option: "Male", value: "MALE" },
+  { index: 2, option: "Female", value: "FEMALE" },
+  { index: 3, option: "Others", value: "OTHERS" },
 ];
 
 export const CalendarItems = [

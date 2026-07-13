@@ -33,7 +33,7 @@ class PartnerPreference:
 
         if partner_preference_validation:
             userinfo = UsersPartnerPreference.objects.create(
-                userprofileid=partner_preference.validated_data["userprofileid"],
+                userprofileid=request.user.profile,
                 age_ranging=preferred_partner_age,
                 maritalstatus=preferred_partner_maritalstatus,
                 living_in=preferred_partner_address,

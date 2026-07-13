@@ -16,7 +16,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UsersBasicInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersBasicInfo
-        fields = '__all__'
+        fields = ["fullname", "nickname", "bio", "profile_picture", "cover_picture", "profile_handler", "gender", "date_of_birth"]
         extra_kwargs = {
             "userprofileid": {"write_only": True},
             "fullname": {"required": True},
@@ -70,7 +70,7 @@ class UsersFeaturedImagesSerializer(serializers.ModelSerializer):
 class UsersHobbiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersHobbies
-        fields = '__all__'
+        fields = ["hobby1", "hobby2", "hobby3", "hobby4", "hobby5"]
         extra_kwargs = {
             "userprofileid": {"write_only": True},
             "hobby1": {"required": True},
@@ -84,7 +84,7 @@ class UsersHobbiesSerializer(serializers.ModelSerializer):
 class UsersCareerSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersCareer
-        fields = '__all__'
+        fields = ["highest_qualification", "college_name", "working_as", "occupation", "company_or_organization_name"]
         extra_kwargs = {
             "userprofileid": {"write_only": True},
             "highest_qualification": {"required": True},
@@ -98,7 +98,7 @@ class UsersCareerSerializer(serializers.ModelSerializer):
 class UsersFamilyDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersFamilyDetail
-        fields = '__all__'
+        fields = ["family_type", "total_family_members", "siblings"]
         extra_kwargs = {
             "userprofileid": {"write_only": True},
             "family_type": {"required": True},
@@ -110,7 +110,7 @@ class UsersFamilyDetailSerializer(serializers.ModelSerializer):
 class UsersAstroDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersAstroDetail
-        fields = '__all__'
+        fields = ["mangalik", "sunshine", "moon_sign"]
         extra_kwargs = {
             "userprofileid": {"write_only": True},
             "mangalik": {"required": True},
@@ -122,7 +122,7 @@ class UsersAstroDetailSerializer(serializers.ModelSerializer):
 class UsersPartnerPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersPartnerPreference
-        fields = '__all__'
+        fields = ["age_ranging", "maritalstatus", "living_in", "partner_religion", "partner_diet", "partner_education", "partner_profession", "partner_mangalik"]
         extra_kwargs = {
             "userprofileid": {"write_only": True},
             "age_ranging": {"required": True},

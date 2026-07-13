@@ -24,12 +24,17 @@ const ProfileScreenNavigation = () => {
 
   useEffect(() => {
     const initialScreen = async () => {
-      const screenName = await GetStringDataAsync("UserInfoScreenStatus");
-      if (screenName === "Completed") {
-        await DeleteStringDataAsync("UserInfoScreenStatus");
+      const screenName = await GetStringDataAsync("UserProfileStatus");
+      if (screenName === "BasicInfoCompleted") {
+        await DeleteStringDataAsync("UserProfileStatus");
+        setStartScreen("PersonalInfo");
+        return;
+      } else if (screenName === "UserInfoCompleted") {
+        await DeleteStringDataAsync("UserProfileStatus");
         setStartScreen("BasicInfo");
         return;
-      } else {
+      } 
+      else {
         setStartScreen("UserInfo");
       }
     };
@@ -42,8 +47,8 @@ const ProfileScreenNavigation = () => {
 
   return (
     <Stack.Navigator 
-    initialRouteName="HobbiesInfo" 
-    // initialRouteName={startScreen} 
+    // initialRouteName="BasicInfo" 
+    initialRouteName={startScreen} 
     screenOptions={{ headerShown: false }}>
       <Stack.Screen name="UserInfo" component={UserInfo} options={ProfileScreens("User Info(1/7)")} />
       <Stack.Screen name="BasicInfo" component={BasicInfo} options={ProfileScreens("Basic Info(2/7)")} />

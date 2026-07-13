@@ -280,11 +280,11 @@ class UsersFeaturedImagesSerializerView(viewsets.ViewSet):
 class UsersHobbiesSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     
-    @swagger_auto_schema(request_body=UsersFeaturedImagesSerializer)
+    @swagger_auto_schema(request_body=UsersHobbiesSerializer)
     def create(self, request):
         return Hobbies()._createhobbies(request)
     
-    @swagger_auto_schema(request_body=UsersFeaturedImagesSerializer)
+    @swagger_auto_schema(request_body=UsersHobbiesSerializer)
     def update(self, request, pk=None):
         return Hobbies()._updatehobbies(request, pk)
     
