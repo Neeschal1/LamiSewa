@@ -88,6 +88,9 @@ const UserInfo: FC = () => {
       if (res["status"] === 201) {
         setLoading(false);
         await StoreStringDataAsync("UserProfileStatus", "UserInfoCompleted");
+        await StoreStringDataAsync("UsersProfileID", res["data"]["data"]["profileid"]);
+        const usersProfileID = await GetStringDataAsync("UsersProfileID")
+        console.log("\n\n\n\n\n\nUsers Profile ID: ", usersProfileID, "\n\n\n\n\n")
         console.log(
           "Profile screen status after validation: ",
           await GetStringDataAsync("UserProfileStatus"),

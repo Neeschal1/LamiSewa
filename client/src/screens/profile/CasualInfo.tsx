@@ -34,8 +34,7 @@ import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 import axios from "axios";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
-const defaultUserCoverPicture =
-  "https://res-console.cloudinary.com/dlzx671ck/thumbnails/v1/image/upload/v1783946328/NjNlNTdhMGIwY2MyZGYyNDhmMWFkNWUzMTc3M2RiZWRfcWEyd3ls/drilldown";
+const defaultUserCoverPicture = "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg";
 
 const CasualInfo = () => {
   const [imageUrl, setImageUrl] = useState<string>("");

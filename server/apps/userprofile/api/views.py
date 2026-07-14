@@ -28,8 +28,8 @@ class UserProfileSerializerView(viewsets.ViewSet):
         return UserProfileService()._updateprofileid(request, pk)
     
     @swagger_auto_schema()
-    def retrieve(self, request, pk=None):
-        return UserProfileService()._retrieveprofileid(request, pk)
+    def list(self, request):
+        return UserProfileService()._retrieveprofileid(request)
     
     @swagger_auto_schema()
     def destroy(self, request, pk=None):

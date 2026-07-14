@@ -12,7 +12,7 @@ import {
   Linking,
   Switch,
 } from "react-native";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
   Describe,
@@ -33,6 +33,7 @@ import { useAuth } from "@/src/auth/AuthContext";
 import { clearToken } from "@/src/storage/SecureTokens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DeleteStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import FetchUsersDetail from "@/src/services/settings/fetchDetails";
 
 type AccountType = {
   item: number;
@@ -47,6 +48,29 @@ type OthersType = {
   btnname: string;
   redirect: string;
 };
+
+interface Profile {
+  useremail: string;
+  username: string;
+  profileid: string;
+  userid: number;
+}
+
+interface BasicInfo {
+  fullname: string;
+  nickname: string;
+  bio: string;
+  profile_picture: string;
+  cover_picture: string;
+  profile_handler: string;
+  gender: string;
+  date_of_birth: string;
+}
+
+interface UserData {
+  profile: Profile;
+  basic_info: BasicInfo;
+}
 
 const CoverPP = require("@/src/assets/images/cover.png");
 const myProfile = require("@/src/assets/images/myPP.png");
@@ -122,6 +146,7 @@ const { width, height } = Dimensions.get("window");
 const Profile: FC = () => {
   const { logout } = useAuth();
   const [enabled, setEnabled] = useState<boolean>(false);
+  const [userData, setUserData] = useState<UserData | null>(null)
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -129,13 +154,23 @@ const Profile: FC = () => {
     await logout();
   };
 
+  useEffect(()=>{
+    const fetchUserBasicInfo = async () => {
+      const data =  await FetchUsersDetail()
+      console.log("Message: ", data.data)
+      console.log("Status: ", data.stats)
+      setUserData(data)
+    }
+    fetchUserBasicInfo()
+  }, [])
+
   return (
     <View className="flex-1 items-center justify-start bg-background">
       <ScrollView>
         <StatusBar hidden={false} translucent />
 
         <ImageBackground
-          source={CoverPP}
+          source={{uri: userData?.basic_info.cover_picture}}
           style={{
             width: width,
             height: height * 0.22,
@@ -176,11 +211,12 @@ const Profile: FC = () => {
             >
               <View className="flex py-2 px-2 border-4 border-primaryblue bg-background rounded-full">
                 <Image
-                  source={myProfile}
+                  source={{uri: userData?.basic_info.profile_picture,}}
                   style={{
                     width: "100%",
                     height: "100%",
                     resizeMode: "cover",
+                    borderRadius: 100
                   }}
                 />
               </View>
@@ -189,12 +225,12 @@ const Profile: FC = () => {
               <View className="flex items-center">
                 <View className="flex flex-row items-center justify-center gap-small">
                   <Text className="font-Poppinssemibold text-dark text-[24px]">
-                    Neeschal Pokharel
+                    {userData?.basic_info.fullname}
                   </Text>
                   <Image source={Verification} />
                 </View>
                 <View className="flex mt-[-10px]">
-                  <Description text="Mobile Application Developer" />
+                  <Description text={`${userData?.basic_info.bio}`}/>
                 </View>
               </View>
               <SubTitle text="Hey, beautiful Soul...!" />
@@ -273,12 +309,6 @@ const Profile: FC = () => {
           </View>
         </View>
 
-        <View>
-          <TouchableOpacity onPress={handleLogOut}>
-            <Text>LOGOUT!!!!!!!!!!!!!!!!!</Text>
-          </TouchableOpacity>
-        </View>
-
         <View className="flex w-full items-start p-screen">
           <Description text="Others" />
           <View className="mt-4 gap-mid w-full">
@@ -313,6 +343,10 @@ const Profile: FC = () => {
           <TouchableOpacity
             className="px-2 py-3 bg-black rounded-2xl"
             onPress={async () => {
+              await clearToken();
+              await AsyncStorage.removeItem("onboardingState");
+              await DeleteStringDataAsync("UserProfileStatus");
+              await DeleteStringDataAsync("SubscriptionStatusAfterBuildingUpProfile")
               await logout();
             }}
           >

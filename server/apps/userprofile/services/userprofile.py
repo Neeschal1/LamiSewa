@@ -55,8 +55,9 @@ class UserProfileService:
 
 
     def _updateprofileid(self, request, pk) -> Response:
-        profiledata = get_object_or_404(UserProfile, id=pk)
-        serializer = UserProfileSerializer(profiledata, data=request.data, partial=True)
+        profiledata = get_object_or_404(UserProfile, userid=request.user)
+        basicinfo = profiledata.basic_info
+        serializer = UserProfileSerializer(basicinfo, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(
@@ -71,23 +72,37 @@ class UserProfileService:
         )
 
 
-    def _retrieveprofileid(self, request, pk) -> Response:
-        profiledata = get_object_or_404(UserProfile, id=pk)
-        serializer = UserProfileSerializer(profiledata, data=request.data, partial=True)
-        if serializer.is_valid(raise_exception=True):
-            return Response(
-                {
-                    "message": "User's data retrieved!",
-                    "data": {
-                        "User ProfileID": profiledata.profileid,
-                        "Username": serializer.data["username"],
-                    },
-                },
-                status=status.HTTP_200_OK,
-            )
-        return validators.ValidationError(
-            {"message": "Couldn't fetch user's detail."},
-            status=status.HTTP_400_BAD_REQUEST,
+    # def _retrieveprofileid(self, request, pk) -> Response:
+    #     profiledata = get_object_or_404(UserProfile, userid=request.user)
+    #     basicinfo = profiledata.basic_info
+    #     serializer = UserProfileSerializer(profiledata)
+    #     # if serializer.is_valid(raise_exception=True):
+    #     return Response(
+    #             {
+    #                 "message": "User's data retrieved!",
+    #                 "data": {
+    #                     "User ProfileID": profiledata.profileid,
+    #                     "Username": serializer.data["username"],
+    #                 },
+    #             },
+    #             status=status.HTTP_200_OK,
+    #         )
+    #     # return validators.ValidationError(
+    #     #     {"message": "Couldn't fetch user's detail."},
+    #     #     status=status.HTTP_400_BAD_REQUEST,
+    #     # )
+    
+    def _retrieveprofileid(self, request):
+        profile = get_object_or_404(UserProfile, userid=request.user)
+
+        profile_serializer = UserProfileSerializer(profile)
+        basic_serializer = UsersBasicInfoSerializer(profile.basic_info)
+
+        return Response(
+            {
+                "profile": profile_serializer.data,
+                "basic_info": basic_serializer.data,
+            }
         )
 
 
