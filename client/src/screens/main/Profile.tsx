@@ -304,7 +304,8 @@ const Profile: FC = () => {
             onPress={async () => {
               await clearToken();
               await AsyncStorage.removeItem("onboardingState");
-              await DeleteStringDataAsync("UserProfileStatus")
+              await DeleteStringDataAsync("UserProfileStatus");
+              await DeleteStringDataAsync("SubscriptionStatusAfterBuildingUpProfile")
             }}
           >
             <Text className="text-white">Delete all token</Text>

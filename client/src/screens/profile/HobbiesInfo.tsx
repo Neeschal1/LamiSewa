@@ -89,6 +89,7 @@ const HobbiesInfo: FC = () => {
       await UserHobbiesService(hobbies[0], hobbies[1], hobbies[2], hobbies[3], hobbies[4]);
       await DeleteStringDataAsync("UserProfileStatus");
       await StoreStringDataAsync("ProfileScreenStatus", "AllCompleted");
+      await StoreStringDataAsync("SubscriptionStatusAfterBuildingUpProfile", "Incomplete");
       setProfileCompleted(true);
     } catch (err) {
       if (axios.isAxiosError(err)) {

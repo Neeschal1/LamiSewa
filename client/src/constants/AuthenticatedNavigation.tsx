@@ -8,12 +8,33 @@ import { PaymentSuccess, SubscriptionDetails } from "../screens/payments/Payment
 import MyTabs from "./BottomTabNavigation";
 import {AccountPassword} from "../screens/accounts/AccountLayouts";
 import {BasicDetails, Documents, FacialVerification, FinalVerification, Intro, Verify} from "../screens/accounts/idverification/IDVerificationLayout";
+import { useEffect, useState } from "react";
+import { DeleteStringDataAsync, GetStringDataAsync } from "../storage/ProfileDataAsync";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AuthenticatedNavigation = () => {
+  const [subscriptionScreen, setSubscriptionScreen] = useState<keyof RootStackParamList | null>(null)
+
+  useEffect(()=>{
+    const subscriptionScreenStatus = async () => {
+      const fetchSubscriptionScreenStatus = await GetStringDataAsync("SubscriptionStatusAfterBuildingUpProfile")
+      if (fetchSubscriptionScreenStatus === "Incomplete"){
+        setSubscriptionScreen("SubscriptionDetails")
+        await DeleteStringDataAsync("SubscriptionStatusAfterBuildingUpProfile")
+      } else {
+        setSubscriptionScreen("MyTabs")
+      }
+    }
+    subscriptionScreenStatus()
+  }, [])
+
+  if(!subscriptionScreen){
+    return null;
+  }
+
   return (
-    <Stack.Navigator initialRouteName="MyTabs" screenOptions={{headerShown: false}}>
+    <Stack.Navigator initialRouteName={subscriptionScreen} screenOptions={{headerShown: false}}>
       <Stack.Screen name="Chats" component={Chats} options={optionsScreens} />
       <Stack.Screen name="Home" component={Home} options={optionsScreens} />
       {/* <Stack.Screen name="Notification" component={Notification} options={optionsScreens} /> */}
