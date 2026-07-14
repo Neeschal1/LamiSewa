@@ -1,9 +1,11 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, Dispatch, SetStateAction  } from "react";
 
 export type AuthContextType = {
   token: string | null;
   isLoading: boolean;
   login: (token: string) => Promise<void>;
+  profileCompleted: boolean;
+  setProfileCompleted: Dispatch<SetStateAction<boolean>>;
   logout: () => Promise<void>;
 };
 

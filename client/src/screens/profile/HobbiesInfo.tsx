@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import React, { FC, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import {
   ErrorText,
   Title,
@@ -33,7 +34,7 @@ import { useAuth } from "@/src/auth/AuthContext";
 import { clearToken } from "@/src/storage/SecureTokens";
 import axios from "axios";
 import UserHobbiesService from "@/src/services/profile/hobbies";
-import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import { DeleteStringDataAsync, StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
@@ -78,7 +79,7 @@ const HobbiesInfo: FC = () => {
     return;
   };
 
-  const { logout } = useAuth();
+  const { setProfileCompleted } = useAuth();
 
   const handleOkay = async () => {
     setError(false);
@@ -86,7 +87,9 @@ const HobbiesInfo: FC = () => {
     try {
       setLoading(true);
       await UserHobbiesService(hobbies[0], hobbies[1], hobbies[2], hobbies[3], hobbies[4]);
+      await DeleteStringDataAsync("UserProfileStatus");
       await StoreStringDataAsync("ProfileScreenStatus", "AllCompleted");
+      setProfileCompleted(true);
     } catch (err) {
       if (axios.isAxiosError(err)) {
         const statuscode = err?.response?.status;
@@ -396,6 +399,7 @@ const HobbiesInfo: FC = () => {
               />
             </View>
           </View>
+          {loading && <LottieLoadingAnimation />}
         </View>
       </Modal>
     </SafeAreaView>

@@ -269,11 +269,11 @@ const BasicInfo = () => {
                   disability={disabilityStatus}
                 />
               </Animated.View>
-              <View>
+              {/* <View>
                 <TouchableOpacity onPress={handleLogOut}>
                   <Text>LOGOUT!!!!!!!!!!!!!!!!!</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
           </View>
         </ScrollView>
