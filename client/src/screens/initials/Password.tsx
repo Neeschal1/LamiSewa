@@ -30,7 +30,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import HandleSignupService from "@/src/services/accounts/signup";
 import { getData } from "@/src/storage/SecureCredentials";
 import axios from "axios";
-import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import { DeleteStringDataAsync, StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 import { useAuth } from "@/src/auth/AuthContext";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
@@ -130,10 +130,16 @@ const Password = () => {
         console.log("Response from server: ", response["data"]);
         const accessToken = response["data"]["Message"]["Tokens"]["accesstoken"]
         const refreshToken = response["data"]["Message"]["Tokens"]["refreshtoken"]
+        const userprofilestatus = response["data"]["Message"]["UserprofileStatus"]
         await saveTokens(accessToken)
         await saveRefreshTokens(refreshToken)
         const decoded = jwtDecode<AccessTokenPayload>(accessToken);
         accessTokenRef.current = accessToken
+        if (userprofilestatus === true){
+            await StoreStringDataAsync("ProfileScreenStatus", "NoProfileExists")
+          } else {
+            await DeleteStringDataAsync("ProfileScreenStatus")
+          }
         console.log("\nDecoded Users id: ", decoded.user_id);
         console.log("\nDecoded expiry date: ", decoded.exp);
         console.log("\nDecoded token type: ", decoded.token_type);

@@ -153,7 +153,7 @@ const CasualInfo = () => {
         }
         setError(true);
         setErrorMessage(
-          "Something went wrong. Maybe your internet connection is not stable!",
+          "Something went wrong. Maybe your \ninternet connection is not stable!",
         );
       }
     } finally {

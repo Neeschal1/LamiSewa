@@ -58,11 +58,12 @@ const Welcome: FC = () => {
           >
             <PrimaryButton screen="Signup" text="Let's Begin" />
             {/* <View className="flex flex-row gap-4"> */}
-                  {/* <TouchableOpacity
+                   <TouchableOpacity
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {
                       await clearToken();
                       await DeleteStringDataAsync("onboardingState")
+                      await DeleteStringDataAsync("ProfileScreenStatus")
                     }}
                   >
                     <Text className="text-white">Delete all token</Text>
@@ -74,7 +75,7 @@ const Welcome: FC = () => {
                     }}
                   >
                     <Text className="text-white">Logout</Text>
-                  </TouchableOpacity> */}
+                  </TouchableOpacity> 
                   {/* <TouchableOpacity
                     className="px-2 py-3 bg-black rounded-2xl"
                     onPress={async () => {

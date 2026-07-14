@@ -50,8 +50,10 @@ const ProfileScreenNavigation = () => {
         setStartScreen("BasicInfo");
         return;
       } else {
+        await DeleteStringDataAsync("UserProfileStatus");
         setStartScreen("UserInfo");
-      }
+        return;
+      } 
     };
     initialScreen();
   }, []);

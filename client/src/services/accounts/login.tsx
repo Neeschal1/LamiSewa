@@ -16,9 +16,9 @@ const HandleLoginService = async (email: string, password: string) => {
 
   const profilescreenstatus = res["data"]["UserprofileStatus"]
   if (profilescreenstatus === true){
-    await StoreStringDataAsync("BasicInfoCompleted", "BasicInfoCompleted")
+    await StoreStringDataAsync("ProfileScreenStatus", "NoProfileExists")
   } else {
-    await DeleteStringDataAsync("BasicInfoCompleted")
+    await DeleteStringDataAsync("ProfileScreenStatus")
   }
 
   return res.data.Tokens;

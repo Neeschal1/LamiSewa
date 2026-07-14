@@ -62,6 +62,8 @@ class UserAuth:
                 refresh = RefreshToken.for_user(user)
                 access_token = str(refresh.access_token)
                 refresh_token = str(refresh)
+                
+                userinfo = UserProfile.objects.filter(useremail = user.email).exists()
             
                 if not user:
                     return Response({"Message":"User's account not created. Please try again later :("}, status=status.HTTP_403_FORBIDDEN)
@@ -69,6 +71,7 @@ class UserAuth:
                 return Response({
                     "Message":{
                         "Account Detail": f"Account created successfully for {user.first_name}", 
+                        "UserprofileStatus": userinfo,
                         "Tokens": {
                             "accesstoken":access_token, 
                             "refreshtoken": refresh_token}}
