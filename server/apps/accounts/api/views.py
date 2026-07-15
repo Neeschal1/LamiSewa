@@ -91,4 +91,15 @@ class ResetPasswordSerializersView(viewsets.ViewSet):
             usersphonenumber = serializers.validated_data['contactNumber']
             passcode = serializers.validated_data['password']
             return UserAuth()._resetpassword(usersphonenumber, passcode)
+        
+
+class EmailFingerprintVerificationSerializersView(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+    
+    @swagger_auto_schema(request_body=EmailFingerprintVerificationSerializers)
+    def create(self, request):
+        serializers = EmailFingerprintVerificationSerializers(data=request.data)
+        if serializers.is_valid(raise_exception=True):
+            usermail = serializers.validated_data["email"]
+            return UserAuth()._validatefingerprint(usermail)
     

@@ -12,6 +12,7 @@ router.register('account-credentials-otp-verification', VerifyOTPSerializerView,
 router.register('account-forgot-password-find-account', FindAccountSerializerView, basename="find-account")
 router.register('account-forgot-password-verify-account', CodeVerificationForForgotPasswordSerializersView, basename="verifyaccount")
 router.register('account-reset-account-password', ResetPasswordSerializersView, basename="reset-password")
+router.register('account-fingerprint-login', EmailFingerprintVerificationSerializersView, basename="fingerprint-verification")
 
 urlpatterns = [
     path('', include(router.urls))

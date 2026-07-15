@@ -58,34 +58,17 @@ const Welcome: FC = () => {
             className="w-full flex"
           >
             <PrimaryButton screen="Signup" text="Let's Begin" />
-            {/* <View className="flex flex-row gap-4"> */}
-                   <TouchableOpacity
-                    className="px-2 py-3 bg-black rounded-2xl"
-                    onPress={async () => {
-                      await clearToken();
-                      await DeleteStringDataAsync("onboardingState")
-                      await DeleteStringDataAsync("ProfileScreenStatus")
-                    }}
-                  >
-                    <Text className="text-white">Delete all token</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className="px-2 py-3 bg-black rounded-2xl"
-                    onPress={async () => {
-                      await logout();
-                    }}
-                  >
-                    <Text className="text-white">Logout</Text>
-                  </TouchableOpacity> 
-                  {/* <TouchableOpacity
-                    className="px-2 py-3 bg-black rounded-2xl"
-                    onPress={async () => {
-                      await clearData();
-                    }}
-                  >
-                    <Text className="text-white">Clear ID</Text>
-                  </TouchableOpacity> */} 
-                 {/* </View>  */}
+            <TouchableOpacity
+              className="px-2 py-3 bg-black rounded-2xl items-center"
+              onPress={async () => {
+                await clearToken();
+                await DeleteStringDataAsync("onboardingState");
+                await DeleteStringDataAsync("ProfileScreenStatus");
+                await logout();
+              }}
+            >
+              <Text className="text-white">Delete all token</Text>
+            </TouchableOpacity>
           </Animated.View>
           <Animated.View
             entering={FadeInDown.delay(200).duration(600).springify()}

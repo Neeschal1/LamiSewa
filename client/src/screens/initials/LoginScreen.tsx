@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import React, { FC, useEffect, useState } from "react";
 import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
-import * as LocalAuthentication from 'expo-local-authentication';
+import * as LocalAuthentication from "expo-local-authentication";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, {
   FadeInUp,
@@ -34,7 +34,7 @@ import {
 import HandleLoginService from "@/src/services/accounts/login";
 import { useAuth } from "@/src/auth/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
-import { FingerPrintLogin } from "@/src/constants/FingerPrint";
+import FingerPrintLogin from "@/src/constants/FingerPrint";
 
 const loginBanner = require("@/src/assets/images/loginBanner.png");
 const facebookLogo = require("@/src/assets/images/facebook.png");
@@ -53,23 +53,27 @@ const Login: FC = () => {
   const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
 
+  const handleFingerprint = async () => {
+    await FingerPrintLogin(login);
+  };
+
   const checkBiometric = async () => {
-  const compatible = await LocalAuthentication.hasHardwareAsync();
+    const compatible = await LocalAuthentication.hasHardwareAsync();
 
-  if (!compatible) {
-    console.log("No biometric hardware");
-    return;
-  }
+    if (!compatible) {
+      console.log("No biometric hardware");
+      return;
+    }
 
-  const enrolled = await LocalAuthentication.isEnrolledAsync();
+    const enrolled = await LocalAuthentication.isEnrolledAsync();
 
-  if (!enrolled) {
-    console.log("No fingerprints enrolled");
-    return;
-  }
+    if (!enrolled) {
+      console.log("No fingerprints enrolled");
+      return;
+    }
 
-  console.log("Biometric available");
-};
+    console.log("Biometric available");
+  };
 
   useEffect(() => {
     const disableButton = () => {
@@ -230,7 +234,10 @@ const Login: FC = () => {
                   />
                 </View>
                 <View className="flex w-[20%]">
-                  <TouchableOpacity onPress={FingerPrintLogin} className="flex w-full">
+                  <TouchableOpacity
+                    onPress={handleFingerprint}
+                    className="flex w-full"
+                  >
                     <LinearGradient
                       colors={["#FC404E", "#4987F6"]}
                       start={{ x: 0, y: 0 }}
@@ -244,11 +251,7 @@ const Login: FC = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Ionicons
-                        name="finger-print"
-                        color="white"
-                        size={24}
-                      />
+                      <Ionicons name="finger-print" color="white" size={24} />
                     </LinearGradient>
                   </TouchableOpacity>
                 </View>

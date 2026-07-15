@@ -230,10 +230,10 @@ const Profile: FC = () => {
                   <Image source={Verification} />
                 </View>
                 <View className="flex mt-[-10px]">
-                  <Description text={`${userData?.basic_info.bio}`}/>
+                  {/* <Description text={`${userData?.career_info.occupation}`}/> */}
                 </View>
               </View>
-              <SubTitle text="Hey, beautiful Soul...!" />
+              <SubTitle text={`${userData?.basic_info.bio}`} />
               <View className="flex flex-row gap-mid">
                 <TouchableOpacity className="flex bg-[#FFFFFF] px-4 py-2 rounded-2xl">
                   <SubTitle text="Matching: 28" />
@@ -329,7 +329,7 @@ const Profile: FC = () => {
           </View>
         </View>
         <View className="flex flex-row gap-4">
-          <TouchableOpacity
+          {/* <TouchableOpacity
             className="px-2 py-3 bg-black rounded-2xl"
             onPress={async () => {
               await clearToken();
@@ -339,14 +339,10 @@ const Profile: FC = () => {
             }}
           >
             <Text className="text-white">Delete all token</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             className="px-2 py-3 bg-black rounded-2xl"
             onPress={async () => {
-              await clearToken();
-              await AsyncStorage.removeItem("onboardingState");
-              await DeleteStringDataAsync("UserProfileStatus");
-              await DeleteStringDataAsync("SubscriptionStatusAfterBuildingUpProfile")
               await logout();
             }}
           >

@@ -208,3 +208,35 @@ class UserAuth:
             
         except Exception as e:
                 return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
+            
+    
+    def _validatefingerprint(self, useremail: str) -> Response:
+        try:
+            try:
+                user = User.objects.get(email=useremail)
+            except User.DoesNotExist:
+                return Response(
+                    {"Message": "User not found."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+
+            userinfo = UserProfile.objects.filter(useremail=user.email).exists()
+
+            return Response({
+                "Message": "Login successful :)",
+                "UserprofileStatus": userinfo,
+                "Tokens": {
+                    "accesstoken": access_token,
+                    "refreshtoken": refresh_token,
+                },
+            })
+
+        except Exception as e:
+            return Response(
+                {"Message": "Something went wrong!", "Exception": str(e)},
+                status=status.HTTP_417_EXPECTATION_FAILED,
+            )

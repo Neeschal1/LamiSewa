@@ -14,6 +14,8 @@ const HandleLoginService = async (email: string, password: string) => {
   await saveTokens(res["data"]["Tokens"]["accesstoken"]);
   await saveRefreshTokens(res["data"]["Tokens"]["refreshtoken"]);
 
+  await StoreStringDataAsync("UserEmail", email)
+
   const profilescreenstatus = res["data"]["UserprofileStatus"]
   if (profilescreenstatus === true){
     await StoreStringDataAsync("ProfileScreenStatus", "NoProfileExists")

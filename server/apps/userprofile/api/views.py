@@ -28,12 +28,16 @@ class UserProfileSerializerView(viewsets.ViewSet):
         return UserProfileService()._updateprofileid(request, pk)
     
     @swagger_auto_schema()
-    def list(self, request):
-        return UserProfileService()._retrieveprofileid(request)
+    def retrieve(self, request, pk=None):
+        return UserProfileService()._retrieveprofileid(request, pk)
     
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return UserProfileService()._destroyprofileid(request, pk)
+    
+    @swagger_auto_schema()
+    def list(self, request):
+        return UserProfileService()._listprofileid(request)
         
             
 class UsersBasicInfoSerializerView(viewsets.ViewSet):
