@@ -34,6 +34,12 @@
           "locationAlwaysAndWhenInUsePermission": "Allow LamiSewa to use your location."
         }
       ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow LamiSewa to use Face ID."
+        }
+      ],
       "expo-router",
       [
         "expo-document-picker",

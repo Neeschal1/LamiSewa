@@ -44,7 +44,7 @@ const Welcome: FC = () => {
         className="h-full w-full justify-end align-center p-screen items-center"
         source={Welcomecontents}
       >
-        <View className="flex justify-center items-center mb-mid gap-small">
+        <View className="flex w-full justify-center items-center mb-mid gap-small">
           <Animated.View
             entering={FadeInUp.delay(400).duration(800).springify()}
           >
@@ -55,6 +55,7 @@ const Welcome: FC = () => {
           </Animated.View>
           <Animated.View
             entering={FadeInUp.delay(200).duration(600).springify()}
+            className="w-full flex"
           >
             <PrimaryButton screen="Signup" text="Let's Begin" />
             {/* <View className="flex flex-row gap-4"> */}

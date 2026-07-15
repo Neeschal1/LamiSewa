@@ -216,6 +216,7 @@ const Signup = () => {
         </View>
         <Animated.View
           entering={FadeInDown.delay(1000).duration(400).springify()}
+          className="flex w-full"
         >
           <PrimaryButton
             action={handleButtonPress}

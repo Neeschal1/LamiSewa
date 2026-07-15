@@ -8,9 +8,12 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import React, { FC, useEffect, useState } from "react";
 import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
+import * as LocalAuthentication from 'expo-local-authentication';
+import { LinearGradient } from "expo-linear-gradient";
 import Animated, {
   FadeInUp,
   FadeInDown,
@@ -30,6 +33,8 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import HandleLoginService from "@/src/services/accounts/login";
 import { useAuth } from "@/src/auth/AuthContext";
+import { Ionicons } from "@expo/vector-icons";
+import { FingerPrintLogin } from "@/src/constants/FingerPrint";
 
 const loginBanner = require("@/src/assets/images/loginBanner.png");
 const facebookLogo = require("@/src/assets/images/facebook.png");
@@ -47,6 +52,24 @@ const Login: FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  const checkBiometric = async () => {
+  const compatible = await LocalAuthentication.hasHardwareAsync();
+
+  if (!compatible) {
+    console.log("No biometric hardware");
+    return;
+  }
+
+  const enrolled = await LocalAuthentication.isEnrolledAsync();
+
+  if (!enrolled) {
+    console.log("No fingerprints enrolled");
+    return;
+  }
+
+  console.log("Biometric available");
+};
 
   useEffect(() => {
     const disableButton = () => {
@@ -148,6 +171,7 @@ const Login: FC = () => {
               <View className="flex gap-large">
                 <Animated.View
                   entering={FadeInUp.delay(200).duration(400).springify()}
+                  className="flex w-full"
                 >
                   <MainScreenName text="Login" />
                   <View className="mt-[-10px]">
@@ -196,12 +220,38 @@ const Login: FC = () => {
               </View>
               <Animated.View
                 entering={FadeInDown.delay(800).duration(400).springify()}
+                className="flex flex-row gap-mid w-full"
               >
-                <PrimaryButton
-                  disability={disabilityStatus}
-                  text={loading ? "Loading..." : "Login"}
-                  action={handleLogin}
-                />
+                <View className="flex w-[75%]">
+                  <PrimaryButton
+                    disability={disabilityStatus}
+                    text="Login"
+                    action={handleLogin}
+                  />
+                </View>
+                <View className="flex w-[20%]">
+                  <TouchableOpacity onPress={FingerPrintLogin} className="flex w-full">
+                    <LinearGradient
+                      colors={["#FC404E", "#4987F6"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                      style={{
+                        width: "100%",
+                        height: screenheight * 0.061,
+                        borderRadius: 10,
+                        backgroundColor: "#000",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Ionicons
+                        name="finger-print"
+                        color="white"
+                        size={24}
+                      />
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
               </Animated.View>
             </View>
           </ScrollView>

@@ -130,3 +130,7 @@ export interface CustomDropdownProps {
   setValue: React.Dispatch<React.SetStateAction<any>>;
   setItems: React.Dispatch<React.SetStateAction<DropdownItem[]>>;
 }
+
+export interface ShowCustomModal {
+  showSuccessModal: boolean
+}
