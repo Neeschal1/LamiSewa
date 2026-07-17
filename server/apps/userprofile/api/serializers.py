@@ -61,10 +61,7 @@ class UsersAdditionalInfoSerializer(serializers.ModelSerializer):
 class UsersFeaturedImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersFeaturedImages
-        fields = '__all__'
-        extra_kwargs = {
-            "userprofileid": {"write_only": True},
-        }
+        fields = ['image1', 'image2', 'image3', 'image4', 'image5', 'image6']
         
         
 class UsersHobbiesSerializer(serializers.ModelSerializer):

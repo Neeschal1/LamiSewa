@@ -92,19 +92,24 @@ class UserProfileService:
         
     
     def _listprofileid(self, request):
-        profile = get_object_or_404(UserProfile, userid=request.user)
+        try:
+            profile = get_object_or_404(UserProfile, userid=request.user)
 
-        profile_serializer = UserProfileSerializer(profile)
-        basic_serializer = UsersBasicInfoSerializer(profile.basic_info)
-        career_serializer = UsersCareerSerializer(profile.career)
+            profile_serializer = UserProfileSerializer(profile)
+            basic_serializer = UsersBasicInfoSerializer(profile.basic_info)
+            career_serializer = UsersCareerSerializer(profile.career)
+            featured_photo_serializer = UsersFeaturedImagesSerializer(profile.featured_image)
 
-        return Response(
-            {
-                "profile": profile_serializer.data,
-                "basic_info": basic_serializer.data,
-                "career_info": career_serializer.data
-            }
-        )
+            return Response(
+                {
+                    "profile": profile_serializer.data,
+                    "basic_info": basic_serializer.data,
+                    "career_info": career_serializer.data,
+                    "featured_images": featured_photo_serializer.data
+                }
+            )
+        except Exception as e:
+            return Response({"Message": "Something went wrong!", "Error: ": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
 
 
     def _destroyprofileid(self, request, pk) -> Response:

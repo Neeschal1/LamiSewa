@@ -276,6 +276,10 @@ class UsersFeaturedImagesSerializerView(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         return FeaturedPictures()._retrievefeaturedimages(request, pk)
     
+    # @swagger_auto_schema()
+    # def list(self, request, pk=None):
+    #     return FeaturedPictures()._listfeaturedimages(request, pk)
+    
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return FeaturedPictures()._destroyfeaturedimages(request, pk)

@@ -61,6 +61,10 @@ class FeaturedPictures:
             {"message": "Couldn't fetch up user's featured images."},
             status=status.HTTP_400_BAD_REQUEST,
         )
+        
+        
+    def _listfeaturedimages(self, request):
+        return
 
 
     def _destroyfeaturedimages(self, request, pk) -> Response:
