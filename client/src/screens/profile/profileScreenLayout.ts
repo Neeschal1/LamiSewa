@@ -13,5 +13,5 @@ export {
     CareerInfo,
     HobbiesInfo,
     PersonalInfo,
-    CasualInfo
+    CasualInfo,
 }

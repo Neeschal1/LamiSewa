@@ -29,6 +29,7 @@ export type RootStackParamList = {
   HobbiesInfo: undefined;
   PersonalInfo: undefined;
   CasualInfo: undefined;
+  FeaturedPhoto: undefined;
 
   // Payment
   PaymentSuccess: undefined,

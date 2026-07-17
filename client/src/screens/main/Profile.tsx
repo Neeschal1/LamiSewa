@@ -19,6 +19,7 @@ import {
   Description,
   Heading,
   MainScreenName,
+  SecondaryButton,
   SubHeading,
   SubText,
   SubTitle,
@@ -30,9 +31,6 @@ import {
 } from "@/src/components/componentsType";
 import { useNavigation } from "expo-router";
 import { useAuth } from "@/src/auth/AuthContext";
-import { clearToken } from "@/src/storage/SecureTokens";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DeleteStringDataAsync } from "@/src/storage/ProfileDataAsync";
 import FetchUsersDetail from "@/src/services/settings/fetchDetails";
 
 type AccountType = {
@@ -146,7 +144,7 @@ const { width, height } = Dimensions.get("window");
 const Profile: FC = () => {
   const { logout } = useAuth();
   const [enabled, setEnabled] = useState<boolean>(false);
-  const [userData, setUserData] = useState<UserData | null>(null)
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -154,23 +152,25 @@ const Profile: FC = () => {
     await logout();
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchUserBasicInfo = async () => {
-      const data =  await FetchUsersDetail()
-      console.log("Message: ", data.data)
-      console.log("Status: ", data.stats)
-      setUserData(data)
-    }
-    fetchUserBasicInfo()
-  }, [])
+      const data = await FetchUsersDetail();
+      console.log("Message: ", data.data);
+      console.log("Status: ", data.stats);
+      setUserData(data);
+    };
+    fetchUserBasicInfo();
+  }, []);
 
   return (
     <View className="flex-1 items-center justify-start bg-background">
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{
+        alignItems: 'center',
+      }}>
         <StatusBar hidden={false} translucent />
 
         <ImageBackground
-          source={{uri: userData?.basic_info.cover_picture}}
+          source={{ uri: userData?.basic_info.cover_picture }}
           style={{
             width: width,
             height: height * 0.22,
@@ -211,12 +211,12 @@ const Profile: FC = () => {
             >
               <View className="flex py-2 px-2 border-4 border-primaryblue bg-background rounded-full">
                 <Image
-                  source={{uri: userData?.basic_info.profile_picture,}}
+                  source={{ uri: userData?.basic_info.profile_picture }}
                   style={{
                     width: "100%",
                     height: "100%",
                     resizeMode: "cover",
-                    borderRadius: 100
+                    borderRadius: 100,
                   }}
                 />
               </View>
@@ -248,6 +248,13 @@ const Profile: FC = () => {
           </View>
         </View>
 
+        <View className="flex py-4">
+          <TouchableOpacity className="flex flex-row bg-[#9621C5] items-center gap-mid w-full px-20 rounded-xl py-4">
+            <Ionicons name="diamond" color="white" size={24}/>
+            <Text className="font-Poppinsmedium text-background text-subheading">Purchase Membership</Text>
+          </TouchableOpacity>
+        </View>
+
         <View className="flex items-start w-full p-screen">
           <View className="flex justify-between flex-row w-full">
             <Description text="Your Pictures" />
@@ -255,7 +262,13 @@ const Profile: FC = () => {
               <SubText text="Tap to Edit" />
             </TouchableOpacity>
           </View>
-          <View className="flex flex-row flex-wrap w-full">
+          <Pressable onPress={()=>navigation.navigate("FeaturedPhoto")} className="flex items-center justify-center w-full bg-[#ecebff] rounded-2xl border-[#FFFFFF]">
+            <View className="flex items-center justify-center py-14">
+              <Ionicons name="camera" size={30} />
+              <SubTitle text="Choose from Gallery" />
+            </View>
+          </Pressable>
+          {/* <View className="flex flex-row flex-wrap w-full">
             {FeaturePhotoes.map((index) => (
               <TouchableOpacity
                 className="flex flex-row w-[33%] py-extrasmall"
@@ -267,7 +280,7 @@ const Profile: FC = () => {
                 />
               </TouchableOpacity>
             ))}
-          </View>
+          </View> */}
         </View>
 
         <View className="flex w-full items-start p-screen">

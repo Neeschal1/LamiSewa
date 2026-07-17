@@ -3,7 +3,7 @@ import { TouchableOpacity, Text } from "react-native";
 import {OtpVerification, SetNewPassword} from "../screens/initials/initialScreensLayout";
 import { RootStackParamList } from "@/src/components/componentsType";
 import { Title } from "../components/Texts";
-import { Chats, Home, NearYou, Profile, Search } from "../screens/main/mainScreenLayouts";
+import { Chats, Home, NearYou, Profile, Search, FeaturedPhoto } from "../screens/main/mainScreenLayouts";
 import { PaymentSuccess, SubscriptionDetails } from "../screens/payments/PaymentLayout";
 import MyTabs from "./BottomTabNavigation";
 import {AccountPassword} from "../screens/accounts/AccountLayouts";
@@ -59,6 +59,7 @@ const AuthenticatedNavigation = () => {
       <Stack.Screen name="PaymentSuccess" component={PaymentSuccess} options={{headerShown: false}} />
       <Stack.Screen name="MyTabs" component={MyTabs} />
       <Stack.Screen name="AccountPassword" component={AccountPassword} options={ProfileScreens("Change Password")} />
+      <Stack.Screen name="FeaturedPhoto" component={FeaturedPhoto} options={ProfileScreens("Change Password")} />
       <Stack.Screen name="BasicDetails" component={BasicDetails} options={ProfileScreens("Basic Details (1/3)")} />
       <Stack.Screen name="Documents" component={Documents} options={ProfileScreens("Change Password")} />
       <Stack.Screen name="FacialVerification" component={FacialVerification} options={ProfileScreens("Change Password")} />

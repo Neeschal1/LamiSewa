@@ -89,7 +89,7 @@ export const SecondaryButton: FC<ButtonProps> = ({
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={{
-          width: screenwidth * 0.886,
+          // width: screenwidth * 0.886,
           height: screenheight * 0.061,
           borderRadius: 12,
           backgroundColor: "#000",
