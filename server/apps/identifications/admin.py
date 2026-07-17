@@ -32,31 +32,31 @@ class IDVerificationAdmin(admin.ModelAdmin):
     ]
     
 
-@admin.register(PackageHistory)
-class PackageHistoryAdmin(admin.ModelAdmin):
-    list_display = [
-        "user_record",
-        "package_type",
-        "transaction_id",
-        "package_amount",
-        "paid_via",
-        "package_status",
-        "purchased_date",
-        "expiry_date",
-    ]
+# @admin.register(PackageHistory)
+# class PackageHistoryAdmin(admin.ModelAdmin):
+#     list_display = [
+#         "user_record",
+#         "package_type",
+#         "transaction_id",
+#         "package_amount",
+#         "paid_via",
+#         "package_status",
+#         "purchased_date",
+#         "expiry_date",
+#     ]
 
-    search_fields = [
-        "transaction_id",
-        "user_record__record_id__username",
-        "user_record__record_id__email",
-        "user_record__record_id__first_name",
-        "user_record__record_id__last_name",
-    ]
+#     search_fields = [
+#         "transaction_id",
+#         "user_record__record_id__username",
+#         "user_record__record_id__email",
+#         "user_record__record_id__first_name",
+#         "user_record__record_id__last_name",
+#     ]
 
-    list_filter = [
-        "package_type",
-        "paid_via",
-        "package_status",
-    ]
+#     list_filter = [
+#         "package_type",
+#         "paid_via",
+#         "package_status",
+#     ]
     
 

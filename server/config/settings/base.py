@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     'apps.conversations',
     'apps.privacy',
     'apps.userprofile',
-    'apps.identifications'
+    'apps.identifications',
+    'apps.payments'
 ]
 
 
