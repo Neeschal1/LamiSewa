@@ -1,8 +1,9 @@
+import { View } from "react-native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TouchableOpacity, Text } from "react-native";
 import {OtpVerification, SetNewPassword} from "../screens/initials/initialScreensLayout";
 import { RootStackParamList } from "@/src/components/componentsType";
-import { Title } from "../components/Texts";
+import { Describe, SubHeading, Title } from "../components/Texts";
 import { Chats, Home, NearYou, Profile, Search } from "../screens/main/mainScreenLayouts";
 import { PaymentSuccess, SubscriptionDetails } from "../screens/payments/PaymentLayout";
 import MyTabs from "./BottomTabNavigation";
@@ -69,13 +70,13 @@ const AuthenticatedNavigation = () => {
 
       <Stack.Screen name="FeaturedPhoto" component={FeaturedPhoto} options={ProfileScreens("Featured Photo")} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} options={ProfileScreens("ChangePassword")} />
-      <Stack.Screen name="ContactUs" component={ContactUs} options={ProfileScreens("ContactUs")} />
+      {/* <Stack.Screen name="ContactUs" component={ContactUs} options={OthersScreens("ContactUs")} /> */}
       <Stack.Screen name="EditProfile" component={EditProfile} options={ProfileScreens("EditProfile")} />
-      <Stack.Screen name="Help" component={Help} options={ProfileScreens("Help")} />
+      {/* <Stack.Screen name="Help" component={Help} options={OthersScreens("Help")} /> */}
       <Stack.Screen name="Language" component={Language} options={ProfileScreens("Language")} />
       <Stack.Screen name="MatchedUsers" component={MatchedUsers} options={ProfileScreens("MatchedUsers")} />
-      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={ProfileScreens("PrivacyPolicy")} />
-      <Stack.Screen name="TermsOfUse" component={TermsOfUse} options={ProfileScreens("TermsOfUse")} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={OthersScreens("LamiSewa", "Your Privacy and Personal Data are Important to us.")} />
+      {/* <Stack.Screen name="TermsOfUse" component={TermsOfUse} options={OthersScreens("TermsOfUse")} /> */}
       <Stack.Screen name="VerifyId" component={VerifyId} options={ProfileScreens("VerifyId")} />
     </Stack.Navigator>
   );
@@ -96,6 +97,27 @@ const ProfileScreens = (title: string) => ({
   headerStyle: {backgroundColor: "#F6F5FF", width: '100%', alignItems: 'center', justifyContent: 'center', flex: 1},
   HeaderTitle: () => <Title text={title} />,
   headerTintColor: "#000000",
+});
+
+const OthersScreens = (title: string, description: string) => ({
+  headerShown: true,
+  headerTransparent: false,
+  headerStyle: {
+    backgroundColor: "#0066FF",
+    elevation: 0,  
+    shadowOpacity: 0,     
+    borderBottomWidth: 0, 
+    width: '100%', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    flex: 1
+  },
+  headerTitle: () => <View className="flex items-center">
+    <SubHeading text={title} />
+    <Describe text={description} />
+  </View>,
+  headerTintColor: "#FFFFFF",
+  headerTitleAlign: "center" as const,
 });
 
 const optionsTabs = {
