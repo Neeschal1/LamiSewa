@@ -73,7 +73,7 @@ const AuthenticatedNavigation = () => {
       <Stack.Screen name="ChangePassword" component={ChangePassword} options={ProfileScreens("ChangePassword")} />
       {/* <Stack.Screen name="ContactUs" component={ContactUs} options={OthersScreens("ContactUs")} /> */}
       <Stack.Screen name="EditProfile" component={EditProfile} options={ProfileScreens("EditProfile")} />
-      {/* <Stack.Screen name="Help" component={Help} options={OthersScreens("Help")} /> */}
+      <Stack.Screen name="Help" component={Help} options={OthersScreens("Help", "Find Answers to Common Questions")} />
       <Stack.Screen name="Language" component={Language} options={ProfileScreens("Language")} />
       <Stack.Screen name="MatchedUsers" component={MatchedUsers} options={ProfileScreens("MatchedUsers")} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={OthersScreens("Privacy Policy", "Your Privacy and Personal Data are Important to us.")} />
