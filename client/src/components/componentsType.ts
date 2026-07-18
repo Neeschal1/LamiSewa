@@ -29,19 +29,18 @@ export type RootStackParamList = {
   HobbiesInfo: undefined;
   PersonalInfo: undefined;
   CasualInfo: undefined;
-  FeaturedPhoto: undefined;
-
+  
   // Payment
   PaymentSuccess: undefined,
   SubscriptionDetails: undefined,
-
+  
   // Mains
   MyTabs: undefined;
   NearYou: undefined;
-
+  
   // Accounts
   AccountPassword: undefined;
-
+  
   // Id Verification
   BasicDetails: undefined;
   Documents: undefined;
@@ -49,6 +48,18 @@ export type RootStackParamList = {
   FinalVerification: undefined;
   Intro: undefined;
   Verify: undefined;
+  
+  // Others
+  FeaturedPhoto: undefined;
+  ChangePassword: undefined;
+  ContactUs: undefined;
+  EditProfile: undefined;
+  Help: undefined; 
+  // Language: undefined;
+  MatchedUsers: undefined;
+  PrivacyPolicy: undefined;
+  TermsOfUse: undefined;
+  VerifyId: undefined;
 
   // Extras
   OnboardingScreen: undefined;

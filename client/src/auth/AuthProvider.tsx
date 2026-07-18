@@ -32,14 +32,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (accessToken: string) => {
     await saveTokens(accessToken);
     setToken(accessToken);
+    const state = await GetStringDataAsync("ProfileScreenStatus");
+    setProfileCompleted(state === "AllCompleted");
   };
 
   const logout = async () => {
     await clearToken();
     setToken(null);
     setProfileCompleted(false);
-    const state = await GetStringDataAsync("ProfileScreenStatus");
-    setProfileCompleted(state === "AllCompleted");
   };
 
   return (

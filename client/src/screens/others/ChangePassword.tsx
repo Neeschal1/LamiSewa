@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const TermsOfUse = () => {
+const ChangePassword = () => {
   return (
     <View>
-      <Text>TermsOfUse</Text>
+      <Text>ChangePassword</Text>
     </View>
   )
 }
 
-export default TermsOfUse
+export default ChangePassword

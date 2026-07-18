@@ -33,6 +33,8 @@ import { useNavigation } from "expo-router";
 import { useAuth } from "@/src/auth/AuthContext";
 import FetchUsersDetail from "@/src/services/settings/fetchDetails";
 
+type OthersScreen = "PrivacyPolicy" | "TermsOfUse" | "Help" | "ContactUs" | "Documents";
+
 type AccountType = {
   item: number;
   icon: React.ComponentProps<typeof Ionicons>["name"];
@@ -44,7 +46,7 @@ type OthersType = {
   item: number;
   icon: React.ComponentProps<typeof Ionicons>["name"];
   btnname: string;
-  redirect: string;
+  redirect: OthersScreen;
 };
 
 interface Profile {
@@ -111,31 +113,31 @@ const Others: OthersType[] = [
     item: 1,
     icon: "shield-checkmark",
     btnname: "Privacy Policy",
-    redirect: "https://github.com/Neeschal1",
+    redirect: "PrivacyPolicy",
   },
   {
     item: 2,
     icon: "newspaper",
     btnname: "Terms of Use",
-    redirect: "https://github.com/Neeschal1",
+    redirect: "TermsOfUse",
   },
   {
     item: 3,
     icon: "information-circle",
     btnname: "Help",
-    redirect: "https://github.com/Neeschal1",
+    redirect: "Help",
   },
   {
     item: 4,
     icon: "people-circle",
     btnname: "Contact Us",
-    redirect: "https://github.com/Neeschal1",
+    redirect: "ContactUs",
   },
   {
     item: 5,
     icon: "log-out",
     btnname: "Log Out",
-    redirect: "https://github.com/Neeschal1",
+    redirect: "Documents",
   },
 ];
 
@@ -328,7 +330,8 @@ const Profile: FC = () => {
             {Others.map((index) => (
               <TouchableOpacity
                 onPress={() => {
-                  Linking.openURL(index.redirect);
+                  console.log("Redirect:", index.redirect);
+                  navigation.navigate(index.redirect)
                 }}
                 key={index.item}
                 className="flex flex-row w-full gap-mid"

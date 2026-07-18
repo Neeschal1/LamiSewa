@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const TermsOfUse = () => {
+const VerifyId = () => {
   return (
     <View>
-      <Text>TermsOfUse</Text>
+      <Text>VerifyId</Text>
     </View>
   )
 }
 
-export default TermsOfUse
+export default VerifyId

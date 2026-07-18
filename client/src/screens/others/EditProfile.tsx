@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const TermsOfUse = () => {
+const EditProfile = () => {
   return (
     <View>
-      <Text>TermsOfUse</Text>
+      <Text>EditProfile</Text>
     </View>
   )
 }
 
-export default TermsOfUse
+export default EditProfile

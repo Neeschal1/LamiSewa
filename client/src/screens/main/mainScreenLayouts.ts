@@ -4,7 +4,7 @@ import Notification from "./Notification";
 import Profile from "./Profile";
 import Search from "./Search";
 import NearYou from "./NearYou";
-import FeaturedPhoto from "./FeaturedPhoto"
+import FeaturedPhoto from "../others/FeaturedPhoto"
 
 export {
     Chats,
