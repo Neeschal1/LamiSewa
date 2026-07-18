@@ -135,6 +135,12 @@ const Others: OthersType[] = [
   },
   {
     item: 5,
+    icon: "accessibility-outline",
+    btnname: "About Us",
+    redirect: "AboutUs",
+  },
+  {
+    item: 6,
     icon: "log-out",
     btnname: "Log Out",
     redirect: "Documents",

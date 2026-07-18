@@ -54,7 +54,9 @@ export type RootStackParamList = {
   ChangePassword: undefined;
   ContactUs: undefined;
   EditProfile: undefined;
+  AboutUs: undefined;
   Help: undefined; 
+
   // Language: undefined;
   MatchedUsers: undefined;
   PrivacyPolicy: undefined;

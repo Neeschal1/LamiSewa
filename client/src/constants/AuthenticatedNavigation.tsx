@@ -11,7 +11,7 @@ import {AccountPassword} from "../screens/accounts/AccountLayouts";
 import {BasicDetails, Documents, FacialVerification, FinalVerification, Intro, Verify} from "../screens/accounts/idverification/IDVerificationLayout";
 import { useEffect, useState } from "react";
 import { DeleteStringDataAsync, GetStringDataAsync } from "../storage/ProfileDataAsync";
-import { ChangePassword, ContactUs, EditProfile, FeaturedPhoto, Help, Language, MatchedUsers, PrivacyPolicy, TermsOfUse, VerifyId} from "@/src/screens/others/OtherScreensLayout"
+import { ChangePassword, ContactUs, EditProfile, FeaturedPhoto, Help, Language, MatchedUsers, PrivacyPolicy, TermsOfUse, VerifyId, AboutUs} from "@/src/screens/others/OtherScreensLayout"
 import { HeaderHeightContext } from "@react-navigation/elements";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -71,13 +71,14 @@ const AuthenticatedNavigation = () => {
 
       <Stack.Screen name="FeaturedPhoto" component={FeaturedPhoto} options={ProfileScreens("Featured Photo")} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} options={ProfileScreens("ChangePassword")} />
-      {/* <Stack.Screen name="ContactUs" component={ContactUs} options={OthersScreens("ContactUs")} /> */}
+      <Stack.Screen name="ContactUs" component={ContactUs} options={OthersScreens("Contact Us", "Contact LamiSewa Matrimony Support Team Anytime.")} />
       <Stack.Screen name="EditProfile" component={EditProfile} options={ProfileScreens("EditProfile")} />
       <Stack.Screen name="Help" component={Help} options={OthersScreens("Help", "Find Answers to Common Questions")} />
       <Stack.Screen name="Language" component={Language} options={ProfileScreens("Language")} />
       <Stack.Screen name="MatchedUsers" component={MatchedUsers} options={ProfileScreens("MatchedUsers")} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={OthersScreens("Privacy Policy", "Your Privacy and Personal Data are Important to us.")} />
       <Stack.Screen name="TermsOfUse" component={TermsOfUse} options={OthersScreens("TermsOfUse", "Please Read these Terms before using our Services.")} />
+      <Stack.Screen name="AboutUs" component={AboutUs} options={OthersScreens("AboutUs", "About the Team behind LamiSewa.")} />
       <Stack.Screen name="VerifyId" component={VerifyId} options={ProfileScreens("VerifyId")} />
     </Stack.Navigator>
   );

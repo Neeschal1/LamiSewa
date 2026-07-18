@@ -8,6 +8,7 @@ import MatchedUsers from "./MatchedUsers";
 import PrivacyPolicy from "./PrivacyPolicy";
 import TermsOfUse from "./Termsofuse";
 import VerifyId from "./VerifyId";
+import AboutUs from "./AboutUs";
 
 export {
     ChangePassword,
@@ -19,5 +20,6 @@ export {
     MatchedUsers,
     PrivacyPolicy,
     TermsOfUse,
-    VerifyId
+    VerifyId,
+    AboutUs
 }
