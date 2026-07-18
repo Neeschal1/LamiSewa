@@ -33,7 +33,13 @@ import { useNavigation } from "expo-router";
 import { useAuth } from "@/src/auth/AuthContext";
 import FetchUsersDetail from "@/src/services/settings/fetchDetails";
 
-type OthersScreen = "PrivacyPolicy" | "TermsOfUse" | "Help" | "ContactUs" | "Documents";
+type OthersScreen =
+  | "PrivacyPolicy"
+  | "TermsOfUse"
+  | "Help"
+  | "ContactUs"
+  | "Documents" 
+  | "AboutUs"
 
 type AccountType = {
   item: number;
@@ -139,12 +145,6 @@ const Others: OthersType[] = [
     btnname: "About Us",
     redirect: "AboutUs",
   },
-  {
-    item: 6,
-    icon: "log-out",
-    btnname: "Log Out",
-    redirect: "Documents",
-  },
 ];
 
 const { width, height } = Dimensions.get("window");
@@ -172,9 +172,12 @@ const Profile: FC = () => {
 
   return (
     <View className="flex-1 items-center justify-start bg-background">
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{
-        alignItems: 'center',
-      }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          alignItems: "center",
+        }}
+      >
         <StatusBar hidden={false} translucent />
 
         <ImageBackground
@@ -258,8 +261,10 @@ const Profile: FC = () => {
 
         <View className="flex py-4">
           <TouchableOpacity className="flex flex-row bg-[#9621C5] items-center gap-mid w-full px-20 rounded-xl py-4">
-            <Ionicons name="diamond" color="white" size={24}/>
-            <Text className="font-Poppinsmedium text-background text-subheading">Purchase Membership</Text>
+            <Ionicons name="diamond" color="white" size={24} />
+            <Text className="font-Poppinsmedium text-background text-subheading">
+              Purchase Membership
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -270,7 +275,10 @@ const Profile: FC = () => {
               <SubText text="Tap to Edit" />
             </TouchableOpacity>
           </View>
-          <Pressable onPress={()=>navigation.navigate("FeaturedPhoto")} className="flex items-center justify-center w-full bg-[#ecebff] rounded-2xl border-[#FFFFFF]">
+          <Pressable
+            onPress={() => navigation.navigate("FeaturedPhoto")}
+            className="flex items-center justify-center w-full bg-[#ecebff] rounded-2xl border-[#FFFFFF]"
+          >
             <View className="flex items-center justify-center py-14">
               <Ionicons name="camera" size={30} />
               <SubTitle text="Choose from Gallery" />
@@ -337,7 +345,7 @@ const Profile: FC = () => {
               <TouchableOpacity
                 onPress={() => {
                   console.log("Redirect:", index.redirect);
-                  navigation.navigate(index.redirect)
+                  navigation.navigate(index.redirect);
                 }}
                 key={index.item}
                 className="flex flex-row w-full gap-mid"
@@ -348,29 +356,20 @@ const Profile: FC = () => {
                 </View>
               </TouchableOpacity>
             ))}
+            <TouchableOpacity
+              onPress={async () => {
+                await logout();
+              }}
+              className="flex flex-row w-full gap-mid"
+            >
+              <View className="flex flex-row gap-mid">
+                <Ionicons name="log-out" size={24} />
+                <SubTitle text="Log Out" />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
-        <View className="flex flex-row gap-4">
-          {/* <TouchableOpacity
-            className="px-2 py-3 bg-black rounded-2xl"
-            onPress={async () => {
-              await clearToken();
-              await AsyncStorage.removeItem("onboardingState");
-              await DeleteStringDataAsync("UserProfileStatus");
-              await DeleteStringDataAsync("SubscriptionStatusAfterBuildingUpProfile")
-            }}
-          >
-            <Text className="text-white">Delete all token</Text>
-          </TouchableOpacity> */}
-          <TouchableOpacity
-            className="px-2 py-3 bg-black rounded-2xl"
-            onPress={async () => {
-              await logout();
-            }}
-          >
-            <Text className="text-white">Logout</Text>
-          </TouchableOpacity>
-        </View>
+        <View className="flex flex-row gap-4"></View>
       </ScrollView>
     </View>
   );
