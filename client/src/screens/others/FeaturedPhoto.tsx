@@ -17,11 +17,21 @@ import {
 import UploadImages from "@/src/utils/uploadImages";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
+import CreateUsersFeaturedPhoto from "@/src/services/settings/saveFeaturedPhotoes";
+import axios from "axios";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
 
 const FeaturedPhoto = () => {
-  const [images, setImages] = useState<(string | null)[]>([null,null,null,null,null,null,]);
+  const [images, setImages] = useState<(string | null)[]>([
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ]);
+  const [validImagesDict, setValidImagesDict] = useState<string | any>()
 
   const [error, setError] = useState<boolean | any>(false);
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -60,50 +70,88 @@ const FeaturedPhoto = () => {
     setLoading(false);
   };
 
-  const handleSave = () => {
-    console.log("Images URL: ", images)
-  }
+  const handleSave = async () => {
+    const validImages = images.filter(
+      (image): image is string => image !== null,
+    );
+    console.log(validImages);
+    const imageObject = validImages.reduce(
+      (acc, image, index) => {
+        acc[`image${index + 1}`] = image;
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+    setValidImagesDict(imageObject)
+    console.log("Valid Image Objects: ", imageObject);
+
+    try{
+      setLoading(true)
+      console.log("Images to send to server: ", images);
+      const imgdetail = await CreateUsersFeaturedPhoto(imageObject);
+      if(imgdetail.status === 201){
+        navigation.goBack()
+      }
+      setLoading(false)
+    } catch (err) {
+      if(axios.isAxiosError(err)){
+        const status = err.response?.status;
+        const response = err.response?.data;
+        console.log("Status: ", status, "\nData: ", response)
+      }
+    } finally {
+      setLoading(false)
+    }
+  };
 
   return (
     <View className="bg-background flex p-screen justify-between flex-1">
       <View className="flex flex-1 flex-wrap flex-row justify-between">
         {images.map((image, index) => (
-        <TouchableOpacity
-          key={index}
-          onPress={() => pickAndUpload(index)}
-          activeOpacity={0.8}
-          className="w-[31%] aspect-[3/4] rounded-2xl overflow-hidden bg-[#ECEBFF] border border-[#D9D9D9] mb-4"
-        >
-          {image ? (
-            <ImageBackground
-              source={{ uri: image }}
-              className="flex-1"
-              resizeMode="cover"
-            />
-          ) : (
-            <ImageBackground
-              source={defaultUserImage}
-              className="flex-1 justify-center items-center"
-              resizeMode="cover"
-              imageStyle={{ opacity: 0.25 }}
-            >
-              {loading ? <View key={index}>
-                <SubTitle text="Loading..." />
-              </View> : <View className="items-center">
-                <View className="w-12 h-12 rounded-full bg-white justify-center items-center">
-                  <Ionicons name="add" size={28} color="#444" />
-
-                </View>
-                <SubTitle text="Add" />
-              </View>}
-            </ImageBackground>
-          )}
-        </TouchableOpacity>
-      ))}
+          <TouchableOpacity
+            key={index}
+            onPress={() => pickAndUpload(index)}
+            activeOpacity={0.8}
+            className="w-[31%] aspect-[3/4] rounded-2xl overflow-hidden bg-[#ECEBFF] border border-[#D9D9D9] mb-4"
+          >
+            {image ? (
+              <ImageBackground
+                source={{ uri: image }}
+                className="flex-1"
+                resizeMode="cover"
+              />
+            ) : (
+              <ImageBackground
+                source={defaultUserImage}
+                className="flex-1 justify-center items-center"
+                resizeMode="cover"
+                imageStyle={{ opacity: 0.25 }}
+              >
+                {loading ? (
+                  <View key={index}>
+                    <SubTitle text="Loading..." />
+                  </View>
+                ) : (
+                  <View className="items-center">
+                    <View className="w-12 h-12 rounded-full bg-white justify-center items-center">
+                      <Ionicons name="add" size={28} color="#444" />
+                    </View>
+                    <SubTitle text="Add" />
+                  </View>
+                )}
+              </ImageBackground>
+            )}
+          </TouchableOpacity>
+        ))}
       </View>
       <View className="flex flex-row w-full justify-between">
         <View className="flex w-[48%]">
-          <SecondaryButton action={()=>{navigation.goBack()}} text="Cancel" />
+          <SecondaryButton
+            action={() => {
+              navigation.goBack();
+            }}
+            text="Cancel"
+          />
         </View>
         <View className="flex w-[48%]">
           <PrimaryButton action={handleSave} text="Save" />
