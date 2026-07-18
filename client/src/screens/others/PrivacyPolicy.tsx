@@ -79,10 +79,6 @@ const PrivacyPolicy = () => {
       className="bg-background flex flex-1 items-center justify-center"
     >
       <ScrollView style={{width: '100%', height: '100%', flex: 1}} contentContainerStyle={{alignItems: "center", justifyContent: "center"}}>
-        {/* <View className="flex bg-primaryblue w-full items-center py-10">
-          <SubHeading text="LamiSewa" />
-          <Describe text="Your Privacy and Personal Data are Important to us." />
-        </View> */}
         <View className="flex p-screen gap-large">
           {privacyPolicy.map((index)=>(<View key={index.id} className="flex">
             <Title text={index.title} />

@@ -12,6 +12,7 @@ import {BasicDetails, Documents, FacialVerification, FinalVerification, Intro, V
 import { useEffect, useState } from "react";
 import { DeleteStringDataAsync, GetStringDataAsync } from "../storage/ProfileDataAsync";
 import { ChangePassword, ContactUs, EditProfile, FeaturedPhoto, Help, Language, MatchedUsers, PrivacyPolicy, TermsOfUse, VerifyId} from "@/src/screens/others/OtherScreensLayout"
+import { HeaderHeightContext } from "@react-navigation/elements";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -75,8 +76,8 @@ const AuthenticatedNavigation = () => {
       {/* <Stack.Screen name="Help" component={Help} options={OthersScreens("Help")} /> */}
       <Stack.Screen name="Language" component={Language} options={ProfileScreens("Language")} />
       <Stack.Screen name="MatchedUsers" component={MatchedUsers} options={ProfileScreens("MatchedUsers")} />
-      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={OthersScreens("LamiSewa", "Your Privacy and Personal Data are Important to us.")} />
-      {/* <Stack.Screen name="TermsOfUse" component={TermsOfUse} options={OthersScreens("TermsOfUse")} /> */}
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={OthersScreens("Privacy Policy", "Your Privacy and Personal Data are Important to us.")} />
+      <Stack.Screen name="TermsOfUse" component={TermsOfUse} options={OthersScreens("TermsOfUse", "Please Read these Terms before using our Services.")} />
       <Stack.Screen name="VerifyId" component={VerifyId} options={ProfileScreens("VerifyId")} />
     </Stack.Navigator>
   );
@@ -104,15 +105,16 @@ const OthersScreens = (title: string, description: string) => ({
   headerTransparent: false,
   headerStyle: {
     backgroundColor: "#0066FF",
+    height: 100,
     elevation: 0,  
     shadowOpacity: 0,     
     borderBottomWidth: 0, 
     width: '100%', 
     alignItems: 'center', 
     justifyContent: 'center', 
-    flex: 1
+    flex: 1,
   },
-  headerTitle: () => <View className="flex items-center">
+  headerTitle: () => <View className="flex items-center py-2">
     <SubHeading text={title} />
     <Describe text={description} />
   </View>,
