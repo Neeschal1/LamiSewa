@@ -4,7 +4,7 @@ import { TouchableOpacity, Text } from "react-native";
 import {OtpVerification, SetNewPassword} from "../screens/initials/initialScreensLayout";
 import { RootStackParamList } from "@/src/components/componentsType";
 import { Describe, SubHeading, Title } from "../components/Texts";
-import { Chats, Home, NearYou, Profile, Search } from "../screens/main/mainScreenLayouts";
+import { Chats, Home, NearYou, Profile, Search, UserDetails } from "../screens/main/mainScreenLayouts";
 import { PaymentSuccess, SubscriptionDetails } from "../screens/payments/PaymentLayout";
 import MyTabs from "./BottomTabNavigation";
 import {AccountPassword} from "../screens/accounts/AccountLayouts";
@@ -77,6 +77,7 @@ const AuthenticatedNavigation = () => {
       <Stack.Screen name="Language" component={Language} options={ProfileScreens("Language")} />
       <Stack.Screen name="MatchedUsers" component={MatchedUsers} options={ProfileScreens("MatchedUsers")} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={OthersScreens("Privacy Policy", "Your Privacy and Personal Data are Important to us.")} />
+      <Stack.Screen name="UserDetails" component={UserDetails} options={OthersScreens("Privacy Policy", "Your Privacy and Personal Data are Important to us.")} />
       <Stack.Screen name="TermsOfUse" component={TermsOfUse} options={OthersScreens("TermsOfUse", "Please Read these Terms before using our Services.")} />
       <Stack.Screen name="AboutUs" component={AboutUs} options={OthersScreens("AboutUs", "About the Team behind LamiSewa.")} />
       <Stack.Screen name="VerifyId" component={VerifyId} options={ProfileScreens("VerifyId")} />
