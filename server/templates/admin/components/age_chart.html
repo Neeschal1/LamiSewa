@@ -1,0 +1,41 @@
+<div class="card chart-card">
+  <div class="chart-header">
+    <div>
+      <h3>Age Distribution</h3>
+      <p>User demographics by age group</p>
+    </div>
+
+    <div class="age-summary">
+      <h2>{{ average_age|default:"26" }}</h2>
+      <span>Average Age</span>
+    </div>
+  </div>
+
+  <div id="ageChart"></div>
+
+  <div class="age-grid">
+    <div class="age-box blue">
+      <h4>18 - 24</h4>
+      <strong>{{ age_18_24|default:"3542" }}</strong>
+      <small>Young Adults</small>
+    </div>
+
+    <div class="age-box green">
+      <h4>25 - 30</h4>
+      <strong>{{ age_25_30|default:"5291" }}</strong>
+      <small>Most Active</small>
+    </div>
+
+    <div class="age-box orange">
+      <h4>31 - 35</h4>
+      <strong>{{ age_31_35|default:"2175" }}</strong>
+      <small>Professionals</small>
+    </div>
+
+    <div class="age-box red">
+      <h4>36+</h4>
+      <strong>{{ age_36_plus|default:"864" }}</strong>
+      <small>Experienced</small>
+    </div>
+  </div>
+</div>

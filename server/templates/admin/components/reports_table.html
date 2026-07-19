@@ -1,0 +1,180 @@
+<div class="card table-card">
+  <div class="chart-header">
+    <div>
+      <h3>Reports & Moderation</h3>
+      <p>Latest user reports requiring attention</p>
+    </div>
+
+    <button class="view-all-btn">View All Reports</button>
+  </div>
+
+  <div class="report-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Reported User</th>
+
+          <th>Reported By</th>
+
+          <th>Reason</th>
+
+          <th>Severity</th>
+
+          <th>Status</th>
+
+          <th>Date</th>
+
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for report in reports %}
+
+        <tr>
+          <td>
+            <div class="report-user">
+              <img src="{{ report.reported_user.profile_image.url }}" />
+
+              <div>
+                <strong>{{ report.reported_user.full_name }}</strong>
+
+                <small>ID #{{ report.reported_user.profile_id }}</small>
+              </div>
+            </div>
+          </td>
+
+          <td>{{ report.reported_by.full_name }}</td>
+
+          <td>{{ report.reason }}</td>
+
+          <td>
+            <span class="severity {{ report.severity|lower }}">
+              {{ report.severity }}
+            </span>
+          </td>
+
+          <td>
+            <span class="status-badge {{ report.status|lower }}">
+              {{ report.status }}
+            </span>
+          </td>
+
+          <td>{{ report.created_at }}</td>
+
+          <td>
+            <button class="action-btn">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+
+        {% empty %}
+
+        <tr>
+          <td>
+            <div class="report-user">
+              <img src="https://i.pravatar.cc/150?img=9" />
+
+              <div>
+                <strong>Raj Sharma</strong>
+
+                <small>ID #LS1034</small>
+              </div>
+            </div>
+          </td>
+
+          <td>Priya Thapa</td>
+
+          <td>Fake Profile</td>
+
+          <td>
+            <span class="severity high"> High </span>
+          </td>
+
+          <td>
+            <span class="status-badge pending"> Pending </span>
+          </td>
+
+          <td>Today</td>
+
+          <td>
+            <button class="action-btn">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="report-user">
+              <img src="https://i.pravatar.cc/150?img=14" />
+
+              <div>
+                <strong>Sabin KC</strong>
+
+                <small>ID #LS1045</small>
+              </div>
+            </div>
+          </td>
+
+          <td>Asha Rai</td>
+
+          <td>Abusive Language</td>
+
+          <td>
+            <span class="severity medium"> Medium </span>
+          </td>
+
+          <td>
+            <span class="status-badge investigating"> Investigating </span>
+          </td>
+
+          <td>Yesterday</td>
+
+          <td>
+            <button class="action-btn">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="report-user">
+              <img src="https://i.pravatar.cc/150?img=21" />
+
+              <div>
+                <strong>Anita Lama</strong>
+
+                <small>ID #LS1090</small>
+              </div>
+            </div>
+          </td>
+
+          <td>Sunil Gurung</td>
+
+          <td>Spam Messages</td>
+
+          <td>
+            <span class="severity low"> Low </span>
+          </td>
+
+          <td>
+            <span class="status-badge resolved"> Resolved </span>
+          </td>
+
+          <td>2 days ago</td>
+
+          <td>
+            <button class="action-btn">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

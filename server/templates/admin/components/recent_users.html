@@ -1,0 +1,111 @@
+<div class="card table-card">
+  <div class="chart-header">
+    <div>
+      <h3>Recent Users</h3>
+      <p>Latest registered members</p>
+    </div>
+
+    <button class="view-all-btn">View All</button>
+  </div>
+
+  <div class="recent-users">
+    {% for user in recent_users %}
+
+    <div class="user-row">
+      <div class="user-left">
+        <img
+          src="{{ user.profile_image.url|default:'https://ui-avatars.com/api/?name=User' }}"
+          class="avatar"
+        />
+
+        <div>
+          <div class="user-name">
+            {{ user.full_name }} {% if user.is_verified %}
+            <i class="fa-solid fa-circle-check verified"></i>
+            {% endif %}
+          </div>
+
+          <div class="user-meta">{{ user.age }} Years • {{ user.city }}</div>
+        </div>
+      </div>
+
+      <div class="user-right">
+        {% if user.subscription == "VIP" %}
+        <span class="badge vip">VIP</span>
+
+        {% elif user.subscription == "Premium" %}
+        <span class="badge premium">Premium</span>
+
+        {% else %}
+        <span class="badge free">Free</span>
+        {% endif %}
+
+        <span class="status online"></span>
+      </div>
+    </div>
+
+    {% empty %}
+
+    <!-- Dummy Rows -->
+
+    <div class="user-row">
+      <div class="user-left">
+        <img src="https://i.pravatar.cc/150?img=1" class="avatar" />
+
+        <div>
+          <div class="user-name">
+            Aarav Sharma
+
+            <i class="fa-solid fa-circle-check verified"></i>
+          </div>
+
+          <div class="user-meta">27 Years • Kathmandu</div>
+        </div>
+      </div>
+
+      <div class="user-right">
+        <span class="badge premium"> Premium </span>
+
+        <span class="status online"></span>
+      </div>
+    </div>
+
+    <div class="user-row">
+      <div class="user-left">
+        <img src="https://i.pravatar.cc/150?img=5" class="avatar" />
+
+        <div>
+          <div class="user-name">Priya Thapa</div>
+
+          <div class="user-meta">24 Years • Pokhara</div>
+        </div>
+      </div>
+
+      <div class="user-right">
+        <span class="badge vip"> VIP </span>
+
+        <span class="status offline"></span>
+      </div>
+    </div>
+
+    <div class="user-row">
+      <div class="user-left">
+        <img src="https://i.pravatar.cc/150?img=15" class="avatar" />
+
+        <div>
+          <div class="user-name">Saugat KC</div>
+
+          <div class="user-meta">29 Years • Lalitpur</div>
+        </div>
+      </div>
+
+      <div class="user-right">
+        <span class="badge free"> Free </span>
+
+        <span class="status online"></span>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+</div>
