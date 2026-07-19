@@ -1,0 +1,13 @@
+.revenue-summary {
+  text-align: right;
+}
+
+.revenue-summary h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.revenue-summary span {
+  margin-top: 6px;
+  display: inline-block;
+}

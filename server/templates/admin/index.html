@@ -1,14 +1,27 @@
-{% extends "admin/base_site.html" %} {% load static %} {% block extrastyle %}
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/all.min.css"
-/>
+{% extends "admin/base_site.html" %}
+{% load static %}
 
-<link rel="stylesheet" href="{% static 'style.css' %}" />
+{% block extrastyle %}
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/stat_cards.css' %}">
+<link rel="stylesheet" href="{% static 'css/signup_chart.css' %}">
+<link rel="stylesheet" href="{% static 'css/revenue_chart.css' %}">
+<link rel="stylesheet" href="{% static 'css/gender_chart.css' %}">
+<link rel="stylesheet" href="{% static 'css/subscription_chart.css' %}">
+<link rel="stylesheet" href="{% static 'css/match_chart.css' %}">
+<link rel="stylesheet" href="{% static 'css/verification_chart.css' %}">
+<link rel="stylesheet" href="{% static 'css/age_chart.css' %}">
+<link rel="stylesheet" href="{% static 'css/recent_users.css' %}">
+<link rel="stylesheet" href="{% static 'css/reports_table.css' %}">
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <div class="dashboard">
   {% include "admin/components/stat_cards.html" %}
   <br />

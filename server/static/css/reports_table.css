@@ -1,0 +1,127 @@
+.report-table {
+  overflow-x: auto;
+}
+
+.report-table table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.report-table th {
+  text-align: left;
+
+  padding: 16px;
+
+  font-size: 14px;
+
+  color: #6b7280;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.report-table td {
+  padding: 18px 16px;
+
+  border-bottom: 1px solid #f3f4f6;
+
+  vertical-align: middle;
+}
+
+.report-user {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+}
+
+.report-user img {
+  width: 46px;
+
+  height: 46px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+}
+
+.report-user strong {
+  display: block;
+}
+
+.report-user small {
+  color: #9ca3af;
+}
+
+.severity {
+  padding: 6px 12px;
+
+  border-radius: 20px;
+
+  color: white;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.high {
+  background: #ef4444;
+}
+
+.medium {
+  background: #f59e0b;
+}
+
+.low {
+  background: #10b981;
+}
+
+.status-badge {
+  padding: 7px 14px;
+
+  border-radius: 30px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  color: white;
+}
+
+.pending {
+  background: #f59e0b;
+}
+
+.investigating {
+  background: #3b82f6;
+}
+
+.resolved {
+  background: #10b981;
+}
+
+.action-btn {
+  width: 40px;
+
+  height: 40px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  background: #eef2ff;
+
+  color: #4338ca;
+
+  transition: 0.2s;
+}
+
+.action-btn:hover {
+  background: #4338ca;
+
+  color: white;
+}

@@ -176,116 +176,9 @@
     margin-top: 6px;
   }
 
-  .gender-total {
-    text-align: right;
-  }
 
-  .gender-total h2 {
-    margin: 0;
-    font-size: 30px;
-    font-weight: 700;
-  }
 
-  .gender-total span {
-    color: #9ca3af;
-    font-size: 13px;
-  }
 
-  .gender-stats {
-    margin-top: 25px;
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .gender-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .gender-item strong {
-    display: block;
-    font-size: 18px;
-  }
-
-  .gender-item p {
-    margin: 2px 0 0;
-    color: #9ca3af;
-    font-size: 13px;
-  }
-
-  .gender-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-  }
-
-  .gender-dot.male {
-    background: #3b82f6;
-  }
-
-  .gender-dot.female {
-    background: #ec4899;
-  }
-
-  .gender-dot.other {
-    background: #10b981;
-  }
-
-  .subscription-summary {
-    text-align: right;
-  }
-
-  .subscription-summary h2 {
-    margin: 0;
-    font-size: 30px;
-    font-weight: 700;
-  }
-
-  .subscription-summary span {
-    color: #9ca3af;
-    font-size: 13px;
-  }
-
-  .subscription-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-top: 25px;
-  }
-
-  .subscription-box {
-    padding: 18px;
-    border-radius: 14px;
-    color: white;
-  }
-
-  .subscription-box h4 {
-    margin: 0;
-    font-size: 15px;
-  }
-
-  .subscription-box h2 {
-    margin: 10px 0;
-    font-size: 28px;
-  }
-
-  .subscription-box span {
-    font-size: 13px;
-    opacity: 0.9;
-  }
-
-  .subscription-box.free {
-    background: #3b82f6;
-  }
-
-  .subscription-box.premium {
-    background: #f59e0b;
-  }
-
-  .subscription-box.vip {
-    background: #8b5cf6;
-  }
 
   .match-summary {
     text-align: right;
@@ -309,57 +202,7 @@
     margin-top: 25px;
   }
 
-  .verification-summary {
-    text-align: right;
-  }
 
-  .verification-summary h2 {
-    margin: 0;
-    font-size: 30px;
-    font-weight: 700;
-  }
-
-  .verification-summary span {
-    color: #9ca3af;
-    font-size: 13px;
-  }
-
-  .verification-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-top: 24px;
-  }
-
-  .verification-box {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 18px;
-    border-radius: 16px;
-    color: white;
-  }
-
-  .verification-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.2);
-    font-size: 22px;
-  }
-
-  .verification-box h4 {
-    margin: 0;
-    font-size: 24px;
-  }
-
-  .verification-box p {
-    margin-top: 5px;
-    font-size: 13px;
-  }
 
   .approved {
     background: #10b981;
@@ -373,52 +216,6 @@
     background: #ef4444;
   }
 
-  .age-summary {
-    text-align: right;
-  }
-
-  .age-summary h2 {
-    margin: 0;
-    font-size: 30px;
-    font-weight: 700;
-  }
-
-  .age-summary span {
-    color: #9ca3af;
-    font-size: 13px;
-  }
-
-  .age-grid {
-    margin-top: 25px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
-
-  .age-box {
-    padding: 18px;
-    border-radius: 16px;
-    color: white;
-  }
-
-  .age-box h4 {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 600;
-  }
-
-  .age-box strong {
-    display: block;
-    margin-top: 12px;
-    font-size: 28px;
-  }
-
-  .age-box small {
-    display: block;
-    margin-top: 8px;
-    opacity: 0.9;
-    font-size: 13px;
-  }
 
   .blue {
     background: #2563eb;
@@ -436,100 +233,7 @@
     background: #ef4444;
   }
 
-  .view-all-btn {
-    background: #2563eb;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-  }
 
-  .recent-users {
-    margin-top: 20px;
-  }
-
-  .user-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 0;
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  .user-row:last-child {
-    border-bottom: none;
-  }
-
-  .user-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .avatar {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  .user-name {
-    font-weight: 700;
-    font-size: 16px;
-  }
-
-  .user-meta {
-    margin-top: 5px;
-    color: #9ca3af;
-    font-size: 13px;
-  }
-
-  .verified {
-    color: #2563eb;
-    margin-left: 6px;
-  }
-
-  .user-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-
-  .badge {
-    padding: 7px 14px;
-    border-radius: 30px;
-    font-size: 12px;
-    font-weight: 700;
-    color: white;
-  }
-
-  .badge.free {
-    background: #64748b;
-  }
-
-  .badge.premium {
-    background: #f59e0b;
-  }
-
-  .badge.vip {
-    background: #8b5cf6;
-  }
-
-  .status {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-  }
-
-  .online {
-    background: #10b981;
-  }
-
-  .offline {
-    background: #9ca3af;
-  }
 
   .report-table {
     overflow-x: auto;
@@ -583,17 +287,7 @@
     font-weight: 600;
   }
 
-  .high {
-    background: #ef4444;
-  }
-
-  .medium {
-    background: #f59e0b;
-  }
-
-  .low {
-    background: #10b981;
-  }
+  
 
   .status-badge {
     padding: 7px 14px;
@@ -631,35 +325,7 @@
     color: white;
   }
 
-  .match-box {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 18px;
-    border-radius: 16px;
-    color: white;
-  }
-
-  .match-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.2);
-    font-size: 20px;
-  }
-
-  .match-box h4 {
-    margin: 0;
-    font-size: 24px;
-  }
-
-  .match-box p {
-    margin-top: 5px;
-    font-size: 13px;
-  }
+  
 
   .success {
     background: #10b981;

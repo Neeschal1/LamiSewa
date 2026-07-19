@@ -35,16 +35,15 @@
         <p>Pending</p>
       </div>
     </div>
+  </div>
+  <div class="verification-box rejected">
+    <div class="verification-icon">
+      <i class="fa-solid fa-circle-xmark"></i>
+    </div>
 
-    <div class="verification-box rejected">
-      <div class="verification-icon">
-        <i class="fa-solid fa-circle-xmark"></i>
-      </div>
-
-      <div>
-        <h4>{{ rejected_verifications|default:"0" }}</h4>
-        <p>Rejected</p>
-      </div>
+    <div>
+      <h4>{{ rejected_verifications|default:"0" }}</h4>
+      <p>Rejected</p>
     </div>
   </div>
 </div>

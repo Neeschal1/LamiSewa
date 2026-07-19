@@ -1,0 +1,68 @@
+.stat-card {
+  transition: 0.25s;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-title {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-bottom: 8px;
+}
+
+.stat-card h2 {
+  font-size: 34px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+}
+
+.users {
+  background: #3b82f6;
+}
+.premium {
+  background: #eab308;
+}
+.match {
+  background: #ef4444;
+}
+.revenue {
+  background: #10b981;
+}
+.signup {
+  background: #8b5cf6;
+}
+.verify {
+  background: #0ea5e9;
+}
+.report {
+  background: #f97316;
+}
+.chats {
+  background: #06b6d4;
+}
+
+.positive {
+  color: #10b981;
+  font-size: 13px;
+  font-weight: 600;
+}

@@ -1,0 +1,62 @@
+.age-summary {
+  text-align: right;
+}
+
+.age-summary h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.age-summary span {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.age-grid {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.age-box {
+  padding: 18px;
+  border-radius: 16px;
+  color: white;
+}
+
+.age-box h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.age-box strong {
+  display: block;
+  margin-top: 12px;
+  font-size: 28px;
+}
+
+.age-box small {
+  display: block;
+  margin-top: 8px;
+  opacity: 0.9;
+  font-size: 13px;
+}
+
+.blue {
+  background: #2563eb;
+}
+
+.green {
+  background: #10b981;
+}
+
+.orange {
+  background: #f59e0b;
+}
+
+.red {
+  background: #ef4444;
+}
