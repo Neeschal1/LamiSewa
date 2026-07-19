@@ -9,6 +9,7 @@ SECRET_KEY = Config.SECRET_KEY
 # Installed Apps
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
+    'unfold',
     
     # default
     'django.contrib.auth',
@@ -60,6 +61,14 @@ CORS_ALLOW_METHODS = (
 )
 
 
+# Custom Admin Dashboard Setup
+UNFOLD = {
+    "SITE_TITLE": "LamiSewa",
+    "SITE_HEADER": "Dashboard",
+    "DASHBOARD_CALLBACK": "config.views.dashboard_callback",
+}
+
+
 # Rest framework setup
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -96,7 +105,7 @@ SIMPLE_JWT = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,6 +136,5 @@ USE_TZ = True
 
 # Static Files
 STATIC_URL = 'static/'
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
