@@ -1,0 +1,142 @@
+<div class="chart-grid grid-4">
+  <div class="card stat-card">
+    <div class="stat-header">
+      <div>
+        <p class="stat-title">Total Users</p>
+        <h2>{{ total_users|default:"0" }}</h2>
+
+        <span class="positive">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          {{ users_growth|default:"0" }}% this month
+        </span>
+      </div>
+
+      <div class="icon users">
+        <i class="fa-solid fa-users"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="card stat-card">
+    <div class="stat-header">
+      <div>
+        <p class="stat-title">Premium Members</p>
+
+        <h2>{{ premium_users|default:"0" }}</h2>
+
+        <span class="positive">
+          <i class="fa-solid fa-crown"></i>
+
+          {{ premium_growth|default:"0" }}%
+        </span>
+      </div>
+
+      <div class="icon premium">
+        <i class="fa-solid fa-gem"></i>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card stat-card">
+    <div class="stat-header">
+      <div>
+        <p class="stat-title">Total Matches</p>
+
+        <h2>{{ total_matches|default:"0" }}</h2>
+
+        <span class="positive">
+          <i class="fa-solid fa-heart"></i>
+
+          {{ match_growth|default:"0" }}%
+        </span>
+      </div>
+
+      <div class="icon match">
+        <i class="fa-solid fa-heart"></i>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card stat-card">
+    <div class="stat-header">
+      <div>
+        <p class="stat-title">Revenue</p>
+
+        <h2>Rs. {{ total_revenue|default:"0" }}</h2>
+
+        <span class="positive">
+          <i class="fa-solid fa-chart-line"></i>
+
+          {{ revenue_growth|default:"0" }}%
+        </span>
+      </div>
+
+      <div class="icon revenue">
+        <i class="fa-solid fa-wallet"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br />
+
+<div class="chart-grid grid-4">
+
+  <div class="card stat-card">
+    <div class="stat-header">
+      <div>
+        <p class="stat-title">Today's Signups</p>
+
+        <h2>{{ today_signup|default:"0" }}</h2>
+      </div>
+
+      <div class="icon signup">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="card stat-card">
+    <div class="stat-header">
+      <div>
+        <p class="stat-title">Pending Verification</p>
+
+        <h2>{{ pending_verification|default:"0" }}</h2>
+      </div>
+
+      <div class="icon verify">
+        <i class="fa-solid fa-user-check"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="card stat-card">
+    <div class="stat-header">
+      <div>
+        <p class="stat-title">Reported Profiles</p>
+
+        <h2>{{ reported_profiles|default:"0" }}</h2>
+      </div>
+
+      <div class="icon report">
+        <i class="fa-solid fa-flag"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="card stat-card">
+    <div class="stat-header">
+      <div>
+        <p class="stat-title">Active Chats</p>
+
+        <h2>{{ active_chats|default:"0" }}</h2>
+      </div>
+
+      <div class="icon chats">
+        <i class="fa-solid fa-comments"></i>
+      </div>
+    </div>
+  </div>
+</div>

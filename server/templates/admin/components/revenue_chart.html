@@ -1,0 +1,21 @@
+<div class="card chart-card">
+  <div class="chart-header">
+    <div>
+      <h3>Revenue Analytics</h3>
+
+      <p>This Month</p>
+    </div>
+
+    <div class="revenue-summary">
+      <h2>Rs. {{ total_revenue|default:"0" }}</h2>
+
+      <span class="positive">
+        <i class="fa-solid fa-arrow-trend-up"></i>
+
+        {{ revenue_growth|default:"0" }}%
+      </span>
+    </div>
+  </div>
+
+  <div id="revenueChart"></div>
+</div>
