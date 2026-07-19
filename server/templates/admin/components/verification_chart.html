@@ -1,0 +1,50 @@
+<div class="card chart-card">
+  <div class="chart-header">
+    <div>
+      <h3>Verification Analytics</h3>
+      <p>Identity Verification Overview</p>
+    </div>
+
+    <div class="verification-summary">
+      <h2>{{ total_verifications|default:"0" }}</h2>
+      <span>Total Requests</span>
+    </div>
+  </div>
+
+  <div id="verificationChart"></div>
+
+  <div class="verification-grid">
+    <div class="verification-box approved">
+      <div class="verification-icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <div>
+        <h4>{{ approved_verifications|default:"0" }}</h4>
+        <p>Approved</p>
+      </div>
+    </div>
+
+    <div class="verification-box pending">
+      <div class="verification-icon">
+        <i class="fa-solid fa-hourglass-half"></i>
+      </div>
+
+      <div>
+        <h4>{{ pending_verifications|default:"0" }}</h4>
+        <p>Pending</p>
+      </div>
+    </div>
+
+    <div class="verification-box rejected">
+      <div class="verification-icon">
+        <i class="fa-solid fa-circle-xmark"></i>
+      </div>
+
+      <div>
+        <h4>{{ rejected_verifications|default:"0" }}</h4>
+        <p>Rejected</p>
+      </div>
+    </div>
+  </div>
+</div>

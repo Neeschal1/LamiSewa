@@ -1,0 +1,41 @@
+<div class="card chart-card">
+  <div class="chart-header">
+    <div>
+      <h3>Gender Distribution</h3>
+      <p>Registered Users</p>
+    </div>
+
+    <div class="gender-total">
+      <h2>{{ total_users|default:"0" }}</h2>
+      <span>Total Users</span>
+    </div>
+  </div>
+
+  <div id="genderChart"></div>
+
+  <div class="gender-stats">
+    <div class="gender-item">
+      <span class="gender-dot male"></span>
+      <div>
+        <strong>{{ male_users|default:"0" }}</strong>
+        <p>Male</p>
+      </div>
+    </div>
+
+    <div class="gender-item">
+      <span class="gender-dot female"></span>
+      <div>
+        <strong>{{ female_users|default:"0" }}</strong>
+        <p>Female</p>
+      </div>
+    </div>
+
+    <div class="gender-item">
+      <span class="gender-dot other"></span>
+      <div>
+        <strong>{{ other_users|default:"0" }}</strong>
+        <p>Other</p>
+      </div>
+    </div>
+  </div>
+</div>

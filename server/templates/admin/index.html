@@ -187,6 +187,245 @@
         margin-top:6px;
     }
 
+    .gender-total{
+        text-align:right;
+    }
+
+    .gender-total h2{
+        margin:0;
+        font-size:30px;
+        font-weight:700;
+    }
+
+    .gender-total span{
+        color:#9ca3af;
+        font-size:13px;
+    }
+
+    .gender-stats{
+        margin-top:25px;
+        display:flex;
+        justify-content:space-around;
+    }
+
+    .gender-item{
+        display:flex;
+        align-items:center;
+        gap:12px;
+    }
+
+    .gender-item strong{
+        display:block;
+        font-size:18px;
+    }
+
+    .gender-item p{
+        margin:2px 0 0;
+        color:#9ca3af;
+        font-size:13px;
+    }
+
+    .gender-dot{
+        width:14px;
+        height:14px;
+        border-radius:50%;
+    }
+
+    .gender-dot.male{
+        background:#3B82F6;
+    }
+
+    .gender-dot.female{
+        background:#EC4899;
+    }
+
+    .gender-dot.other{
+        background:#10B981;
+    }
+
+    .subscription-summary{
+        text-align:right;
+    }
+
+    .subscription-summary h2{
+        margin:0;
+        font-size:30px;
+        font-weight:700;
+    }
+
+    .subscription-summary span{
+        color:#9ca3af;
+        font-size:13px;
+    }
+
+    .subscription-grid{
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:14px;
+        margin-top:25px;
+    }
+
+    .subscription-box{
+        padding:18px;
+        border-radius:14px;
+        color:white;
+    }
+
+    .subscription-box h4{
+        margin:0;
+        font-size:15px;
+    }
+
+    .subscription-box h2{
+        margin:10px 0;
+        font-size:28px;
+    }
+
+    .subscription-box span{
+        font-size:13px;
+        opacity:.9;
+    }
+
+    .subscription-box.free{
+        background:#3B82F6;
+    }
+
+    .subscription-box.premium{
+        background:#F59E0B;
+    }
+
+    .subscription-box.vip{
+        background:#8B5CF6;
+    }
+
+    .match-summary{
+    text-align:right;
+    }
+
+    .match-summary h2{
+        margin:0;
+        font-size:30px;
+        font-weight:700;
+    }
+
+    .match-summary span{
+        color:#9CA3AF;
+        font-size:13px;
+    }
+
+    .match-grid{
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:16px;
+        margin-top:25px;
+    }
+
+    .verification-summary{
+    text-align:right;
+    }
+
+    .verification-summary h2{
+        margin:0;
+        font-size:30px;
+        font-weight:700;
+    }
+
+    .verification-summary span{
+        color:#9CA3AF;
+        font-size:13px;
+    }
+
+    .verification-grid{
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:16px;
+        margin-top:24px;
+    }
+
+    .verification-box{
+        display:flex;
+        align-items:center;
+        gap:14px;
+        padding:18px;
+        border-radius:16px;
+        color:white;
+    }
+
+    .verification-icon{
+        width:50px;
+        height:50px;
+        border-radius:14px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:rgba(255,255,255,.2);
+        font-size:22px;
+    }
+
+    .verification-box h4{
+        margin:0;
+        font-size:24px;
+    }
+
+    .verification-box p{
+        margin-top:5px;
+        font-size:13px;
+    }
+
+    .approved{
+        background:#10B981;
+    }
+
+    .pending{
+        background:#F59E0B;
+    }
+
+    .rejected{
+        background:#EF4444;
+    }
+
+    .match-box{
+        display:flex;
+        align-items:center;
+        gap:14px;
+        padding:18px;
+        border-radius:16px;
+        color:white;
+    }
+
+    .match-icon{
+        width:48px;
+        height:48px;
+        border-radius:12px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:rgba(255,255,255,.2);
+        font-size:20px;
+    }
+
+    .match-box h4{
+        margin:0;
+        font-size:24px;
+    }
+
+    .match-box p{
+        margin-top:5px;
+        font-size:13px;
+    }
+
+    .success{
+        background:#10B981;
+    }
+
+    .pending{
+        background:#F59E0B;
+    }
+
+    .rejected{
+        background:#EF4444;
+    }
+
     @media (max-width: 1200px) {
         .grid-4 {
         grid-template-columns: repeat(2, 1fr);
@@ -229,6 +468,6 @@
   </div>
 </div>
 
-<script src="{% templates 'charts.js' %}"></script>
+<script src="{% static 'charts.js' %}"></script>
 
 {% endblock %}

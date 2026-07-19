@@ -1,0 +1,50 @@
+<div class="card chart-card">
+  <div class="chart-header">
+    <div>
+      <h3>Match Analytics</h3>
+      <p>Monthly Match Performance</p>
+    </div>
+
+    <div class="match-summary">
+      <h2>{{ total_matches|default:"0" }}</h2>
+      <span>Total Matches</span>
+    </div>
+  </div>
+
+  <div id="matchChart"></div>
+
+  <div class="match-grid">
+    <div class="match-box success">
+      <div class="match-icon">
+        <i class="fa-solid fa-heart"></i>
+      </div>
+
+      <div>
+        <h4>{{ successful_matches|default:"0" }}</h4>
+        <p>Successful</p>
+      </div>
+    </div>
+
+    <div class="match-box pending">
+      <div class="match-icon">
+        <i class="fa-solid fa-clock"></i>
+      </div>
+
+      <div>
+        <h4>{{ pending_matches|default:"0" }}</h4>
+        <p>Pending</p>
+      </div>
+    </div>
+
+    <div class="match-box rejected">
+      <div class="match-icon">
+        <i class="fa-solid fa-heart-crack"></i>
+      </div>
+
+      <div>
+        <h4>{{ rejected_matches|default:"0" }}</h4>
+        <p>Rejected</p>
+      </div>
+    </div>
+  </div>
+</div>
