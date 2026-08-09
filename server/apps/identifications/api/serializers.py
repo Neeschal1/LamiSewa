@@ -23,4 +23,3 @@ class IDVerificationSerializers(serializers.ModelSerializer):
             'live_photo': {'required': True},
             'status': {'required': True},
         }
-        

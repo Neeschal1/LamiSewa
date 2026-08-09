@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import *
 from apps.identifications.services.document import Documents
 from drf_yasg.utils import swagger_auto_schema
+import random
 
 
 class UserIDRecordsSerializersView(viewsets.ViewSet):

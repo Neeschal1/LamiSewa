@@ -4,14 +4,14 @@ from .choices import *
 
 
 class UserIDRecords(models.Model):
-    record_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    record_id = models.OneToOneField(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return f"{self.record_id.first_name} | {self.record_id}"
     
 
 class IDVerification(models.Model):
-    user_record = models.OneToOneField(UserIDRecords, on_delete=models.CASCADE, related_name='blocked_users')
+    user_record = models.OneToOneField(UserIDRecords, on_delete=models.CASCADE, related_name='idverification')
     fullname = models.CharField(max_length=50, blank=False)
     date_of_birth = models.CharField(max_length=30, blank=False)
     permanent_address = models.CharField(max_length=50, blank=False)
