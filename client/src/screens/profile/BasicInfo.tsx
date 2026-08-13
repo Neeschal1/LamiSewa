@@ -153,7 +153,7 @@ const BasicInfo = () => {
             >
               <ErrorText text={`${errorMessage}`} />
             </Animated.View>
-            <View className="flex gap-mid items-start">
+            <View className="flex w-full gap-mid items-start">
               <Animated.View
                 entering={FadeInUp.delay(200).duration(400).springify()}
                 className="items-start w-full"
@@ -261,6 +261,7 @@ const BasicInfo = () => {
                 </View>
               </Animated.View>
               <Animated.View
+              className="flex w-full"
                 entering={FadeInDown.delay(400).duration(400).springify()}
               >
                 <PrimaryButton

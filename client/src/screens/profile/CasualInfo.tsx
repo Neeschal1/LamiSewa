@@ -267,7 +267,7 @@ const CasualInfo = () => {
                 </View>
               </Animated.View>
             </View>
-            <Animated.View entering={FadeInDown.delay(200).duration(300)}>
+            <Animated.View className="flex w-full" entering={FadeInDown.delay(200).duration(300)}>
               <PrimaryButton
                 action={handleProcees}
                 text="Proceed"

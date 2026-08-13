@@ -144,7 +144,7 @@ const UserInfo: FC = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 items-center justify-center mt-20 p-screen bg-background gap-large pt-extralarge">
+          <View className="flex-1 w-full items-center justify-center mt-20 p-screen bg-background gap-large pt-extralarge">
             <StatusBar hidden={false} translucent />
             <Animated.View
               entering={FadeInUp.delay(200).duration(400).springify()}
@@ -170,7 +170,7 @@ const UserInfo: FC = () => {
             >
               <ErrorText text={`${errorMessage}`} />
             </Animated.View>
-            <View className="flex gap-mid items-start">
+            <View className="flex w-full gap-mid items-start">
               <Animated.View
                 entering={FadeInUp.delay(200).duration(400).springify()}
                 className="items-start w-full"
@@ -188,7 +188,7 @@ const UserInfo: FC = () => {
               </Animated.View>
               <Animated.View
                 entering={FadeInDown.delay(200).duration(400).springify()}
-                className="items-start w-full"
+                className="flex w-full"
               >
                 <PrimaryButton
                   action={handleProceed}
