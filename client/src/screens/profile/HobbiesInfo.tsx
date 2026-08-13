@@ -360,8 +360,10 @@ const HobbiesInfo: FC = () => {
           </View>
         </View>
       </ScrollView>
-      <View className="flex items-center mb-1 gap-mid">
-        <PrimaryButton disability={disabilityStatus} action={handleProceed} text="Proceed" />
+      <View className="flex w-full items-center mb-1 gap-mid">
+        <View className="flex w-full p-screen">
+          <PrimaryButton disability={disabilityStatus} action={handleProceed} text="Proceed" />
+        </View>
         <Description text="LamiSewa © 2026. All rights reserved." />
       </View>
       <Modal
@@ -387,7 +389,7 @@ const HobbiesInfo: FC = () => {
                 </View>
               </View>
             </View>
-            <View className="flex flex-col gap-mid">
+            <View className="flex flex-col w-full gap-mid">
               <PrimaryButton
                 text="Okay :)"
                 action={handleOkay}

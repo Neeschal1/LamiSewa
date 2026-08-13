@@ -133,7 +133,7 @@ const PersonalInfo: FC = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 items-center justify-center p-screen bg-background gap-large pt-extralarge">
+          <View className="flex-1 w-full items-center justify-center p-screen bg-background gap-large pt-extralarge">
             <StatusBar hidden={false} translucent />
             <Animated.View
               key={errorMessage}
@@ -214,6 +214,7 @@ const PersonalInfo: FC = () => {
               </Animated.View>
             </View>
             <Animated.View
+              className="flex w-full"
               entering={FadeInDown.delay(300).duration(400).springify()}
             >
               <PrimaryButton

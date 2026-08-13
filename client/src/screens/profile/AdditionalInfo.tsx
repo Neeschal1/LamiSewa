@@ -229,6 +229,7 @@ const AdditionalInfo: FC = () => {
               </Animated.View>
             </Animated.View>
             <Animated.View
+              className="flex w-full"
               entering={FadeInDown.delay(300).duration(400).springify()}
             >
               <PrimaryButton

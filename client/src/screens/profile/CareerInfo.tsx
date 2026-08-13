@@ -199,6 +199,7 @@ const CareerInfo: FC = () => {
               </Animated.View>
             </View>
             <Animated.View
+              className="flex w-full"
               entering={FadeInDown.delay(300).duration(400).springify()}
             >
               <PrimaryButton
