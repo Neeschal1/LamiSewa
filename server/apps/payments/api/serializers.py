@@ -11,7 +11,7 @@ class SubscriptionPackageSerializers(serializers.ModelSerializer):
         model = SubscriptionPackage
         fields = ['user_record', 'package_type', 'transaction_id', 'package_amount', 'purchased_date', 'expiry_date', 'paid_via', 'payment_status', 'package_status']
         extra_kwargs = {
-            'user_records': {'required': False, 'read_only': True},
+            'user_record': {'required': False, 'read_only': True},
             'package_type': {'required': True},
             'transaction_id': {'required': True},
             'package_amount': {'required': True},

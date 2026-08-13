@@ -5,7 +5,7 @@ from datetime import timedelta
 from .choices import *
 
 class UserPaymentRecords(models.Model):
-    payment_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    payment_id = models.OneToOneField(User, on_delete=models.CASCADE, related_name="paymentdetail")
     
     def __str__(self):
         return f"{self.payment_id.first_name} | {self.payment_id}"
