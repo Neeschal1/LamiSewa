@@ -189,6 +189,7 @@ const SignupVerification = () => {
                 {error ? <View className="flex w-full items-center justify-center"><ErrorText text={errorMessage} /></View> : null}
               </Animated.View>
               <Animated.View
+              className="flex w-full"
                 entering={FadeInDown.delay(200).duration(400).springify()}
               >
                 <PrimaryButton

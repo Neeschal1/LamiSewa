@@ -30,11 +30,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import HandleSignupService from "@/src/services/accounts/signup";
 import { getData } from "@/src/storage/SecureCredentials";
 import axios from "axios";
-import { DeleteStringDataAsync, StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import {
+  DeleteStringDataAsync,
+  StoreStringDataAsync,
+} from "@/src/storage/ProfileDataAsync";
 import { useAuth } from "@/src/auth/AuthContext";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import { getAccessTokens, saveRefreshTokens, saveTokens } from "@/src/storage/SecureTokens";
+import {
+  getAccessTokens,
+  saveRefreshTokens,
+  saveTokens,
+} from "@/src/storage/SecureTokens";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
@@ -116,7 +123,7 @@ const Password = () => {
       const email = data["email"];
       const name = data["fullname"];
       const phoneNumber = data["contactnumber"];
-      const response = await HandleSignupService( 
+      const response = await HandleSignupService(
         name,
         email,
         phoneNumber,
@@ -128,18 +135,21 @@ const Password = () => {
         setErrormessage("");
         setShowSuccessModal(true);
         console.log("Response from server: ", response["data"]);
-        const accessToken = response["data"]["Message"]["Tokens"]["accesstoken"]
-        const refreshToken = response["data"]["Message"]["Tokens"]["refreshtoken"]
-        const userprofilestatus = response["data"]["Message"]["UserprofileStatus"]
-        await saveTokens(accessToken)
-        await saveRefreshTokens(refreshToken)
+        const accessToken =
+          response["data"]["Message"]["Tokens"]["accesstoken"];
+        const refreshToken =
+          response["data"]["Message"]["Tokens"]["refreshtoken"];
+        const userprofilestatus =
+          response["data"]["Message"]["UserprofileStatus"];
+        await saveTokens(accessToken);
+        await saveRefreshTokens(refreshToken);
         const decoded = jwtDecode<AccessTokenPayload>(accessToken);
-        accessTokenRef.current = accessToken
-        if (userprofilestatus === true){
-            await StoreStringDataAsync("ProfileScreenStatus", "NoProfileExists")
-          } else {
-            await DeleteStringDataAsync("ProfileScreenStatus")
-          }
+        accessTokenRef.current = accessToken;
+        if (userprofilestatus === true) {
+          await StoreStringDataAsync("ProfileScreenStatus", "NoProfileExists");
+        } else {
+          await DeleteStringDataAsync("ProfileScreenStatus");
+        }
         console.log("\nDecoded Users id: ", decoded.user_id);
         console.log("\nDecoded expiry date: ", decoded.exp);
         console.log("\nDecoded token type: ", decoded.token_type);
@@ -175,7 +185,7 @@ const Password = () => {
         >
           <View className="flex-1 items-center justify-center bg-background p-screen">
             <StatusBar hidden={false} translucent />
-            <View className="flex items-start justify-center gap-extralarge">
+            <View className="flex w-full items-start justify-center gap-extralarge">
               <Animated.View
                 entering={FadeInUp.delay(200).duration(400).springify()}
               >
@@ -225,6 +235,7 @@ const Password = () => {
                 </Animated.View>
               </View>
               <Animated.View
+                className="flex w-full"
                 entering={FadeInDown.delay(200).duration(400).springify()}
               >
                 <PrimaryButton
@@ -263,7 +274,7 @@ const Password = () => {
                       />
                     </View>
                   ) : (
-                    <View className="flex items-center gap-mid">
+                    <View className="flex w-full items-center gap-mid">
                       <Image className="h-40 w-40" source={logo} />
                       <View className="mt-[-30px] w-full flex items-center">
                         <MainScreenName text="Success!" />
@@ -271,7 +282,9 @@ const Password = () => {
                           <Description text="Your Account has been Created Successfully" />
                         </View>
                       </View>
-                      <PrimaryButton text="Okay :)" action={handleOkay} />
+                      <View className="flex w-full">
+                        <PrimaryButton text="Okay :)" action={handleOkay} />
+                      </View>
                     </View>
                   )}
                 </View>
