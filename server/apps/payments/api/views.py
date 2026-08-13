@@ -10,6 +10,19 @@ from apps.userprofile.services.hobbies import Hobbies
 from drf_yasg.utils import swagger_auto_schema
 
 
+class UserPaymentRecordsSerializersView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=UserPaymentRecordsSerializers)
+    def create(self, request):
+        try:
+            userid = request.user
+            UserPaymentRecords.objects.get_or_create(payment_id=request.user)
+            return Response({"message": "users payment record created."}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"Message":"Exception Occured!", "Issue":str(e)})
+
+
 class SubscriptionPackageSerializersrView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     

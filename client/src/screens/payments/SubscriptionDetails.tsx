@@ -17,6 +17,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Basicoffers, Premiumoffers, VIPoffers, SubscriptionPlans } from "./PaymentServices";
 import PaymentOption from "./PaymentOption";
+import UserPayment from "@/src/services/payments/UserPayment";
 
 const screenheight = Dimensions.get("window").height;
 const screenwidth = Dimensions.get("window").width;
@@ -25,7 +26,8 @@ const SubscriptionDetails = () => {
   const [selectedPackage, setSelectedPackage] = useState(SubscriptionPlans[2]);
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const openModal = () => {
+  const openModal = async () => {
+    await UserPayment()
     setModalVisible(true);
   };
 
