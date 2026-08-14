@@ -30,18 +30,14 @@ class SubscriptionPackageSerializersrView(viewsets.ViewSet):
     def create(self, request):
         return StripePayment().createpayment(request)
         
-    # @swagger_auto_schema(request_body=SubscriptionPackageSerializers)
-    # def update(self, request, pk=None):
-    #     return UserProfileService()._updateprofileid(request, pk)
+    @swagger_auto_schema(request_body=SubscriptionPackageSerializers)
+    def update(self, request, pk=None):
+        return StripePayment().updatepayment(request)
     
-    # @swagger_auto_schema()
-    # def retrieve(self, request, pk=None):
-    #     return UserProfileService()._retrieveprofileid(request, pk)
+    @swagger_auto_schema()
+    def retrieve(self, request, pk=None):
+        return StripePayment().retrievepayment(request)
     
-    # @swagger_auto_schema()
-    # def destroy(self, request, pk=None):
-    #     return UserProfileService()._destroyprofileid(request, pk)
-    
-    # @swagger_auto_schema()
-    # def list(self, request):
-    #     return UserProfileService()._listprofileid(request)
+    @swagger_auto_schema()
+    def destroy(self, request, pk=None):
+        return StripePayment().destroypayment(request)
