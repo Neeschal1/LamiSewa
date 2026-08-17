@@ -20,5 +20,8 @@ export const API = {
         FEATUREDPHOTOLIST: "/profiles/user-profile/featured-images-details/",
         PARTNERPREFERENCEDETAIL: "/profiles/user-profile/partner-preference-detail/",
         PERSONALINFO: "/profiles/user-profile/personal-info/"
+    },
+    PAYMENTS: {
+        RECORDS: "/payments/records/"
     }
 }

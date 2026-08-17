@@ -1,6 +1,7 @@
 import { API } from "@/src/constants/apiEndpoints";
 import api from "../api";
 import { saveTokens } from "@/src/storage/SecureTokens";
+import Records from "../payments/Records";
 
 const HandleSignupService = async (
   name: string,
@@ -15,6 +16,9 @@ const HandleSignupService = async (
     password: password,
   };
   const res = await api.post(API.ACCOUNTS.SIGNUP, signupData);
+  console.log("Reached before Records.")
+  await Records()
+  console.log("Reached after Records.")
   return res
 };
 

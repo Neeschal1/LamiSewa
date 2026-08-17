@@ -160,15 +160,23 @@ const Profile: FC = () => {
     await logout();
   };
 
-  useEffect(() => {
-    const fetchUserBasicInfo = async () => {
+useEffect(() => {
+  const fetchUserBasicInfo = async () => {
+    try {
       const data = await FetchUsersDetail();
-      console.log("Message: ", data.data);
-      console.log("Status: ", data.stats);
+
+      console.log("User data:", data);
       setUserData(data);
-    };
-    fetchUserBasicInfo();
-  }, []);
+    } catch (error: any) {
+      console.log("FETCH USER ERROR:", error);
+      console.log("STATUS:", error?.response?.status);
+      console.log("RESPONSE:", error?.response?.data);
+      console.log("HEADERS:", error?.response?.headers);
+    }
+  };
+
+  fetchUserBasicInfo();
+}, []);
 
   return (
     <View className="flex-1 items-center justify-start bg-background">
