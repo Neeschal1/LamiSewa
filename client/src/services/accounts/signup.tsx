@@ -17,7 +17,7 @@ const HandleSignupService = async (
   };
   const res = await api.post(API.ACCOUNTS.SIGNUP, signupData);
   console.log("Reached before Records.")
-  await Records()
+  // await Records()
   console.log("Reached after Records.")
   return res
 };

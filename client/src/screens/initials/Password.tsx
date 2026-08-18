@@ -42,6 +42,7 @@ import {
   saveRefreshTokens,
   saveTokens,
 } from "@/src/storage/SecureTokens";
+import Records from "@/src/services/payments/Records";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
@@ -117,6 +118,7 @@ const Password = () => {
       }, 5000);
       return;
     }
+
     try {
       setLoading(true);
       const data = await getData();
@@ -145,6 +147,9 @@ const Password = () => {
         await saveRefreshTokens(refreshToken);
         const decoded = jwtDecode<AccessTokenPayload>(accessToken);
         accessTokenRef.current = accessToken;
+        console.log("\n\n\nReady to go to records!\n")
+        await Records()
+        console.log("\nAfter records!\n\n\n")
         if (userprofilestatus === true) {
           await StoreStringDataAsync("ProfileScreenStatus", "NoProfileExists");
         } else {
