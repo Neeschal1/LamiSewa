@@ -51,7 +51,7 @@ const Login: FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [disabilityStatus, setDisabilityStatus] = useState<boolean>(false);
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = useState<boolean>(false);
 
   const handleFingerprint = async () => {
     await FingerPrintLogin(login);

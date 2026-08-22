@@ -95,8 +95,8 @@ class UserAuth:
                 return Response({"Message":"An account is already signed up with the entered phone number!"}, status=status.HTTP_409_CONFLICT)
             
             type="Account Activation/Verification"
-            # sms = SendOTP()
-            # result = sms._send_sms(phonenumber, name, type)   
+            sms = SendOTP()
+            result = sms._send_sms(phonenumber, name, type)   
             
             otp = str(random.randint(100000, 999999))
             result = {"success": True, "otpcode": otp}
