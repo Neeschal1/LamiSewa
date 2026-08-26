@@ -23,5 +23,8 @@ export const API = {
     },
     PAYMENTS: {
         RECORDS: "/payments/records/"
+    },
+    PRIVACY: {
+        USERSPRIVACY: "/privacy/userprivacy/"
     }
 }

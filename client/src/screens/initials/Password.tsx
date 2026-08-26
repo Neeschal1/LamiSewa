@@ -43,6 +43,7 @@ import {
   saveTokens,
 } from "@/src/storage/SecureTokens";
 import Records from "@/src/services/payments/Records";
+import Privacy from "@/src/services/privacy/UserPrivacy";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
@@ -149,6 +150,7 @@ const Password = () => {
         accessTokenRef.current = accessToken;
         console.log("\n\n\nReady to go to records!\n")
         await Records()
+        await Privacy()
         console.log("\nAfter records!\n\n\n")
         if (userprofilestatus === true) {
           await StoreStringDataAsync("ProfileScreenStatus", "NoProfileExists");
