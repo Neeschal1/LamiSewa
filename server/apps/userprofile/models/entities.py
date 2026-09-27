@@ -9,9 +9,26 @@ class UserProfile(models.Model):
     useremail = models.CharField(max_length=50, unique=True)
     username = models.CharField(max_length=15, unique=True)
     profileid = models.CharField(max_length=20, unique=True)
-    
+    visible_to_verified_only = models.BooleanField(default=False)
+
     def __str__(self):
         return f"{self.userid.first_name} | {self.userid} | {self.profileid}"
+
+
+class UserProfileEmbedding(models.Model):
+    """DB store for sentence-transformer vectors (swap for Pinecone later)."""
+
+    userprofileid = models.OneToOneField(
+        UserProfile, on_delete=models.CASCADE, related_name="embedding"
+    )
+    summary = models.TextField(default="")
+    embedding = models.TextField(default="[]")
+    model_name = models.CharField(max_length=100, default="all-MiniLM-L6-v2")
+    dimension = models.IntegerField(default=384)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Embedding of: {self.userprofileid.profileid}"
     
     
 class UsersBasicInfo(models.Model):

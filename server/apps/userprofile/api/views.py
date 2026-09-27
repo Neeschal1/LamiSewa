@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from apps.userprofile.models.entities import *
 from apps.userprofile.services.userprofile import UserProfileService
+from apps.userprofile.services.complete_profile import CompleteProfile
+from apps.userprofile.services.matching import SemanticMatcher
 from apps.userprofile.services.basicinfo import BasicInfo
 from apps.userprofile.services.personalinfo import PersonalInfo
 from apps.userprofile.services.additionalinfo import AdditionalInfo
@@ -343,3 +345,38 @@ class UsersPartnerPreferenceSerializerView(viewsets.ViewSet):
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return PartnerPreference()._destroypartnerpreferencedetail(request, pk)
+
+
+class CompleteProfileView(viewsets.ViewSet):
+    """Single create for the whole staged wizard (called at hobbies step)."""
+
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request):
+        result = CompleteProfile().create(request)
+        status_code = result.pop("status", 200)
+        if "error" in result:
+            return Response({"message": result["error"]}, status=status_code)
+        return Response(
+            {
+                "message": "Profile created successfully.",
+                "data": result,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
+class SemanticMatchView(viewsets.ViewSet):
+    """Semantic search over stored embeddings (subscription-gated)."""
+
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        result = SemanticMatcher().ranked_matches(request)
+        status_code = result.pop("status", 200)
+        if "error" in result:
+            return Response({"message": result["error"]}, status=status_code)
+        return Response(
+            {"message": "Matches retrieved.", "data": result["results"]},
+            status=status.HTTP_200_OK,
+        )

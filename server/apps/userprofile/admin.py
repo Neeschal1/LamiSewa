@@ -8,6 +8,7 @@ class UserProfileAdmin(admin.ModelAdmin):
         "useremail",
         "username",
         "profileid",
+        "visible_to_verified_only",
     ]
     search_fields = [
         "useremail",
@@ -196,4 +197,18 @@ class StoriesAdmin(admin.ModelAdmin):
     ]
     search_fields = [
         "userprofileid__profileid",
+    ]
+
+
+@admin.register(UserProfileEmbedding)
+class UserProfileEmbeddingAdmin(admin.ModelAdmin):
+    list_display = [
+        "userprofileid",
+        "model_name",
+        "dimension",
+        "updated_at",
+    ]
+    search_fields = [
+        "userprofileid__profileid",
+        "userprofileid__username",
     ]

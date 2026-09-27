@@ -15,6 +15,8 @@ router.register('user-profile/career-info', UsersCareerSerializerView, basename=
 router.register('user-profile/family-detail', UsersFamilyDetailSerializerView, basename="familydetail")
 router.register('user-profile/astro-detail', UsersAstroDetailSerializerView, basename="astrodetails")
 router.register('user-profile/partner-preference-detail', UsersPartnerPreferenceSerializerView, basename="partnerpreference")
+router.register('user-profile/complete-profile', CompleteProfileView, basename="completeprofile")
+router.register('matches', SemanticMatchView, basename="semanticmatches")
 
 urlpatterns = [
     path('', include(router.urls))

@@ -4,12 +4,22 @@ from rest_framework import serializers
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ["useremail", "username", "profileid", "userid"]
+        fields = ["useremail", "username", "profileid", "userid", "visible_to_verified_only"]
         extra_kwargs = {
             "userid": {"read_only": True},
             "useremail": {"required": True},
             "username": {"required": True},
             "profileid": {"read_only": True},
+            "visible_to_verified_only": {"required": False},
+        }
+
+
+class UserProfileEmbeddingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfileEmbedding
+        fields = ["summary", "model_name", "dimension", "updated_at"]
+        extra_kwargs = {
+            "summary": {"read_only": True},
         }
         
 

@@ -25,19 +25,29 @@ class UserPaymentRecordsSerializersView(viewsets.ViewSet):
 
 class SubscriptionPackageSerializersrView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=SubscriptionPackageSerializers)
     def create(self, request):
         return StripePayment().createpayment(request)
-        
+
+    @swagger_auto_schema()
+    def list(self, request):
+        return StripePayment().subscription_status(request)
+
     @swagger_auto_schema(request_body=SubscriptionPackageSerializers)
     def update(self, request, pk=None):
-        return StripePayment().updatepayment(request)
-    
+        return Response(
+            {"message": "Use POST /payments/subscription/ to create/update a subscription."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED,
+        )
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
-        return StripePayment().retrievepayment(request)
-    
+        return StripePayment().subscription_status(request)
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
-        return StripePayment().destroypayment(request)
+        return Response(
+            {"message": "Subscriptions cannot be deleted via API."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED,
+        )

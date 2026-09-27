@@ -95,17 +95,28 @@ class UserProfileService:
         try:
             profile = get_object_or_404(UserProfile, userid=request.user)
 
-            profile_serializer = UserProfileSerializer(profile)
-            basic_serializer = UsersBasicInfoSerializer(profile.basic_info)
-            career_serializer = UsersCareerSerializer(profile.career)
-            featured_photo_serializer = UsersFeaturedImagesSerializer(profile.featured_image)
+            def safe(serializer_cls, obj):
+                try:
+                    return serializer_cls(obj).data
+                except Exception:
+                    return None
+
+            try:
+                embedding = profile.embedding
+                embedding_data = UserProfileEmbeddingSerializer(embedding).data
+            except Exception:
+                embedding_data = None
 
             return Response(
                 {
-                    "profile": profile_serializer.data,
-                    "basic_info": basic_serializer.data,
-                    "career_info": career_serializer.data,
-                    "featured_images": featured_photo_serializer.data
+                    "profile": UserProfileSerializer(profile).data,
+                    "basic_info": safe(UsersBasicInfoSerializer, getattr(profile, "basic_info", None)),
+                    "personal_info": safe(UsersPersonalInfoSerializer, getattr(profile, "personal_info", None)),
+                    "additional_info": safe(UsersAdditionalInfoSerializer, getattr(profile, "additional_info", None)),
+                    "career_info": safe(UsersCareerSerializer, getattr(profile, "career", None)),
+                    "hobbies": safe(UsersHobbiesSerializer, getattr(profile, "hobbies", None)),
+                    "featured_images": safe(UsersFeaturedImagesSerializer, getattr(profile, "featured_image", None)),
+                    "embedding": embedding_data,
                 }
             )
         except Exception as e:
