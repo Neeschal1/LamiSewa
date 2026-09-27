@@ -29,9 +29,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import UserBasicService from "@/src/services/profile/basicinfo";
 import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
-import axios from "axios";
+import { saveDraftSection } from "@/src/storage/profileDraft";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
 const defaultUserCoverPicture = "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg";
@@ -110,7 +109,6 @@ const CasualInfo = () => {
     try {
       setLoading(true);
       const fetchusersbasicinfodata = await getJsonData("basicinfo");
-      console.log("User's data: ", fetchusersbasicinfodata);
 
       const fullName = fetchusersbasicinfodata["fullname"];
       const gender = fetchusersbasicinfodata["gender"];
@@ -119,42 +117,27 @@ const CasualInfo = () => {
       const year = fetchusersbasicinfodata["date_of_birth"]["year"];
       const month = fetchusersbasicinfodata["date_of_birth"]["month"];
       const day = fetchusersbasicinfodata["date_of_birth"]["day"];
-      const datevalue = fetchusersbasicinfodata["date_of_birth"]["value"];
 
       const dob = `${year}-${month}-${day}`;
 
-      await UserBasicService(
-        fullName,
-        nickName,
-        bio,
-        imageUrl,
-        defaultUserCoverPicture,
-        handlingProfile,
-        gender,
-        dob,
-      );
+      // Stage in AsyncStorage; single create happens at hobbies step.
+      await saveDraftSection("basic_info", {
+        fullname: fullName,
+        nickname: nickName,
+        bio: bio,
+        profile_picture: imageUrl,
+        cover_picture: defaultUserCoverPicture,
+        profile_handler: handlingProfile,
+        gender: gender,
+        date_of_birth: dob,
+      });
 
       await StoreStringDataAsync("UserProfileStatus", "BasicInfoCompleted");
       navigation.navigate("PersonalInfo");
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const statuscode = err?.response?.status;
-        const errormessage = err?.response?.data;
-        console.log("Status code: ", statuscode);
-        console.log("Errormessage: ", errormessage);
-        if (statuscode === 400) {
-          setError(true);
-          setErrorMessage(errormessage);
-        }
-        if (statuscode === 417) {
-          setError(true);
-          setErrorMessage("Something went wrong. Try again!");
-        }
-        setError(true);
-        setErrorMessage(
-          "Something went wrong. Maybe your \ninternet connection is not stable!",
-        );
-      }
+      console.log("Draft stage error: ", err);
+      setError(true);
+      setErrorMessage("Something went wrong. Try again!");
     } finally {
       setLoading(false);
     }

@@ -33,7 +33,8 @@ import {
 import { useAuth } from "@/src/auth/AuthContext";
 import { clearToken } from "@/src/storage/SecureTokens";
 import axios from "axios";
-import UserHobbiesService from "@/src/services/profile/hobbies";
+import SubmitCompleteProfileService from "@/src/services/profile/completeProfile";
+import { clearDraft } from "@/src/storage/profileDraft";
 import { DeleteStringDataAsync, StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const logo = require("@/src/assets/images/mainLogo.png");
@@ -86,24 +87,31 @@ const HobbiesInfo: FC = () => {
     setErrorMessage("");
     try {
       setLoading(true);
-      await UserHobbiesService(hobbies[0], hobbies[1], hobbies[2], hobbies[3], hobbies[4]);
-      await DeleteStringDataAsync("UserProfileStatus");
-      await StoreStringDataAsync("ProfileScreenStatus", "AllCompleted");
-      await StoreStringDataAsync("SubscriptionStatusAfterBuildingUpProfile", "Incomplete");
-      setProfileCompleted(true);
+      // Single create for the whole staged wizard (200 OK expected).
+      const res = await SubmitCompleteProfileService(hobbies);
+      if (res.status === 200) {
+        await StoreStringDataAsync("UsersProfileID", res.data?.data?.profileid ?? "");
+        await clearDraft();
+        await DeleteStringDataAsync("UserProfileStatus");
+        await StoreStringDataAsync("ProfileScreenStatus", "AllCompleted");
+        // Show subscription page once after profile creation.
+        await StoreStringDataAsync("SubscriptionStatusAfterBuildingUpProfile", "Incomplete");
+        setProfileCompleted(true);
+      }
     } catch (err) {
       if (axios.isAxiosError(err)) {
         const statuscode = err?.response?.status;
         const errormessage = err?.response?.data;
         console.log("Status code: ", statuscode);
         console.log("Errormessage: ", errormessage);
-        if (statuscode === 400) {
+        if (statuscode === 400 || statuscode === 409 || statuscode === 417) {
           setError(true);
-          setErrorMessage(errormessage);
-        }
-        if (statuscode === 417) {
-          setError(true);
-          setErrorMessage("Something went wrong. Try again!");
+          setErrorMessage(
+            typeof errormessage === "string"
+              ? errormessage
+              : (errormessage?.message ?? "Something went wrong. Try again!"),
+          );
+          return;
         }
         setError(true);
         setErrorMessage(

@@ -16,7 +16,7 @@ class SemanticMatcher:
             return False
         return SubscriptionPackage.objects.filter(
             user_record=record,
-            package_status__iexact="Active",
+            package_status__in=["Completed", "Verified", "Active"],
             expiry_date__gt=timezone.now(),
         ).exists()
 

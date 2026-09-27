@@ -11,6 +11,8 @@ export const API = {
     },
     PROFILE: {
         USERPROFILE: "/profiles/userprofile/",
+        COMPLETEPROFILE: "/profiles/user-profile/complete-profile/",
+        MATCHES: "/profiles/matches/",
         BASICINFO: "/profiles/user-profile/basic-info/",
         CAREERINFO: "/profiles/user-profile/career-info/",
         ASTRODETAILS: "/profiles/user-profile/astro-detail/",
@@ -22,7 +24,8 @@ export const API = {
         PERSONALINFO: "/profiles/user-profile/personal-info/"
     },
     PAYMENTS: {
-        RECORDS: "/payments/records/"
+        RECORDS: "/payments/records/",
+        SUBSCRIPTION: "/payments/subscription/"
     },
     PRIVACY: {
         USERSPRIVACY: "/privacy/userprivacy/"

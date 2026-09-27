@@ -22,9 +22,10 @@ class StripePayment():
             packagestatus = paid.validated_data["package_status"]
 
             checkout_url = None
-            # Only hit Stripe when the client pays via Stripe methods; local
-            # wallets (eSewa/Khalti/ConnectIPS) are recorded directly.
-            if str(paidvia).strip().lower().startswith("stripe") and Config.STRIPE_SECRET_KEY and "paste your" not in str(Config.STRIPE_SECRET_KEY):
+            # Card payments go through Stripe Checkout (uses STRIPE_SECRET_KEY);
+            # local wallets (eSewa/Khalti/ConnectIPS) are recorded directly.
+            stripe_methods = {"visa", "mastercard", "master card", "american express"}
+            if str(paidvia).strip().lower() in stripe_methods and Config.STRIPE_SECRET_KEY and "paste your" not in str(Config.STRIPE_SECRET_KEY):
                 lineitem = [
                     {
                         "quantity": 1,
@@ -78,7 +79,7 @@ class StripePayment():
             return Response({"is_subscribed": False, "message": "No payment record."})
         active = SubscriptionPackage.objects.filter(
             user_record=record,
-            package_status__iexact="Active",
+            package_status__in=["Completed", "Verified", "Active"],
             expiry_date__gt=timezone.now(),
         ).order_by("-expiry_date").first()
         if not active:

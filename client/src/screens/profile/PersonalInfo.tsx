@@ -29,9 +29,8 @@ import {
 import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import UserPersonalService from "@/src/services/profile/personalinfo";
 import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
-import axios from "axios";
+import { saveDraftSection } from "@/src/storage/profileDraft";
 
 const PersonalInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
@@ -88,34 +87,20 @@ const PersonalInfo: FC = () => {
     setErrorMessage("");
     try {
       setLoading(true);
-      await UserPersonalService(
-        maritalStatus,
-        gotra,
-        livingCountry,
-        district,
-        residencyStatus,
-      );
+      // Stage in AsyncStorage; single create happens at hobbies step.
+      await saveDraftSection("personal_info", {
+        maritalstatus: maritalStatus,
+        gotra: gotra,
+        current_living_country: livingCountry,
+        current_city: district,
+        residency_status: residencyStatus,
+      });
       await StoreStringDataAsync("UserProfileStatus", "PersonalInfoCompleted");
       navigation.navigate("AdditionalInfo");
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const statuscode = err?.response?.status;
-        const errormessage = err?.response?.data;
-        console.log("Status code: ", statuscode);
-        console.log("Errormessage: ", errormessage);
-        if (statuscode === 400) {
-          setError(true);
-          setErrorMessage(errormessage);
-        }
-        if (statuscode === 417) {
-          setError(true);
-          setErrorMessage("Something went wrong. Try again!");
-        }
-        setError(true);
-        setErrorMessage(
-          "Something went wrong. Maybe your internet connection is not stable!",
-        );
-      }
+      console.log("Draft stage error: ", err);
+      setError(true);
+      setErrorMessage("Something went wrong. Try again!");
     } finally {
       setLoading(false);
     }

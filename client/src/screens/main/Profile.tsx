@@ -76,6 +76,11 @@ interface BasicInfo {
 interface UserData {
   profile: Profile;
   basic_info: BasicInfo;
+  personal_info?: Record<string, any>;
+  additional_info?: Record<string, any>;
+  career_info?: Record<string, any>;
+  hobbies?: Record<string, any>;
+  featured_images?: Record<string, any>;
 }
 
 const CoverPP = require("@/src/assets/images/cover.png");
@@ -305,6 +310,57 @@ useEffect(() => {
               </TouchableOpacity>
             ))}
           </View> */}
+        </View>
+
+        <View className="flex w-full items-start p-screen">
+          <Description text="Profile Details" />
+          <View className="mt-2 w-full gap-small">
+            <View className="flex flex-row justify-between w-full">
+              <SubTitle text="Username" />
+              <Description text={`@${userData?.profile?.username ?? "-"}`} />
+            </View>
+            <View className="flex flex-row justify-between w-full">
+              <SubTitle text="Profile ID" />
+              <Description text={`${userData?.profile?.profileid ?? "-"}`} />
+            </View>
+            <View className="flex flex-row justify-between w-full">
+              <SubTitle text="Gender" />
+              <Description text={`${userData?.basic_info?.gender ?? "-"}`} />
+            </View>
+            <View className="flex flex-row justify-between w-full">
+              <SubTitle text="City" />
+              <Description text={`${userData?.personal_info?.current_city ?? "-"}`} />
+            </View>
+            <View className="flex flex-row justify-between w-full">
+              <SubTitle text="Country" />
+              <Description text={`${userData?.personal_info?.current_living_country ?? "-"}`} />
+            </View>
+            <View className="flex flex-row justify-between w-full">
+              <SubTitle text="Marital status" />
+              <Description text={`${userData?.personal_info?.maritalstatus ?? "-"}`} />
+            </View>
+            <View className="flex flex-row justify-between w-full">
+              <SubTitle text="Religion" />
+              <Description text={`${userData?.additional_info?.religion ?? "-"}`} />
+            </View>
+            <View className="flex flex-row justify-between w-full">
+              <SubTitle text="Occupation" />
+              <Description text={`${(userData?.career_info as any)?.occupation ?? "-"}`} />
+            </View>
+            <View className="flex flex-row justify-between w-full">
+              <SubTitle text="Organization" />
+              <Description text={`${(userData?.career_info as any)?.company_or_organization_name ?? "-"}`} />
+            </View>
+          </View>
+          {userData?.hobbies ? (
+            <View className="flex flex-row flex-wrap gap-2 mt-3">
+              {Object.values(userData.hobbies).map((h: any) => (
+                <View key={String(h)} className="bg-[#ecebff] px-4 py-2 rounded-2xl">
+                  <SubTitle text={String(h)} />
+                </View>
+              ))}
+            </View>
+          ) : null}
         </View>
 
         <View className="flex w-full items-start p-screen">

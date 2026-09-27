@@ -26,9 +26,9 @@ import { DegreeItems, WorkingItems } from "@/src/utils/objects";
 import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import UserCareerService from "@/src/services/profile/careerinfo";
 import axios from "axios";
 import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import { saveDraftSection } from "@/src/storage/profileDraft";
 
 const CareerInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
@@ -74,34 +74,20 @@ const CareerInfo: FC = () => {
     setErrorMessage("");
     try {
       setLoading(true);
-      await UserCareerService(
-        degree,
-        college,
-        working,
-        profession,
-        companyName,
-      );
+      // Stage in AsyncStorage; single create happens at hobbies step.
+      await saveDraftSection("career_info", {
+        highest_qualification: degree,
+        college_name: college,
+        working_as: working,
+        occupation: profession,
+        company_or_organization_name: companyName,
+      });
       await StoreStringDataAsync("UserProfileStatus", "CareerInfoCompleted");
       navigation.navigate("HobbiesInfo");
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const statuscode = err?.response?.status;
-        const errormessage = err?.response?.data;
-        console.log("Status code: ", statuscode);
-        console.log("Errormessage: ", errormessage);
-        if (statuscode === 400) {
-          setError(true);
-          setErrorMessage(errormessage);
-        }
-        if (statuscode === 417) {
-          setError(true);
-          setErrorMessage("Something went wrong. Try again!");
-        }
-        setError(true);
-        setErrorMessage(
-          "Something went wrong. Maybe your \ninternet connection is not stable!",
-        );
-      }
+      console.log("Draft stage error: ", err);
+      setError(true);
+      setErrorMessage("Something went wrong. Try again!");
     } finally {
       setLoading(false);
     }

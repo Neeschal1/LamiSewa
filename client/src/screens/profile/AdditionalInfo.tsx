@@ -31,9 +31,8 @@ import {
 } from "@/src/utils/objects";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import UserAdditionalService from "@/src/services/profile/additionalinfo";
 import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
-import axios from "axios";
+import { saveDraftSection } from "@/src/storage/profileDraft";
 
 const AdditionalInfo: FC = () => {
   const [error, setError] = useState<boolean>(false);
@@ -93,31 +92,23 @@ const AdditionalInfo: FC = () => {
     setErrorMessage("");
     try {
       setLoading(true);
-      await UserAdditionalService(height, weight, religion, diet, community);
+      // Stage in AsyncStorage; single create happens at hobbies step.
+      await saveDraftSection("additional_info", {
+        height: height,
+        weight: weight,
+        religion: religion,
+        diet: diet,
+        community: community,
+      });
       await StoreStringDataAsync(
         "UserProfileStatus",
         "AdditionalInfoCompleted",
       );
       navigation.navigate("CareerInfo");
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const statuscode = err?.response?.status;
-        const errormessage = err?.response?.data;
-        console.log("Status code: ", statuscode);
-        console.log("Errormessage: ", errormessage);
-        if (statuscode === 400) {
-          setError(true);
-          setErrorMessage(errormessage);
-        }
-        if (statuscode === 417) {
-          setError(true);
-          setErrorMessage("Something went wrong. Try again!");
-        }
-        setError(true);
-        setErrorMessage(
-          "Something went wrong. Maybe your \ninternet connection is not stable!",
-        );
-      }
+      console.log("Draft stage error: ", err);
+      setError(true);
+      setErrorMessage("Something went wrong. Try again!");
     } finally {
       setLoading(false);
     }

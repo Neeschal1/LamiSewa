@@ -1,8 +1,9 @@
 import { MainScreenName, SubTitle, Title } from "@/src/components/Texts";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Image, Dimensions } from "react-native";
+import { View, TouchableOpacity, Text, Image, Dimensions, ActivityIndicator } from "react-native";
 import Modal from "react-native-modal";
+import * as WebBrowser from "expo-web-browser";
 import {
   InternationalPaymentMethod,
   NationalPaymentMethod,
@@ -11,9 +12,24 @@ import {
 import { PaymentOptionProps } from "./PaymentComponentTypes"
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
+import { createSubscription } from "@/src/services/payments/subscription";
+import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 
 const screenheight = Dimensions.get("window").height;
 const screenwidth = Dimensions.get("window").width;
+
+const PACKAGE_AMOUNTS: Record<string, number> = {
+  Basic: 1000,
+  Premium: 3000,
+  VIP: 5000,
+};
+
+const normalizePaidVia = (name: string) => {
+  if (name === "Master Card") return "Mastercard";
+  if (name === "KhaltiIME") return "Khalti";
+  if (name === "Connect IPS") return "ConnectIPS";
+  return name;
+};
 
 const PaymentOption = ({
   isVisible,
@@ -24,13 +40,43 @@ const PaymentOption = ({
   const [paymentItem, setPaymentItem] = useState(InternationalPaymentMethod[0]);
   const [selectedPackage, setSelectedPackage] = useState(SubscriptionPlans[2]);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [paying, setPaying] = useState<boolean>(false);
+  const [payError, setPayError] = useState<string>("");
 
   const navigation = useNavigation<NavigationProps>()
 
-  const handlePayment = () => {
-    console.log(paymentItem["paymentName"]);
-    setModalVisible(true);
-    navigation.navigate("PaymentSuccess");
+  const activePlan = SubscriptionPlans.find((p) => p.packagetype === packageName) ?? selectedPackage;
+
+  const handlePayment = async () => {
+    setPaying(true);
+    setPayError("");
+    try {
+      const data = await createSubscription({
+        package_type: activePlan.packagetype,
+        transaction_id: Math.floor(Date.now() / 1000),
+        package_amount: PACKAGE_AMOUNTS[activePlan.packagetype] ?? 1000,
+        paid_via: normalizePaidVia(paymentItem["paymentName"]),
+        payment_status: "Paid",
+        package_status: "Completed",
+      });
+      // Card payments return a Stripe Checkout URL (uses STRIPE_SECRET_KEY
+      // on the backend). Open it in the system browser per Expo v54
+      // expo-web-browser docs, then continue on return.
+      if (data?.URL) {
+        await WebBrowser.openBrowserAsync(data.URL);
+      }
+      // Subscription page shows once: mark complete so AuthenticatedNavigation
+      // routes straight to MyTabs next time.
+      await StoreStringDataAsync("SubscriptionStatusAfterBuildingUpProfile", "Complete");
+      setModalVisible(true);
+      onClose();
+      navigation.navigate("PaymentSuccess");
+    } catch (e: any) {
+      console.log("Payment error:", e?.response?.data ?? e);
+      setPayError("Payment failed. Please try again.");
+    } finally {
+      setPaying(false);
+    }
   }
 
   const closeModal = () => {
@@ -116,19 +162,28 @@ const PaymentOption = ({
             </View>
           </View>
         </View>
+        {payError ? (
+          <Text className="font-Poppinsregular text-primaryred text-center">{payError}</Text>
+        ) : null}
         <TouchableOpacity
         onPress={handlePayment}
+        disabled={paying}
           className="rounded-2xl items-center justify-center"
           style={{
             height: screenheight * 0.061,
             width: screenwidth * 0.883,
             backgroundColor: paymentItem.btncolor,
+            opacity: paying ? 0.6 : 1,
           }}
         >
           <View className="flex flex-row gap-mid justify-center items-center">
-            <Ionicons name="diamond-outline" color="white" size={22} />
+            {paying ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <Ionicons name="diamond-outline" color="white" size={22} />
+            )}
             <Text className="text-background text-subheading font-Poppinsmedium">
-              Upgrade to {paymentItem.paymentName}
+              {paying ? "Processing..." : `Upgrade to ${paymentItem.paymentName}`}
             </Text>
           </View>
         </TouchableOpacity>
