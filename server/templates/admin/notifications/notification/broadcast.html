@@ -1,0 +1,11 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Broadcast announcement to all users</h1>
+<p>Posted instantly to every active user over the realtime channel and saved in their notification list.</p>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" class="default" value="Broadcast now" />
+  <a class="button" href="../">Cancel</a>
+</form>
+{% endblock %}
