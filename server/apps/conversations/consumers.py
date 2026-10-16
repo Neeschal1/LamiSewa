@@ -55,15 +55,34 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return
         user = self.scope.get("user")
         if payload.get("typing") is not None:
+            typing = bool(payload.get("typing"))
             await self.channel_layer.group_send(
                 self.group,
                 {
                     "type": "chat.typing",
                     "user_id": user.id,
                     "name": user.first_name or user.username,
-                    "typing": bool(payload.get("typing")),
+                    "typing": typing,
                 },
             )
+            try:
+                other_id = await self._other_id(user.id, self.thread_id)
+                if other_id:
+                    await self.channel_layer.group_send(
+                        f"user_{other_id}",
+                        {
+                            "type": "inbox.event",
+                            "event": {
+                                "ntype": "typing",
+                                "thread_id": self.thread_id,
+                                "user_id": user.id,
+                                "name": user.first_name or user.username,
+                                "typing": typing,
+                            },
+                        },
+                    )
+            except Exception:
+                pass
             return
         if payload.get("mark_seen"):
             marked = await self._mark_seen(user.id, self.thread_id)

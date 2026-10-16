@@ -12,6 +12,7 @@ import {
   Linking,
   Switch,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import React, { FC, useEffect, useState, useCallback } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -185,6 +186,8 @@ const Profile: FC = () => {
   const [coverViewer, setCoverViewer] = useState<boolean>(false);
   const [deleteCoverConfirm, setDeleteCoverConfirm] = useState<boolean>(false);
   const [uploadingCover, setUploadingCover] = useState<boolean>(false);
+  const [logoutConfirm, setLogoutConfirm] = useState<boolean>(false);
+  const [loggingOut, setLoggingOut] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -285,7 +288,13 @@ const Profile: FC = () => {
   };
 
   const handleLogOut = async () => {
-    await logout();
+    setLogoutConfirm(false);
+    setLoggingOut(true);
+    try {
+      await logout();
+    } finally {
+      setLoggingOut(false);
+    }
   };
 
 useEffect(() => {
@@ -583,9 +592,7 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
               </TouchableOpacity>
             ))}
             <TouchableOpacity
-              onPress={async () => {
-                await logout();
-              }}
+              onPress={() => setLogoutConfirm(true)}
               className="flex flex-row w-full gap-mid"
             >
               <View className="flex flex-row gap-mid">
@@ -796,6 +803,39 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
           </View>
         </View>
       </Modal>
+      <Modal
+        isVisible={logoutConfirm}
+        onBackdropPress={() => setLogoutConfirm(false)}
+        onBackButtonPress={() => setLogoutConfirm(false)}
+        style={{ justifyContent: "flex-end", margin: 0 }}
+      >
+        <View className="bg-background rounded-t-3xl p-screen items-center gap-large">
+          <SubTitle text="Are you sure you want to logout?" />
+          <View className="flex-row w-full gap-mid">
+            <View className="flex-1">
+              <TouchableOpacity
+                onPress={handleLogOut}
+                className="bg-primaryred rounded-2xl py-3 items-center"
+              >
+                <Text className="font-Poppinsmedium text-background">Yes</Text>
+              </TouchableOpacity>
+            </View>
+            <View className="flex-1">
+              <TouchableOpacity
+                onPress={() => setLogoutConfirm(false)}
+                className="border border-darkvariant/40 rounded-2xl py-3 items-center"
+              >
+                <Text className="font-Poppinsmedium text-dark">No</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      {(uploadingAvatar || uploadingCover || loggingOut) && (
+        <View className="absolute inset-0 items-center justify-center bg-black/40">
+          <ActivityIndicator size="large" color="#FFFFFF" />
+        </View>
+      )}
       <Modal
         isVisible={packageVisible}
         onBackdropPress={() => setPackageVisible(false)}

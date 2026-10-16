@@ -51,6 +51,8 @@ const Chats: FC = () => {
   const [uploadingStory, setUploadingStory] = useState(false);
   const [tab, setTab] = useState<"general" | "requests">("general");
   const [loading, setLoading] = useState(true);
+  const [typingThreads, setTypingThreads] = useState<Record<number, string>>({});
+  const typingTimers = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
   const { event } = useInbox();
 
   const load = useCallback(async () => {
@@ -120,6 +122,30 @@ const Chats: FC = () => {
       ];
     });
   }, [event]);
+
+  useEffect(() => {
+    if (!event || (event as any).ntype !== "typing" || !event.thread_id) return;
+    const tid = event.thread_id;
+    if (event.typing) {
+      setTypingThreads((p) => ({ ...p, [tid]: event.name || event.title }));
+      if (typingTimers.current[tid]) clearTimeout(typingTimers.current[tid]);
+      typingTimers.current[tid] = setTimeout(() => {
+        setTypingThreads((p) => {
+          const next = { ...p };
+          delete next[tid];
+          return next;
+        });
+      }, 4000);
+    } else {
+      if (typingTimers.current[tid]) clearTimeout(typingTimers.current[tid]);
+      setTypingThreads((p) => {
+        const next = { ...p };
+        delete next[tid];
+        return next;
+      });
+    }
+  }, [event]);
+
   const { data: profileData } = useProfile();
   const myPic = (profileData as any)?.basic_info?.profile_picture ?? "";
   const myProfileId = (profileData as any)?.profile?.profileid ?? "";
@@ -296,7 +322,13 @@ const Chats: FC = () => {
                 />
                 <View className="flex-1">
                   <Text className="font-Poppinsmedium text-dark">{t.other_name}</Text>
-                  {t.unread > 0 ? (
+                  {typingThreads[t.id] ? (
+                    <Text className="font-Poppinsregular text-primaryblue text-description" numberOfLines={1}>
+                      typing...
+                    </Text>
+                  ) : t.last_by_me ? (
+                    <Description text={`You: ${t.last_text || ""}`} />
+                  ) : t.unread > 0 ? (
                     <Text className="font-Poppinsmedium text-primaryred text-description" numberOfLines={1}>
                       {t.last_text || "New message"}
                     </Text>

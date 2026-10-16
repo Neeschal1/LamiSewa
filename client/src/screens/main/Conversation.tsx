@@ -132,7 +132,7 @@ const Conversation: FC = () => {
           try {
             const data = JSON.parse(e.data);
             if (data?.kind === "typing") {
-              if (Number(data.user_id) !== myId) {
+              if (myId !== null && Number(data.user_id) !== myId) {
                 setTypingName(data.typing ? data.name || "User" : "");
                 if (typingTimer.current) clearTimeout(typingTimer.current);
                 if (data.typing) {
@@ -142,14 +142,14 @@ const Conversation: FC = () => {
               return;
             }
             if (data?.kind === "seen") {
-              if (Number(data.user_id) !== myId) {
+              if (myId !== null && Number(data.user_id) !== myId) {
                 setMessages((m) => m.map((x: any) => (Number(x.message_user) === myId ? { ...x, seen: true } : x)));
               }
               return;
             }
             if (data?.id) {
               setMessages((m) => (m.some((x: any) => x.id === data.id) ? m : [...m, data]));
-              if (Number(data.message_user) !== myId) {
+              if (myId !== null && Number(data.message_user) !== myId) {
                 try {
                   ws.current?.send(JSON.stringify({ mark_seen: true }));
                 } catch {}

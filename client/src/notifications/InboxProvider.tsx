@@ -8,6 +8,9 @@ export type InboxEvent = {
   title: string;
   body: string;
   thread_id?: number;
+  user_id?: number;
+  name?: string;
+  typing?: boolean;
   actor_profileid?: string;
   other_profileid?: string;
   other_name?: string;

@@ -14,6 +14,7 @@ const InboxSlider: FC = () => {
 
   useEffect(() => {
     if (!event) return;
+    if (!["message", "follow", "announcement"].includes(event.ntype)) return;
     setVisible(true);
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => setVisible(false), 4500);
