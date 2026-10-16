@@ -13,6 +13,7 @@ router.register('account-forgot-password-find-account', FindAccountSerializerVie
 router.register('account-forgot-password-verify-account', CodeVerificationForForgotPasswordSerializersView, basename="verifyaccount")
 router.register('account-reset-account-password', ResetPasswordSerializersView, basename="reset-password")
 router.register('account-fingerprint-login', EmailFingerprintVerificationSerializersView, basename="fingerprint-verification")
+router.register('account-change-password', AccountChangePasswordView, basename="change-password")
 
 urlpatterns = [
     path('', include(router.urls))

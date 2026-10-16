@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -18,6 +18,7 @@ import UploadImages from "@/src/utils/uploadImages";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import CreateUsersFeaturedPhoto from "@/src/services/settings/saveFeaturedPhotoes";
+import { useProfile } from "@/src/profile/ProfileProvider";
 import axios from "axios";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
@@ -39,6 +40,16 @@ const FeaturedPhoto = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
+  const { data: profileData, refreshProfile } = useProfile();
+
+  useEffect(() => {
+    const existing: string[] = Array.isArray((profileData as any)?.featured_urls)
+      ? (profileData as any).featured_urls
+      : [];
+    if (existing.length > 0) {
+      setImages((prev) => prev.map((_, i) => existing[i] ?? null));
+    }
+  }, [profileData]);
 
   const pickAndUpload = async (index: number) => {
     setError(null);
@@ -90,6 +101,7 @@ const FeaturedPhoto = () => {
       console.log("Images to send to server: ", images);
       const imgdetail = await CreateUsersFeaturedPhoto(imageObject);
       if(imgdetail.status === 201){
+        await refreshProfile();
         navigation.goBack()
       }
       setLoading(false)

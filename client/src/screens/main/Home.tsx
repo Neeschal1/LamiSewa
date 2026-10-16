@@ -28,6 +28,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import { fetchSemanticMatches } from "@/src/services/payments/subscription";
+import { searchProfiles } from "@/src/services/profile/search";
 import { followUser } from "@/src/services/privacy/follow";
 
 const star = require("@/src/assets/icons/star.png");
@@ -79,11 +80,18 @@ const Home: FC = () => {
         setCards(filtered.map(toCardFromMatch));
         setSemanticMode(true);
         setIndex(0);
-      } else {
-        setCards([]);
-        setSemanticMode(true);
-        setNotice("No close matches yet. Complete your profile fully to improve matching.");
+        return;
       }
+      const others = await searchProfiles({});
+      if (others.length > 0) {
+        setCards(others.map(toCardFromMatch));
+        setSemanticMode(false);
+        setIndex(0);
+        return;
+      }
+      setCards([]);
+      setSemanticMode(true);
+      setNotice("No close matches yet. Complete your profile fully to improve matching.");
     } catch (e: any) {
       const status = e?.response?.status;
       if (status === 402) {

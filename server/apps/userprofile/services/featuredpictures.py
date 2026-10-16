@@ -9,14 +9,20 @@ class FeaturedPictures:
         user = UsersFeaturedImagesSerializer(data=request.data)
 
         if user.is_valid(raise_exception=True):
-            userinfo = user.save()
+            try:
+                owner = request.user.profile
+            except Exception:
+                return Response({"Message": "Complete your profile first."}, status=status.HTTP_404_NOT_FOUND)
+            userinfo, _ = UsersFeaturedImages.objects.update_or_create(
+                userprofileid=owner, defaults={**user.validated_data}
+            )
             return Response(
                 {
                     "message": f"Successfully set up user's featured images.",
                     "Profile Info": {
                         "Name": userinfo.userprofileid.userid.first_name,
                         "ProfileID": userinfo.userprofileid.profileid,
-                        "PhoneNumber": userinfo.userprofileid.phonenumber,
+                        "UsersEmail": userinfo.userprofileid.useremail,
                     },
                     "data": UsersFeaturedImagesSerializer(userinfo).data,
                 },

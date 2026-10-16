@@ -248,3 +248,21 @@ class UserAuth:
                 {"Message": "Something went wrong!", "Exception": str(e)},
                 status=status.HTTP_417_EXPECTATION_FAILED,
             )
+
+    def _changepassword(self, user, current_password: str, new_password: str) -> Response:
+        try:
+            if not check_password(current_password, user.password):
+                return Response({"Message": "Current password is incorrect."}, status=status.HTTP_400_BAD_REQUEST)
+            if check_password(new_password, user.password):
+                return Response({"Message": "New password must differ from the current one."}, status=status.HTTP_400_BAD_REQUEST)
+            from django.contrib.auth.password_validation import validate_password
+            from django.core.exceptions import ValidationError
+            try:
+                validate_password(new_password, user)
+            except ValidationError as ve:
+                return Response({"Message": "; ".join(ve.messages)}, status=status.HTTP_400_BAD_REQUEST)
+            user.set_password(new_password)
+            user.save()
+            return Response({"Message": "Password updated successfully :)"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)

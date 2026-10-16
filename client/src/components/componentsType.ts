@@ -32,7 +32,7 @@ export type RootStackParamList = {
   
   // Payment
   PaymentSuccess: undefined,
-  SubscriptionDetails: undefined,
+  SubscriptionDetails: { from?: string } | undefined,
   
   // Mains
   MyTabs: undefined;

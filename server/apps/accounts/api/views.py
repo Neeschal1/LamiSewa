@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from .serializers import *
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 from ..services.auth import UserAuth
 from drf_yasg.utils import swagger_auto_schema
 
@@ -102,4 +104,15 @@ class EmailFingerprintVerificationSerializersView(viewsets.ViewSet):
         if serializers.is_valid(raise_exception=True):
             usermail = serializers.validated_data["email"]
             return UserAuth()._validatefingerprint(usermail)
+
+
+class AccountChangePasswordView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request):
+        current = (request.data.get("current_password") or "")
+        new = (request.data.get("new_password") or "")
+        if not current or not new:
+            return Response({"Message": "Current and new passwords are required."}, status=status.HTTP_400_BAD_REQUEST)
+        return UserAuth()._changepassword(request.user, current, new)
     

@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   Description,
   MainScreenName,
@@ -25,7 +26,9 @@ const Notification: FC = () => {
 
   const load = useCallback(async () => {
     try {
-      setItems(await fetchNotifications());
+      const items = await fetchNotifications();
+      items.sort((a: any, b: any) => Number(a.is_read) - Number(b.is_read));
+      setItems(items);
     } catch {
     } finally {
       setLoading(false);
@@ -33,9 +36,11 @@ const Notification: FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  useFocusEffect(
+    useCallback(() => {
+      load();
+    }, [load])
+  );
 
   const openItem = async (id: number) => {
     try {

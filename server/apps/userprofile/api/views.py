@@ -440,6 +440,7 @@ class MemberDetailAPIView(APIView):
                     "career_info": career,
                     "hobbies": hobbies,
                     "featured_images": featured,
+                    "featured_urls": featured,
                 },
             },
             status=status.HTTP_200_OK,

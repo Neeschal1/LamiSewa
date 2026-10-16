@@ -82,7 +82,8 @@ class SemanticMatcher:
             featured_data = [u for u in featured_data if u]
         except Exception:
             featured_data = []
-        return basic_data, personal_data, additional_data, career_data, hobby_data, featured_data
+        from apps.userprofile.services.media import featured_urls
+        return basic_data, personal_data, additional_data, career_data, hobby_data, featured_urls(profile)
 
     def ranked_matches(self, request, top_k: int = 20):
         try:

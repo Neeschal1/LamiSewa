@@ -40,6 +40,12 @@
           "faceIDPermission": "Allow LamiSewa to use Face ID."
         }
       ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow LamiSewa to scan profile QR codes."
+        }
+      ],
       "expo-router",
       [
         "expo-document-picker",

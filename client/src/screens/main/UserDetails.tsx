@@ -32,6 +32,11 @@ const UserDetails = () => {
       ? p.hobbies
       : p.hobbies.map((h: any) => h?.hobby ?? String(h))
     : [];
+  const featured: string[] = Array.isArray((p as any)?.featured_urls)
+    ? (p as any).featured_urls
+    : Array.isArray(p?.featured_images)
+      ? p.featured_images
+      : [];
 
   const pic = basic?.profile_picture || basic?.profilepic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg";
   const cover = basic?.cover_picture || pic;
@@ -100,6 +105,22 @@ const UserDetails = () => {
                   <View key={h} className="bg-black px-4 py-2 rounded-2xl">
                     <Describe text={h} />
                   </View>
+                ))}
+              </View>
+            </View>
+          ) : null}
+
+          {featured.length > 0 ? (
+            <View className="mt-4">
+              <Title text="Photos" />
+              <View className="flex-row flex-wrap justify-between mt-2">
+                {featured.slice(0, 6).map((uri) => (
+                  <Image
+                    key={uri}
+                    source={{ uri }}
+                    style={{ width: "31%", aspectRatio: 3 / 4, borderRadius: 12, marginBottom: 8 }}
+                    resizeMode="cover"
+                  />
                 ))}
               </View>
             </View>

@@ -34,6 +34,8 @@ import { useAuth } from "@/src/auth/AuthContext";
 import { useProfile } from "@/src/profile/ProfileProvider";
 import { fetchFollowers, fetchFollowing } from "@/src/services/privacy/follow";
 import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
+import { fetchSubscriptionStatus } from "@/src/services/payments/subscription";
+import QRCode from "react-native-qrcode-svg";
 
 const FollowRow = ({
   title,
@@ -139,7 +141,7 @@ const Accounts: AccountType[] = [
     item: 1,
     icon: "person",
     btnname: "Edit Profile",
-    headto: "AccountPassword",
+    headto: "EditProfile",
   },
   {
     item: 2,
@@ -151,9 +153,9 @@ const Accounts: AccountType[] = [
     item: 3,
     icon: "lock-closed",
     btnname: "Change Password",
-    headto: "AccountPassword",
+    headto: "ChangePassword",
   },
-  { item: 4, icon: "earth", btnname: "Language", headto: "AccountPassword" },
+  { item: 4, icon: "earth", btnname: "Language", headto: "Language" },
 ];
 
 const Others: OthersType[] = [
@@ -198,6 +200,8 @@ const Profile: FC = () => {
   const [userData, setUserData] = useState<UserData | null>(cached);
   const [followers, setFollowers] = useState<any[]>([]);
   const [following, setFollowing] = useState<any[]>([]);
+  const [showList, setShowList] = useState<"followers" | "following" | null>(null);
+  const [subscribed, setSubscribed] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -224,6 +228,10 @@ useEffect(() => {
       try {
         setFollowing(await fetchFollowing());
       } catch {}
+      try {
+        const sub = await fetchSubscriptionStatus();
+        setSubscribed(!!sub?.is_subscribed);
+      } catch {}
     } catch (error: any) {
       console.log("FETCH USER ERROR:", error);
     }
@@ -231,6 +239,17 @@ useEffect(() => {
 
   fetchUserBasicInfo();
 }, [fetchProfile]);
+
+useEffect(() => {
+  if (cached) setUserData(cached);
+}, [cached]);
+
+const profileLink = userData?.profile?.profileid
+  ? `lamisewa://profile/${userData.profile.profileid}`
+  : "";
+const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
+  ? (userData as any).featured_urls
+  : [];
 
   return (
     <View className="flex-1 items-center justify-start bg-background">
@@ -252,7 +271,10 @@ useEffect(() => {
           resizeMode="cover"
         >
           <View className="flex w-full justify-end pt-4 items-end flex-row gap-small">
-            <TouchableOpacity className="w-12 h-12 rounded-full bg-[#2277F7] items-center justify-center">
+            <TouchableOpacity
+              onPress={() => navigation.navigate("SubscriptionDetails", { from: "Profile" })}
+              className="w-12 h-12 rounded-full bg-[#2277F7] items-center justify-center"
+            >
               <Ionicons name="diamond" size={24} color="#F2F1FF" />
             </TouchableOpacity>
             <TouchableOpacity className="flex items-center justify-center bg-background w-12 h-12 rounded-full">
@@ -300,18 +322,30 @@ useEffect(() => {
                   <Text className="font-Poppinssemibold text-dark text-[24px]">
                     {userData?.basic_info.fullname}
                   </Text>
-                  <Image source={Verification} />
+                  {subscribed ? <Image source={Verification} /> : null}
                 </View>
                 <View className="flex mt-[-10px]">
                   {/* <Description text={`${userData?.career_info.occupation}`}/> */}
                 </View>
               </View>
               <SubTitle text={`${userData?.basic_info.bio}`} />
+              {profileLink ? (
+                <View className="items-center gap-small mt-2">
+                  <QRCode value={profileLink} size={140} />
+                  <Description text={profileLink} />
+                </View>
+              ) : null}
               <View className="flex flex-row gap-mid">
-                <TouchableOpacity className="flex bg-[#FFFFFF] px-4 py-2 rounded-2xl">
+                <TouchableOpacity
+                  onPress={() => setShowList(showList === "followers" ? null : "followers")}
+                  className="flex bg-[#FFFFFF] px-4 py-2 rounded-2xl"
+                >
                   <SubTitle text={`Followers: ${followers.length}`} />
                 </TouchableOpacity>
-                <TouchableOpacity className="flex bg-primaryred px-4 py-2 rounded-2xl">
+                <TouchableOpacity
+                  onPress={() => setShowList(showList === "following" ? null : "following")}
+                  className="flex bg-primaryred px-4 py-2 rounded-2xl"
+                >
                   <Text className="font-Poppinsregular text-background text-subheading">
                     {`Following: ${following.length}`}
                   </Text>
@@ -322,7 +356,10 @@ useEffect(() => {
         </View>
 
         <View className="flex py-4">
-          <TouchableOpacity className="flex flex-row bg-[#9621C5] items-center gap-mid w-full px-20 rounded-xl py-4">
+          <TouchableOpacity
+            onPress={() => navigation.navigate("SubscriptionDetails", { from: "Profile" })}
+            className="flex flex-row bg-[#9621C5] items-center gap-mid w-full px-20 rounded-xl py-4"
+          >
             <Ionicons name="diamond" color="white" size={24} />
             <Text className="font-Poppinsmedium text-background text-subheading">
               Purchase Membership
@@ -333,32 +370,36 @@ useEffect(() => {
         <View className="flex items-start w-full p-screen">
           <View className="flex justify-between flex-row w-full">
             <Description text="Your Pictures" />
-            <TouchableOpacity className="mr-2">
+            <TouchableOpacity className="mr-2" onPress={() => navigation.navigate("FeaturedPhoto")}>
               <SubText text="Tap to Edit" />
             </TouchableOpacity>
           </View>
-          <Pressable
-            onPress={() => navigation.navigate("FeaturedPhoto")}
-            className="flex items-center justify-center w-full bg-[#ecebff] rounded-2xl border-[#FFFFFF]"
-          >
-            <View className="flex items-center justify-center py-14">
-              <Ionicons name="camera" size={30} />
-              <SubTitle text="Choose from Gallery" />
-            </View>
-          </Pressable>
-          {/* <View className="flex flex-row flex-wrap w-full">
-            {FeaturePhotoes.map((index) => (
-              <TouchableOpacity
-                className="flex flex-row w-[33%] py-extrasmall"
-                key={index.item}
-              >
+          {featuredUrls.length === 0 ? (
+            <Pressable
+              onPress={() => navigation.navigate("FeaturedPhoto")}
+              className="flex items-center justify-center w-full bg-[#ecebff] rounded-2xl border-[#FFFFFF]"
+            >
+              <View className="flex items-center justify-center py-14">
+                <Ionicons name="camera" size={30} />
+                <SubTitle text="Choose from Gallery" />
+              </View>
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => navigation.navigate("FeaturedPhoto")}
+              className="flex w-full flex-row flex-wrap justify-between bg-[#ecebff] rounded-2xl border-[#FFFFFF] p-2"
+            >
+              {featuredUrls.slice(0, 6).map((uri) => (
                 <Image
-                  className="h-[118px] w-[113px] rounded-2xl pr-extrasmall"
-                  source={index.image}
+                  key={uri}
+                  source={{ uri }}
+                  className="rounded-2xl mb-2"
+                  style={{ width: "31%", aspectRatio: 3 / 4 }}
+                  resizeMode="cover"
                 />
-              </TouchableOpacity>
-            ))}
-          </View> */}
+              ))}
+            </Pressable>
+          )}
         </View>
 
         <View className="flex w-full items-start p-screen">
@@ -412,8 +453,12 @@ useEffect(() => {
           ) : null}
         </View>
 
-        <FollowRow title="Followers" emptyText="No followers" users={followers} onOpen={openMember} />
-        <FollowRow title="Following" emptyText="No following" users={following} onOpen={openMember} />
+        {showList === "followers" ? (
+          <FollowRow title="Followers" emptyText="No followers" users={followers} onOpen={openMember} />
+        ) : null}
+        {showList === "following" ? (
+          <FollowRow title="Following" emptyText="No following" users={following} onOpen={openMember} />
+        ) : null}
 
         <View className="flex w-full items-start p-screen">
           <Description text="Account" />
@@ -422,7 +467,7 @@ useEffect(() => {
               <TouchableOpacity
                 key={index.item}
                 className="flex flex-row justify-between w-full"
-                // onPress={()=>{navigation.navigate(index.headto)}}
+                onPress={()=>{navigation.navigate(index.headto as never)}}
               >
                 <View className="flex flex-row gap-mid">
                   <Ionicons name={index.icon} size={24} />

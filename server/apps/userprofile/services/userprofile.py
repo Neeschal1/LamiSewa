@@ -107,6 +107,8 @@ class UserProfileService:
             except Exception:
                 embedding_data = None
 
+            from apps.userprofile.services.media import featured_urls
+
             return Response(
                 {
                     "profile": UserProfileSerializer(profile).data,
@@ -116,6 +118,7 @@ class UserProfileService:
                     "career_info": safe(UsersCareerSerializer, getattr(profile, "career", None)),
                     "hobbies": safe(UsersHobbiesSerializer, getattr(profile, "hobbies", None)),
                     "featured_images": safe(UsersFeaturedImagesSerializer, getattr(profile, "featured_image", None)),
+                    "featured_urls": featured_urls(profile),
                     "embedding": embedding_data,
                 }
             )

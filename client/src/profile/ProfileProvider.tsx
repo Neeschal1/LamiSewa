@@ -5,6 +5,7 @@ type ProfileContextType = {
   data: any | null;
   loading: boolean;
   fetchProfile: (force?: boolean) => Promise<any | null>;
+  refreshProfile: () => Promise<any | null>;
 };
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -40,7 +41,7 @@ export const ProfileProvider = ({ children }: { children: React.ReactNode }) => 
   }, []);
 
   return (
-    <ProfileContext.Provider value={{ data, loading, fetchProfile }}>
+    <ProfileContext.Provider value={{ data, loading, fetchProfile, refreshProfile: () => fetchProfile(true) }}>
       {children}
     </ProfileContext.Provider>
   );

@@ -56,22 +56,24 @@ const AuthenticatedNavigation = () => {
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="NearYou" component={NearYou} />
       <Stack.Screen name="SubscriptionDetails" component={SubscriptionDetails}
-      options={({ navigation }) => ({
+      options={({ navigation, route }) => ({
         headerShown: true,
         headerTransparent: true,
         headerTitle: " ",
         headerTintColor: "#F2F1FF",
         headerRight: () => (
-          <TouchableOpacity onPress={async () => {
-            await StoreStringDataAsync("PaymentShown", "true");
-            navigation.navigate("MyTabs");
-          }}>
-            <Text style={{
-              color: "#F2F1FF",
-              fontSize: 16,
-              fontWeight: "400",
-            }}>Skip</Text>
-          </TouchableOpacity>
+          (route.params as { from?: string } | undefined)?.from === "Profile" ? null : (
+            <TouchableOpacity onPress={async () => {
+              await StoreStringDataAsync("PaymentShown", "true");
+              navigation.navigate("MyTabs");
+            }}>
+              <Text style={{
+                color: "#F2F1FF",
+                fontSize: 16,
+                fontWeight: "400",
+              }}>Skip</Text>
+            </TouchableOpacity>
+          )
         ),})}/>
       <Stack.Screen name="PaymentSuccess" component={PaymentSuccess} options={{headerShown: false}} />
       <Stack.Screen name="MyTabs" component={MyTabs} />
