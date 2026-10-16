@@ -308,7 +308,9 @@ const Search: FC = () => {
     <SafeAreaView className="flex flex-1 bg-background" edges={["bottom", "left", "right"]}>
       <View className="flex-1 bg-background p-screen pt-12 gap-mid">
         <StatusBar hidden={false} translucent />
-        <Text className="font-Poppinssemibold text-dark text-screenname">Search</Text>
+        <View className="w-full items-center" style={{ paddingTop: 10 }}>
+          <Text className="font-Poppinssemibold text-dark text-screenname">Search</Text>
+        </View>
         {scanError ? <Describe text={scanError} /> : null}
         <View className="flex-row gap-small">
           {MODES.map((m) => (

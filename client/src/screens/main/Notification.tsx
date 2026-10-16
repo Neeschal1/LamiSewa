@@ -60,7 +60,9 @@ const Notification: FC = () => {
     <SafeAreaView className="flex flex-1 bg-background" edges={["bottom", "left", "right"]}>
       <View className="flex-1 items-center w-full justify-start bg-background p-screen">
         <StatusBar hidden={false} translucent />
-        <MainScreenName text="Notifications" />
+        <View className="w-full items-center" style={{ paddingTop: 10 }}>
+          <MainScreenName text="Notifications" />
+        </View>
         <View className="gap-mid w-full flex-row items-center justify-between">
           <View className="flex flex-row gap-mid">
             <Ionicons name="notifications" size={24} color="black" />

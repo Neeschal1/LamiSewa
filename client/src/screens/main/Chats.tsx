@@ -214,7 +214,9 @@ const Chats: FC = () => {
       <StatusBar hidden={false} translucent />
       {uploadingStory ? <LottieLoadingAnimation /> : null}
       <View className="flex-1 w-full bg-background p-screen">
-        <MainScreenName text="Messages" />
+        <View className="w-full items-center" style={{ paddingTop: 10 }}>
+          <MainScreenName text="Messages" />
+        </View>
         <View className="mt-large gap-mid">
           <Title text="People you've followed" />
           <ScrollView horizontal showsHorizontalScrollIndicator={true} contentContainerStyle={{ paddingHorizontal: 4, gap: 12 }}>
