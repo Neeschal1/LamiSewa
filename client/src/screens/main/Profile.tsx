@@ -163,9 +163,9 @@ const { width, height } = Dimensions.get("window");
 const Profile: FC = () => {
   const { logout } = useAuth();
   const { data: cached, fetchProfile, refreshProfile } = useProfile();
+  const userData: UserData | null = cached;
   const [enabled, setEnabled] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [userData, setUserData] = useState<UserData | null>(cached);
   const [followers, setFollowers] = useState<any[]>([]);
   const [following, setFollowing] = useState<any[]>([]);
   const [subscribed, setSubscribed] = useState<boolean>(false);
@@ -199,16 +199,7 @@ const Profile: FC = () => {
   };
 
 useEffect(() => {
-  const fetchUserBasicInfo = async () => {
-    try {
-      const data = await fetchProfile();
-      setUserData(data);
-    } catch (error: any) {
-      console.log("FETCH USER ERROR:", error);
-    }
-  };
-
-  fetchUserBasicInfo();
+  fetchProfile();
 }, [fetchProfile]);
 
 useFocusEffect(
@@ -229,10 +220,6 @@ useFocusEffect(
     refreshLists();
   }, [])
 );
-
-useEffect(() => {
-  if (cached) setUserData(cached);
-}, [cached]);
 
 const profileLink = userData?.profile?.profileid
   ? `lamisewa://profile/${userData.profile.profileid}`
