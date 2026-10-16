@@ -1,5 +1,4 @@
 import { View, Text, StatusBar, TextInput, TouchableOpacity, FlatList, Image, Modal, ScrollView } from "react-native";
-import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "expo-router";
@@ -10,7 +9,8 @@ import { NavigationProps } from "@/src/components/componentsType";
 import { fetchRandomMember, searchProfiles } from "@/src/services/profile/search";
 import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
 import { fetchFollowing, followUser, unfollowUser } from "@/src/services/privacy/follow";
-import { Describe, Title } from "@/src/components/systemComponentsLayout";
+import { Describe, PrimaryButton, SecondaryButton, Title } from "@/src/components/systemComponentsLayout";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import { CustomDropdown } from "@/src/components/InputFields";
 import { DropdownItem } from "@/src/components/componentsType";
 import {
@@ -51,29 +51,30 @@ const AgeRange = ({
     <Text className="font-Poppinsregular text-dark text-description">
       from {min} to {max}
     </Text>
-    <View>
-      <Text className="font-Poppinsregular text-darkvariant text-description">From</Text>
-      <Slider
-        minimumValue={18}
-        maximumValue={70}
-        step={1}
-        value={min}
-        onValueChange={(v) => setMin(Math.min(Math.round(v), max))}
-        minimumTrackTintColor="#FC404E"
-        maximumTrackTintColor="#CBCBCB"
-      />
-    </View>
-    <View>
-      <Text className="font-Poppinsregular text-darkvariant text-description">To</Text>
-      <Slider
-        minimumValue={18}
-        maximumValue={70}
-        step={1}
-        value={max}
-        onValueChange={(v) => setMax(Math.max(Math.round(v), min))}
-        minimumTrackTintColor="#4987F6"
-        maximumTrackTintColor="#CBCBCB"
-      />
+    <View className="flex-row items-center gap-mid">
+      <View className="flex-1">
+        <Slider
+          minimumValue={18}
+          maximumValue={70}
+          step={1}
+          value={min}
+          onValueChange={(v) => setMin(Math.min(Math.round(v), max))}
+          minimumTrackTintColor="#FC404E"
+          maximumTrackTintColor="#CBCBCB"
+        />
+      </View>
+      <View className="flex-1">
+        <Slider
+          minimumValue={18}
+          maximumValue={70}
+          step={1}
+          value={max}
+          inverted
+          onValueChange={(v) => setMax(Math.max(Math.round(v), min))}
+          minimumTrackTintColor="#4987F6"
+          maximumTrackTintColor="#CBCBCB"
+        />
+      </View>
     </View>
   </View>
 );
@@ -111,6 +112,24 @@ const GENDERS = [
   { label: "Female", value: "FEMALE" },
   { label: "Others", value: "OTHERS" },
 ];
+
+const ModeButton = ({
+  active,
+  label,
+  onPress,
+}: {
+  active: boolean;
+  label: string;
+  onPress: () => void;
+}) => (
+  <View className="flex-1">
+    {active ? (
+      <PrimaryButton text={label} action={onPress} />
+    ) : (
+      <SecondaryButton text={label} action={onPress} />
+    )}
+  </View>
+);
 
 const Search: FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -212,6 +231,7 @@ const Search: FC = () => {
   };
 
   const openProfile = async (item: any) => {
+    if (!item?.profileid) return;
     try {
       const full = item?.basic_info && item?.personal_info
         ? item
@@ -265,45 +285,54 @@ const Search: FC = () => {
     }
   };
 
-  const ResultRow = ({ item }: { item: any }) => (
-    <TouchableOpacity
-      onPress={() => openProfile(item)}
-      className="flex-row items-center gap-mid py-2 border-b border-darkvariant/10"
-    >
-      <Image
-        source={{ uri: item?.basic_info?.profile_picture ?? FALLBACK_PIC }}
-        style={{ width: 52, height: 52, borderRadius: 26 }}
-      />
-      <View className="flex-1">
-        <Text className="font-Poppinsmedium text-dark">{item?.basic_info?.fullname ?? item?.username}</Text>
-        <Describe text={item?.city ?? ""} />
-      </View>
-    </TouchableOpacity>
-  );
+  const MemberCard = ({ item }: { item: any }) => {
+    const isFollowing = followingIds.includes(item.profileid);
+    return (
+      <TouchableOpacity
+        onPress={() => openProfile(item)}
+        className="flex-row items-center gap-mid bg-[#ECEBFF] rounded-2xl px-4 py-3"
+      >
+        <Image
+          source={{ uri: item?.basic_info?.profile_picture ?? FALLBACK_PIC }}
+          style={{ width: 56, height: 56, borderRadius: 28 }}
+        />
+        <View className="flex-1">
+          <Text className="font-Poppinsmedium text-dark text-subheading">
+            {item?.basic_info?.fullname ?? item?.username}
+          </Text>
+          <Text className="font-Poppinsregular text-darkvariant text-description">
+            {item?.basic_info?.nickname ?? `@${item?.username}`}
+          </Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => toggleFollow(item)}
+          className={`px-5 py-2 rounded-full ${isFollowing ? "border border-primaryblue" : "bg-primaryred"}`}
+        >
+          <Text className={`font-Poppinsmedium ${isFollowing ? "text-primaryblue" : "text-background"}`}>
+            {isFollowing ? "Following" : "Follow"}
+          </Text>
+        </TouchableOpacity>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView className="flex flex-1 bg-background" edges={["bottom", "left", "right"]}>
       <View className="flex-1 bg-background p-screen pt-12 gap-mid">
         <StatusBar hidden={false} translucent />
-        <View className="flex-row items-center justify-between">
-          <Text className="font-Poppinssemibold text-dark text-screenname">Search</Text>
-          <TouchableOpacity onPress={openScanner} className="w-11 h-11 rounded-full bg-primaryblue items-center justify-center">
-            <Ionicons name="qr-code-outline" size={22} color="white" />
-          </TouchableOpacity>
-        </View>
+        <Text className="font-Poppinssemibold text-dark text-screenname">Search</Text>
         {scanError ? <Describe text={scanError} /> : null}
         <View className="flex-row gap-mid">
-          {(["quick", "advanced", "idname"] as const).map((m) => (
-            <TouchableOpacity
-              key={m}
-              onPress={() => setMode(m)}
-              className={`px-5 py-2 rounded-full ${mode === m ? "bg-primaryred" : "bg-[#ECEBFF]"}`}
-            >
-              <Text className={`font-Poppinsmedium ${mode === m ? "text-background" : "text-dark"}`}>
-                {m === "quick" ? "Quick" : m === "advanced" ? "Advanced" : "ID/Name"}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          <ModeButton active={mode === "quick"} label="Quick" onPress={() => setMode("quick")} />
+          <ModeButton active={mode === "advanced"} label="Advanced" onPress={() => setMode("advanced")} />
+        </View>
+        <View className="flex-row gap-mid">
+          <View className="flex-1">
+            <ModeButton active={mode === "idname"} label="ID/Name" onPress={() => setMode("idname")} />
+          </View>
+          <View className="w-28">
+            <PrimaryButton text="QR" action={openScanner} />
+          </View>
         </View>
 
         {mode !== "idname" ? (
@@ -323,9 +352,7 @@ const Search: FC = () => {
                       className="border border-darkvariant/30 rounded-2xl px-4 py-3 font-Poppinsregular"
                     />
                   </View>
-                  <TouchableOpacity onPress={runQuick} className="bg-primaryred rounded-2xl py-3 items-center">
-                    <Text className="font-Poppinsmedium text-background">Search</Text>
-                  </TouchableOpacity>
+                  <PrimaryButton text="Search" action={runQuick} />
                 </>
               ) : (
                 <>
@@ -367,66 +394,31 @@ const Search: FC = () => {
                   </View>
                   <Drop label="Diet" value={diet} onChange={setDiet} choices={DietItems} />
                   <Drop label="Mangalik" value={mangalik} onChange={setMangalik} choices={MangalikItems} />
-                  <TouchableOpacity onPress={runAdvanced} className="bg-primaryred rounded-2xl py-3 items-center">
-                    <Text className="font-Poppinsmedium text-background">Search</Text>
-                  </TouchableOpacity>
+                  <PrimaryButton text="Search" action={runAdvanced} />
                 </>
               )}
               {loading ? <LottieLoadingAnimation /> : null}
-              <FlatList
-                data={results}
-                scrollEnabled={false}
-                keyExtractor={(item, i) => item?.profileid ?? String(i)}
-                renderItem={({ item }) => <ResultRow item={item} />}
-              />
+              {results.map((item: any) => (
+                <MemberCard key={item.profileid} item={item} />
+              ))}
             </View>
           </ScrollView>
         ) : (
           <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
             <View className="gap-mid pb-4">
-              <View className="flex-row gap-mid items-center">
-                <TextInput
-                  value={q}
-                  onChangeText={onIdChange}
-                  placeholder="User ID or Name"
-                  className="flex-1 border border-darkvariant/30 rounded-2xl px-4 py-3 font-Poppinsregular"
-                />
-                <TouchableOpacity onPress={() => runIdSearch(q)} className="w-12 h-12 rounded-full bg-primaryred items-center justify-center">
-                  <Ionicons name="search" size={22} color="white" />
-                </TouchableOpacity>
-              </View>
+              <TextInput
+                value={q}
+                onChangeText={onIdChange}
+                placeholder="User ID or Name"
+                className="border border-darkvariant/30 rounded-2xl px-4 py-3 font-Poppinsregular"
+              />
+              <PrimaryButton text="Search" action={() => runIdSearch(q)} />
               {idLoading ? <LottieLoadingAnimation /> : null}
               {idResults.map((item: any) => (
-                <ResultRow key={item.profileid} item={item} />
+                <MemberCard key={item.profileid} item={item} />
               ))}
               <Text className="font-Poppinsmedium text-dark text-subheading mt-2">Recommended</Text>
-              {recommended ? (
-                <TouchableOpacity
-                  onPress={() => openProfile(recommended)}
-                  className="flex-row items-center gap-mid bg-[#ECEBFF] rounded-2xl px-4 py-3"
-                >
-                  <Image
-                    source={{ uri: recommended?.basic_info?.profile_picture ?? FALLBACK_PIC }}
-                    style={{ width: 56, height: 56, borderRadius: 28 }}
-                  />
-                  <View className="flex-1">
-                    <Text className="font-Poppinsmedium text-dark text-subheading">
-                      {recommended?.basic_info?.fullname ?? recommended?.username}
-                    </Text>
-                    <Text className="font-Poppinsregular text-darkvariant text-description">
-                      {recommended?.basic_info?.nickname ?? `@${recommended?.username}`}
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => toggleFollow(recommended)}
-                    className={`px-5 py-2 rounded-full ${followingIds.includes(recommended.profileid) ? "border border-primaryblue" : "bg-primaryred"}`}
-                  >
-                    <Text className={`font-Poppinsmedium ${followingIds.includes(recommended.profileid) ? "text-primaryblue" : "text-background"}`}>
-                      {followingIds.includes(recommended.profileid) ? "Following" : "Follow"}
-                    </Text>
-                  </TouchableOpacity>
-                </TouchableOpacity>
-              ) : null}
+              {recommended ? <MemberCard item={recommended} /> : null}
             </View>
           </ScrollView>
         )}
