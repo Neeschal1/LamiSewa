@@ -13,13 +13,13 @@ import {
   TextualButton,
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Checkbox from "expo-checkbox";
+import { Checkbox } from "expo-checkbox";
 import CountryPicker, { CountryCode } from "react-native-country-picker-modal";
 import HandleAccountCredentials from "@/src/services/accounts/credentials";
 import { saveData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import axios from "axios";
+import { isAxiosError } from "axios";
 import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 
 const facebookLogo = require("@/src/assets/images/facebook.png");
@@ -43,7 +43,7 @@ const Signup = () => {
 
   useEffect(() => {
     const disableButton = () => {
-      if (email.trim() == "" || name.trim() == "" || phone.trim() == "" || isSelected === false) {
+      if (email.trim() === "" || name.trim() === "" || phone.trim() === "" || isSelected === false) {
         setDisabilityStatus(true);
       } else {
         setDisabilityStatus(false);
@@ -109,7 +109,7 @@ const Signup = () => {
       navigation.navigate("SignupVerification");
       setLoading(false);
     } catch (e) {
-      if (axios.isAxiosError(e)) {
+      if (isAxiosError(e)) {
         const status = e.response?.status;
         const response = e.response?.data;
         console.log("Status: ", status, "\nData: ", response)

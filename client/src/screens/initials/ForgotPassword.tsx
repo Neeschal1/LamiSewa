@@ -6,11 +6,9 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Animated, {
-  FadeInUp,
   FadeInDown,
-  BounceIn,
 } from "react-native-reanimated";
 import {
   Description,
@@ -26,9 +24,10 @@ import CountryPicker, {
 } from "react-native-country-picker-modal";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FindAccountService from "@/src/services/accounts/findaccount";
+import { saveJsonData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import axios from "axios";
+import { isAxiosError } from "axios";
 
 
 const forgotImage = require("@/src/assets/images/confused.png");
@@ -53,10 +52,11 @@ const ForgotPassword = () => {
       setLoading(true);
       const res = await FindAccountService(contact);
       if (res.status === 200) {
+        await saveJsonData("resetContact", contact);
         navigation.navigate("OtpVerification");
       }
     } catch (e) {
-      if (axios.isAxiosError(e)) {
+      if (isAxiosError(e)) {
         const status = e.response?.status;
         const response = e.response?.data;
         if (status === 400) {

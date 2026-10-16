@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StatusBar,
   Modal,
   Image,
@@ -8,28 +7,22 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Animated, {
-  FadeInUp,
   FadeInDown,
-  BounceIn,
 } from "react-native-reanimated";
 import {
   Description,
-  InputFields,
   MainScreenName,
   PrimaryButton,
   Title,
   ErrorText,
-  SocialButton,
-  SubTitle,
-  TextualButton,
   InputPassword,
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HandleResetPasswordService from "@/src/services/accounts/resetpassword";
-import { getDataString } from "@/src/storage/SecureCredentials";
-import axios from "axios";
+import { deleteJsonData, getJsonData } from "@/src/storage/SecureCredentials";
+import { isAxiosError } from "axios";
 
 const logo = require("@/src/assets/images/mainLogo.png");
 
@@ -48,9 +41,6 @@ const SetNewPassword = () => {
     const pass = password.trim();
     const confirmpass = confirmPassword.trim();
 
-    const userid = Number(await getDataString());
-    console.log("Users ID: ", userid);
-
     if (!pass || !confirmpass) {
       setUnMatched(true);
       setShowMessage("Please fill in both password fields.");
@@ -63,7 +53,7 @@ const SetNewPassword = () => {
       return;
     }
 
-    if (pass != confirmpass) {
+    if (pass !== confirmpass) {
       setUnMatched(true);
       setShowMessage(
         "Your password and confirm password doesn't \nmatch. Please check them again and try again!",
@@ -72,15 +62,21 @@ const SetNewPassword = () => {
     }
 
     try {
-      const userid = Number(await getDataString());
-      const reset = await HandleResetPasswordService(userid, password);
+      const contact = await getJsonData("resetContact");
+      if (!contact) {
+        setUnMatched(true);
+        setShowMessage("Session expired. Please restart forgot password flow.");
+        return;
+      }
+      const reset = await HandleResetPasswordService(String(contact), password);
       if (reset.status === 200) {
+        await deleteJsonData("resetContact");
         setUnMatched(false);
         setShowMessage("");
         setShowSuccessModal(true);
       }
     } catch (e) {
-      if (axios.isAxiosError(e)) {
+      if (isAxiosError(e)) {
         const data = e.response?.data;
         const status = e.response?.status;
         console.log("Status from reset password: ", status);

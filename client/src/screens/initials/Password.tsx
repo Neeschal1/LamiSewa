@@ -6,8 +6,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
-  Text,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
@@ -29,7 +27,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import HandleSignupService from "@/src/services/accounts/signup";
 import { getData } from "@/src/storage/SecureCredentials";
-import axios from "axios";
+import { isAxiosError } from "axios";
 import {
   DeleteStringDataAsync,
   StoreStringDataAsync,
@@ -38,7 +36,6 @@ import { useAuth } from "@/src/auth/AuthContext";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import {
-  getAccessTokens,
   saveRefreshTokens,
   saveTokens,
 } from "@/src/storage/SecureTokens";
@@ -108,7 +105,7 @@ const Password = () => {
         setErrormessage("");
       }, 5000);
       return;
-    } else if (pass != confirmpass) {
+    } else if (pass !== confirmpass) {
       setError(true);
       setErrormessage(
         "Your password and confirm password doesn't \nmatch. Please check them again and try again!",
@@ -163,7 +160,7 @@ const Password = () => {
       }
     } catch (e) {
       console.log("Error occured: ", e);
-      if (axios.isAxiosError(e)) {
+      if (isAxiosError(e)) {
         const status = e.response?.status;
         const response = e.response?.data;
         console.log("Error Status: ", status);

@@ -1,9 +1,10 @@
 import { TouchableOpacity, Dimensions, Text, Image, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { act, FC } from "react";
+import { FC } from "react";
 import {
   ButtonProps,
   NavigationProps,
+  RootStackParamList,
   SocialButtonProps,
 } from "./componentsType";
 import { useNavigation } from "@react-navigation/native";
@@ -21,7 +22,7 @@ export const PrimaryButton: FC<ButtonProps> = ({
 
   const handleButtonPress = () => {
     if (screen) {
-      navigation.navigate(screen);
+      (navigation.navigate as (name: keyof RootStackParamList) => void)(screen);
     }
     if (action) {
       action();
@@ -68,7 +69,7 @@ export const SecondaryButton: FC<ButtonProps> = ({
 
   const handleButtonPress = () => {
     if (screen) {
-      navigation.navigate(screen);
+      (navigation.navigate as (name: keyof RootStackParamList) => void)(screen);
     }
     if (action) {
       action();
@@ -116,7 +117,7 @@ export const TextualButton: FC<ButtonProps> = ({ text, action, screen }) => {
       return;
     }
     if (screen) {
-      navigation.navigate(screen);
+      (navigation.navigate as (name: keyof RootStackParamList) => void)(screen);
     }
   };
 

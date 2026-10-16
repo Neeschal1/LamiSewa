@@ -32,7 +32,6 @@ import { searchProfiles } from "@/src/services/profile/search";
 import { followUser } from "@/src/services/privacy/follow";
 import { useProfile } from "@/src/profile/ProfileProvider";
 import {
-  clearCachedMatches,
   getCachedMatches,
   setCachedMatches,
   MatchCard as Card,

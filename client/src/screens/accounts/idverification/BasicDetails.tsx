@@ -1,4 +1,4 @@
-import { View, Text, StatusBar } from "react-native";
+import { View, StatusBar } from "react-native";
 import React, { useState } from "react";
 import Animated, {
   FadeInUp,

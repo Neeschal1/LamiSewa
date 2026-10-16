@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StatusBar,
   ScrollView,
   KeyboardAvoidingView,
@@ -23,10 +22,8 @@ import {
   Title,
 } from "@/src/components/systemComponentsLayout";
 import { DegreeItems, WorkingItems } from "@/src/utils/objects";
-import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import axios from "axios";
 import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
 import { saveDraftSection } from "@/src/storage/profileDraft";
 

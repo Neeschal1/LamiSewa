@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   clearToken,
   getAccessTokens,
@@ -32,16 +32,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [profileCompleted, setProfileCompleted] = useState(false);
 
-  useEffect(() => {
-    loadingTokens();
-  }, []);
-
   const readProfileFlag = async (): Promise<boolean> => {
     const state = await GetStringDataAsync("ProfileScreenStatus");
     return state === "AllCompleted";
   };
 
-  const loadingTokens = async () => {
+  const loadingTokens = useCallback(async () => {
     try {
       let storedToken = await getAccessTokens();
       if (storedToken && isExpired(storedToken)) {
@@ -52,13 +48,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (refresh) storedToken = await rotateToken();
       }
       setToken(storedToken);
-      setProfileCompleted(storedToken ? await readProfileFlag() : false);
+      if (storedToken) {
+        const state = await GetStringDataAsync("ProfileScreenStatus");
+        setProfileCompleted(state === "AllCompleted");
+      } else {
+        setProfileCompleted(false);
+      }
     } catch {
       setToken(null);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadingTokens();
+  }, [loadingTokens]);
 
   const login = async (
     accessToken: string,

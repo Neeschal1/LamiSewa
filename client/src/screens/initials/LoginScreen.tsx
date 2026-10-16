@@ -1,4 +1,4 @@
-import axios from "axios";
+import { isAxiosError } from "axios";
 import {
   View,
   StatusBar,
@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import React, { FC, useEffect, useState } from "react";
 import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
-import * as LocalAuthentication from "expo-local-authentication";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, {
   FadeInUp,
@@ -57,27 +56,9 @@ const Login: FC = () => {
     await FingerPrintLogin(login);
   };
 
-  const checkBiometric = async () => {
-    const compatible = await LocalAuthentication.hasHardwareAsync();
-
-    if (!compatible) {
-      console.log("No biometric hardware");
-      return;
-    }
-
-    const enrolled = await LocalAuthentication.isEnrolledAsync();
-
-    if (!enrolled) {
-      console.log("No fingerprints enrolled");
-      return;
-    }
-
-    console.log("Biometric available");
-  };
-
   useEffect(() => {
     const disableButton = () => {
-      if (email.trim() == "" || password.trim() == "") {
+      if (email.trim() === "" || password.trim() === "") {
         setDisabilityStatus(true);
       } else {
         setDisabilityStatus(false);
@@ -109,7 +90,7 @@ const Login: FC = () => {
         await login(session.accessToken, session.refreshToken, session.hasProfile);
       }
     } catch (e) {
-      if (axios.isAxiosError(e)) {
+      if (isAxiosError(e)) {
         const status = e.response?.status;
         const response = e.response?.data;
 

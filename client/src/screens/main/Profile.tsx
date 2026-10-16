@@ -8,7 +8,6 @@ import {
   Text,
   ScrollView,
   Pressable,
-  Linking,
   Switch,
   RefreshControl,
 } from "react-native";
@@ -16,16 +15,10 @@ import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useEffect, useState, useCallback } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
-  Describe,
   Description,
   ErrorText,
-  Heading,
-  MainScreenName,
-  SecondaryButton,
-  SubHeading,
   SubText,
   SubTitle,
-  Title,
 } from "@/src/components/systemComponentsLayout";
 import {
   NavigationProps,
@@ -68,7 +61,7 @@ type OthersType = {
   redirect: OthersScreen;
 };
 
-interface Profile {
+interface ProfileInfo {
   useremail: string;
   username: string;
   profileid: string;
@@ -87,7 +80,7 @@ interface BasicInfo {
 }
 
 interface UserData {
-  profile: Profile;
+  profile: ProfileInfo;
   basic_info: BasicInfo;
   personal_info?: Record<string, any>;
   additional_info?: Record<string, any>;
@@ -96,19 +89,7 @@ interface UserData {
   featured_images?: Record<string, any>;
 }
 
-const CoverPP = require("@/src/assets/images/cover.png");
-const myProfile = require("@/src/assets/images/myPP.png");
-
 const Verification = require("@/src/assets/icons/verified.png");
-
-const FeaturePhotoes = [
-  { item: 1, image: require("@/src/assets/images/feature1.png") },
-  { item: 2, image: require("@/src/assets/images/feature2.png") },
-  { item: 3, image: require("@/src/assets/images/feature3.png") },
-  { item: 4, image: require("@/src/assets/images/feature4.png") },
-  { item: 5, image: require("@/src/assets/images/feature5.png") },
-  { item: 6, image: require("@/src/assets/images/feature6.png") },
-];
 
 const Accounts: AccountType[] = [
   {
@@ -681,6 +662,18 @@ const featuredUrls: string[] = featuredPhotos;
               <Ionicons name="add-circle-outline" size={24} color="black" />
               <SubTitle text={uploadingAvatar ? "Uploading..." : "Add to story"} />
             </TouchableOpacity>
+            {myStory?.has_story ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setAvatarOptions(false);
+                  openViewers();
+                }}
+                className="flex-row items-center gap-mid py-3 border-b border-darkvariant/10"
+              >
+                <Ionicons name="eye-outline" size={24} color="black" />
+                <SubTitle text={`Viewed by ${myStory.storyviews ?? 0}`} />
+              </TouchableOpacity>
+            ) : null}
             <TouchableOpacity
               onPress={() => {
                 setAvatarOptions(false);

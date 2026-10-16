@@ -1,10 +1,7 @@
-import { API } from "@/src/constants/apiEndpoints";
-import api from "../api";
-
 const UserPayment = async () => {
-    try{
-    } catch (err) {
-    }
-}
+  try {
+  } catch {
+  }
+};
 
-export default UserPayment
+export default UserPayment;

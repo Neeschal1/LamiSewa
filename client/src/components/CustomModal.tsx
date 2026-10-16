@@ -1,9 +1,8 @@
-import { View, Text, Modal, Image } from "react-native";
-import React, { FC, useState } from "react";
+import { View, Modal } from "react-native";
+import React, { FC } from "react";
 import {
   Description,
   MainScreenName,
-  PrimaryButton,
 } from "./systemComponentsLayout";
 import { Ionicons } from "@expo/vector-icons";
 import { ShowCustomModal } from "./componentsType";

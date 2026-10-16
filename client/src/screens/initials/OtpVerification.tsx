@@ -1,7 +1,6 @@
 import {
   View,
   Image,
-  TextInput,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
@@ -24,12 +23,7 @@ import {
   TextualButton,
   SubTitle,
 } from "@/src/components/systemComponentsLayout";
-import {  } from "@/src/storage/SecureCredentials";
-import HandleForgotPasswordOTPVerification from "@/src/services/accounts/forgotpasswordotp";
-import { useNavigation } from "expo-router";
-import { NavigationProps } from "@/src/components/componentsType";
-import axios from "axios";
-import { GetStringDataAsync } from "@/src/storage/ProfileDataAsync";
+import { isAxiosError } from "axios";
 
 const confusedImage = require("@/src/assets/images/confused.png");
 
@@ -39,10 +33,8 @@ const OtpVerification = () => {
   const [checkOTPState, setCheckOTPState] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const navigation = useNavigation<NavigationProps>();
+  const [, setError] = useState<boolean>(false);
+  const [, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     if (timer === 0) return;
@@ -56,23 +48,19 @@ const OtpVerification = () => {
 
   const handleOTPAction = async () => {
     const otpCode = otp.join("");
-    if (otpCode.length != 6) {
+    if (otpCode.length !== 6) {
       setCheckOTPState(true);
       setShowMessage("Enter complete OTP codes!");
       return;
     } else {
       setCheckOTPState(false);
     }
-    let stringOTP = "";
-    for (let i = 0; i < otp.length; i++) {
-      stringOTP += otp[i];
-    }
     try {
       setLoading(true);
 
 
     } catch (e) {
-      if (axios.isAxiosError(e)) {
+      if (isAxiosError(e)) {
         const status = e.response?.status;
         const response = e.response?.data;
 

@@ -1,4 +1,4 @@
-import { MainScreenName, SubTitle, Title } from "@/src/components/Texts";
+import { SubTitle, Title } from "@/src/components/Texts";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { View, TouchableOpacity, Text, Image, Dimensions } from "react-native";
@@ -39,8 +39,8 @@ const PaymentOption = ({
   color,
 }: PaymentOptionProps) => {
   const [paymentItem, setPaymentItem] = useState(InternationalPaymentMethod[0]);
-  const [selectedPackage, setSelectedPackage] = useState(SubscriptionPlans[2]);
-  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedPackage] = useState(SubscriptionPlans[2]);
+  const [, setModalVisible] = useState<boolean>(false);
   const [paying, setPaying] = useState<boolean>(false);
   const [payError, setPayError] = useState<string>("");
 
@@ -78,10 +78,6 @@ const PaymentOption = ({
       setPaying(false);
     }
   }
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
 
   return (
     <Modal

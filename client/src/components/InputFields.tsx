@@ -1,5 +1,5 @@
 import { View, TextInput, Dimensions, TouchableOpacity } from "react-native";
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   InputFieldProps,
@@ -7,7 +7,6 @@ import {
   OTPInputProps,
   InputPasswordProps,
   DOBInputProps,
-  DropdownItem,
   CustomDropdownProps,
 } from "./componentsType";
 import { Ionicons } from "@expo/vector-icons";
@@ -114,7 +113,7 @@ export const InputPassword: FC<InputPasswordProps> = ({
 };
 
 export const OTPInputFields: FC<OTPInputProps> = ({ otp, setOtp }) => {
-  const refs = useRef<Array<React.ElementRef<typeof TextInput> | null>>([]);
+  const refs = useRef<(React.ElementRef<typeof TextInput> | null)[]>([]);
 
   const handleChange = (text: string, index: number) => {
     const value = text.replace(/[^0-9]/g, "");
@@ -168,7 +167,7 @@ export const OTPInputFields: FC<OTPInputProps> = ({ otp, setOtp }) => {
 };
 
 export const DOBInput: FC<DOBInputProps> = ({ dob, setDob }) => {
-  const refs = useRef<Array<React.ElementRef<typeof TextInput> | null>>([]);
+  const refs = useRef<(React.ElementRef<typeof TextInput> | null)[]>([]);
 
   const handleChange = (
     text: string,

@@ -5,7 +5,7 @@ import { useFonts } from "expo-font";
 import StackNavigation from "../src/constants/Navigation";
 import { AuthProvider } from "@/src/auth/AuthProvider";
 import { ProfileProvider } from "@/src/profile/ProfileProvider";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as GestureHandler from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { AppState, Platform } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
@@ -45,12 +45,12 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandler.GestureHandlerRootView style={{ flex: 1 }}>
       <AuthProvider>
         <ProfileProvider>
           <StackNavigation />
         </ProfileProvider>
       </AuthProvider>
-    </GestureHandlerRootView>
+    </GestureHandler.GestureHandlerRootView>
   );
 }

@@ -1,6 +1,5 @@
 import {
   ImageBackground,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -17,7 +16,7 @@ import UploadImages from "@/src/utils/uploadImages";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import { fetchFeaturedPhotos, saveFeaturedPhotos } from "@/src/services/profile/featuredPhotos";
-import axios from "axios";
+import { isAxiosError } from "axios";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
 
@@ -118,7 +117,7 @@ const FeaturedPhoto = () => {
       }
       setLoading(false)
     } catch (err) {
-      if(axios.isAxiosError(err)){
+      if(isAxiosError(err)){
         const status = err.response?.status;
         const response = err.response?.data;
         console.log("Status: ", status, "\nData: ", response)

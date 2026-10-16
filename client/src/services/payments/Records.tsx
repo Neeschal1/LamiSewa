@@ -1,6 +1,6 @@
 import { API } from "@/src/constants/apiEndpoints";
 import api from "../api";
-import axios from "axios";
+import { isAxiosError } from "axios";
 
 const Records = async () => {
     console.log("Reached to Records!!!");
@@ -14,7 +14,7 @@ const Records = async () => {
         }
     } catch (e) {
         console.log("Error occured in Records section!", e)
-        if (axios.isAxiosError(e)) {
+        if (isAxiosError(e)) {
         const status = e.response?.status;
         const response = e.response?.data;
         console.log("Error Status in Records section: ", status);

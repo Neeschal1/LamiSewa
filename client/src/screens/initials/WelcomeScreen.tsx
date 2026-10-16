@@ -15,17 +15,10 @@ import {
 } from "@/src/components/systemComponentsLayout";
 import React, { FC } from "react";
 import Animated, {
-  FadeIn,
-  FadeOut,
   FadeInUp,
   FadeInDown,
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  BounceIn,
 } from "react-native-reanimated";
 import { clearToken } from "@/src/storage/SecureTokens";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@/src/auth/AuthContext";
 import { DeleteStringDataAsync } from "@/src/storage/ProfileDataAsync";
 

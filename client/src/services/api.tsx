@@ -1,4 +1,4 @@
-import axios from "axios";
+import { create } from "axios";
 import {
   getAccessTokens,
   getRefreshTokens,
@@ -6,7 +6,7 @@ import {
   clearToken,
 } from "../storage/SecureTokens";
 
-const api = axios.create({
+const api = create({
   baseURL: `${process.env.EXPO_PUBLIC_DJANGO_DEVELOPMENT_SERVER_URL}`,
   timeout: 10000,
 });
@@ -19,7 +19,7 @@ const rotateAccessToken = async (): Promise<string | null> => {
     try {
       const refresh = await getRefreshTokens();
       if (!refresh) return null;
-      const res = await axios.post(
+      const res = await api.post(
         `${process.env.EXPO_PUBLIC_DJANGO_DEVELOPMENT_SERVER_URL}/api/token/refresh/`,
         { refresh },
         { timeout: 10000 }

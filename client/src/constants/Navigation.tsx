@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth } from "../auth/useAuth";
 import AuthenticatedNavigation from "./AuthenticatedNavigation";
 import ProfileScreenNavigation from "./ProfileScreenNavigation";
 import UnauthenticatedNavigation from "./UnauthenticatedNavigation";
 import Splash from "@/src/screens/initials/SplashScreen";
-import { DeleteStringDataAsync, GetStringDataAsync } from "../storage/ProfileDataAsync";
 
 const StackNavigation = () => {
   const { token, isLoading, profileCompleted } = useAuth();

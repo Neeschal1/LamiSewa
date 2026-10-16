@@ -27,8 +27,7 @@ import {
   WeightItems,
   WorkingItems,
 } from "@/src/utils/objects";
-import { DropdownItem } from "@/src/components/componentsType";
-import { NavigationProps } from "@/src/components/componentsType";
+import { DropdownItem, NavigationProps } from "@/src/components/componentsType";
 import { useProfile } from "@/src/profile/ProfileProvider";
 import { updateOwnProfile } from "@/src/services/profile/updateProfile";
 import { clearCachedMatches } from "@/src/services/matches/matchCache";

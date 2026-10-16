@@ -1,18 +1,17 @@
-import { View, Text, StatusBar, TextInput, TouchableOpacity, FlatList, Image, Modal, ScrollView } from "react-native";
+import { View, Text, StatusBar, TextInput, TouchableOpacity, Image, Modal, ScrollView } from "react-native";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "expo-router";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
-import { NavigationProps } from "@/src/components/componentsType";
+import { DropdownItem, NavigationProps } from "@/src/components/componentsType";
 import { fetchRandomMember, searchProfiles } from "@/src/services/profile/search";
 import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
 import { fetchFollowing, followUser, unfollowUser } from "@/src/services/privacy/follow";
 import { Describe, PrimaryButton, Title } from "@/src/components/systemComponentsLayout";
 import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import { CustomDropdown } from "@/src/components/InputFields";
-import { DropdownItem } from "@/src/components/componentsType";
 import {
   CommunityItems,
   DietItems,

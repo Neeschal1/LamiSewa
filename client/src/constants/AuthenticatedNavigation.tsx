@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text, View } from "react-native";
 import { RootStackParamList } from "@/src/components/componentsType";
 import { Describe, SubHeading, Title } from "../components/Texts";
 import { Chats, Home, NearYou, Profile, Search, UserDetails } from "../screens/main/mainScreenLayouts";
@@ -13,7 +13,6 @@ import MyTabs from "./BottomTabNavigation";
 import {AccountPassword} from "../screens/accounts/AccountLayouts";
 import {BasicDetails, Documents, FacialVerification, FinalVerification, Intro, Verify} from "../screens/accounts/idverification/IDVerificationLayout";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
 import { GetStringDataAsync, StoreStringDataAsync } from "../storage/ProfileDataAsync";
 import { fetchSubscriptionStatus } from "../services/payments/subscription";
 import { ChangePassword, ContactUs, EditProfile, FeaturedPhoto, Help, Language, MatchedUsers, PrivacyPolicy, TermsOfUse, VerifyId, AboutUs} from "@/src/screens/others/OtherScreensLayout"

@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
@@ -54,8 +53,8 @@ const AccountPassword = () => {
     }
 
     if (
-      newpassword != confirmnewPassword ||
-      confirmnewPassword != newpassword
+      newpassword !== confirmnewPassword ||
+      confirmnewPassword !== newpassword
     ) {
       setUnMatched(true);
       setShowMessage(
@@ -64,7 +63,7 @@ const AccountPassword = () => {
       return;
     }
 
-    if (presentPassword != newpassword && newpassword === confirmnewPassword) {
+    if (presentPassword !== newpassword && newpassword === confirmnewPassword) {
       setShowSuccessModal(true);
     }
   };

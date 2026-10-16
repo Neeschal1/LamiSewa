@@ -1,4 +1,4 @@
-import { Describe, Description, SubHeading, SubTitle, Title } from "@/src/components/systemComponentsLayout";
+import { Description, Title } from "@/src/components/systemComponentsLayout";
 import React from "react";
 import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

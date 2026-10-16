@@ -25,7 +25,7 @@ import {
   InputFields,
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
+import { getJsonData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
@@ -61,7 +61,7 @@ const CasualInfo = () => {
       if (
         nickName.trim() === "" ||
         bio.trim() === "" ||
-        imageUrl.trim() == ""
+        imageUrl.trim() === ""
       ) {
         setDisabilityStatus(true);
       } else {
@@ -69,7 +69,7 @@ const CasualInfo = () => {
       }
     };
     disablePrimaryButton();
-  }, [nickName, bio]);
+  }, [nickName, bio, imageUrl]);
 
   const pickAndUpload = async () => {
     setError(null);

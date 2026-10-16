@@ -28,7 +28,7 @@ import HandleAccountCredentials from "@/src/services/accounts/credentials";
 import HandleOTPVerification from "@/src/services/accounts/otpverification";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import axios from "axios";
+import { isAxiosError } from "axios";
 import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 
 const mailInboxImage = require("@/src/assets/images/mails.png");
@@ -105,7 +105,7 @@ const SignupVerification = () => {
         setLoading(false);
       }
     } catch (e) {
-      if (axios.isAxiosError(e)) {
+      if (isAxiosError(e)) {
         const status = e.response?.status;
         const response = e.response?.data;
 

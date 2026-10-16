@@ -1,7 +1,7 @@
-import { View, ScrollView } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React from "react";
-import { Description, SubHeading, SubTitle, Title } from "@/src/components/Texts";
+import { Description, SubTitle } from "@/src/components/Texts";
 import { Ionicons } from "@expo/vector-icons";
 
 const contactInformation: {

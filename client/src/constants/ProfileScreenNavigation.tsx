@@ -15,7 +15,7 @@ import { GetStringDataAsync } from "../storage/ProfileDataAsync";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const ORDER: Array<keyof RootStackParamList> = [
+const ORDER: (keyof RootStackParamList)[] = [
   "UserInfo",
   "BasicInfo",
   "CasualInfo",

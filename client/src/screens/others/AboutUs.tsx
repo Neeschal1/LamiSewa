@@ -3,11 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import React from "react";
 import {
   Description,
-  Heading,
   MainScreenName,
-  SubHeading,
-  SubText,
-  SubTitle,
   Title,
 } from "@/src/components/Texts";
 

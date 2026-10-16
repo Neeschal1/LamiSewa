@@ -21,7 +21,7 @@ const UploadImages = async (imageUri: string): Promise<string | null> => {
     const data = await response.json();
     console.log('Cloudinary response:', JSON.stringify(data));
     return data.secure_url ?? null;
-  } catch (error) {
+  } catch {
     return null;
   }
 };

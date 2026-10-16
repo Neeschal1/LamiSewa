@@ -24,7 +24,6 @@ import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
 import { useInbox } from "@/src/notifications/InboxProvider";
 
 const lamisewaLogo = require("@/src/assets/images/vectorLogo.png");
-const FALLBACK_PIC = "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg";
 
 const Notification: FC = () => {
   const navigation = useNavigation<NavigationProps>();

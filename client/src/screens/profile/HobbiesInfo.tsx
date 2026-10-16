@@ -31,8 +31,7 @@ import {
   TravelAndAdventureHobbies,
 } from "@/src/utils/objects";
 import { useAuth } from "@/src/auth/AuthContext";
-import { clearToken } from "@/src/storage/SecureTokens";
-import axios from "axios";
+import { isAxiosError } from "axios";
 import SubmitCompleteProfileService from "@/src/services/profile/completeProfile";
 import { clearDraft } from "@/src/storage/profileDraft";
 import { DeleteStringDataAsync, StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";
@@ -50,7 +49,7 @@ const HobbiesInfo: FC = () => {
 
   useEffect(()=>{
     const handlePrimaryButton = () => {
-      if (hobbies.length != 5){
+      if (hobbies.length !== 5){
         setDisabilityStatus(true)
       } else {
         setDisabilityStatus(false)
@@ -99,7 +98,7 @@ const HobbiesInfo: FC = () => {
         setProfileCompleted(true);
       }
     } catch (err) {
-      if (axios.isAxiosError(err)) {
+      if (isAxiosError(err)) {
         const statuscode = err?.response?.status;
         const errormessage = err?.response?.data;
         console.log("Status code: ", statuscode);

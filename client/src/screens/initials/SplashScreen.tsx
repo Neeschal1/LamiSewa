@@ -1,7 +1,6 @@
 import { View, StatusBar, Image } from "react-native";
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
 
 const logo = require("@/src/assets/images/splashLogo.png");
 

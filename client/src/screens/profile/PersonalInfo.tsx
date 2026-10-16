@@ -26,7 +26,6 @@ import {
   MaritalStatusItems,
   ResidencyStatusItems,
 } from "@/src/utils/objects";
-import { getJsonData, saveJsonData } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
 import { StoreStringDataAsync } from "@/src/storage/ProfileDataAsync";

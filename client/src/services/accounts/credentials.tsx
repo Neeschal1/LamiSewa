@@ -1,7 +1,6 @@
 import { API } from "@/src/constants/apiEndpoints";
 import api from "../api";
-import { saveTokens } from "@/src/storage/SecureTokens";
-import axios from "axios";
+import { isAxiosError } from "axios";
 
 const HandleAccountCredentials = async (
   name: string,
@@ -22,7 +21,7 @@ const HandleAccountCredentials = async (
     console.log("ResponseData: ", res.data);
     return res.status;
   } catch (e) {
-    if (axios.isAxiosError(e)) {
+    if (isAxiosError(e)) {
       console.log("\n\nStatus code: ", e.response?.status);
       console.log("\n\Issue data: ", e.response?.data);
 

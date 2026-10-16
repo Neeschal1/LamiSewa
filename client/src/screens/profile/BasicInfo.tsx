@@ -15,7 +15,6 @@ import Animated, {
   BounceIn,
 } from "react-native-reanimated";
 import {
-  CalendarItems,
   GenderOption,
   ProfileOptions,
   RelativeItems,
@@ -30,15 +29,11 @@ import {
   PrimaryButton,
   Title,
 } from "@/src/components/systemComponentsLayout";
-import { useAuth } from "@/src/auth/AuthContext";
-import { clearToken } from "@/src/storage/SecureTokens";
-import { DeleteStringDataAsync } from "@/src/storage/ProfileDataAsync";
 import {
   deleteData,
   deleteJsonData,
   getData,
   getJsonData,
-  saveData,
   saveJsonData,
 } from "@/src/storage/SecureCredentials";
 import { useNavigation } from "expo-router";
@@ -56,9 +51,7 @@ const BasicInfo = () => {
   const [relationOpen, setRelationOpen] = useState(false);
   const [relationItem, setRelationItem] = useState(RelativeItems);
 
-  const [open, setOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<"AD" | "BS">("AD");
-  const [items, setItems] = useState(CalendarItems);
+  const [value] = useState<"AD" | "BS">("AD");
 
   const [idOption, setIdOption] = useState<string>("");
   const [gender, setGender] = useState<string>("");
@@ -88,9 +81,7 @@ const BasicInfo = () => {
       }
     };
     disablePrimaryButton();
-  }, [name, gender, date]);
-
-  const { logout } = useAuth();
+  }, [name, gender, date, idOption, value]);
 
   const handleProcees = async () => {
     setError(false);
@@ -121,13 +112,6 @@ const BasicInfo = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleLogOut = async () => {
-    await logout();
-    await clearToken();
-
-
   };
 
   return (
@@ -195,7 +179,7 @@ const BasicInfo = () => {
                 </Animated.View>
               </View>
 
-              {idOption == "Others" ? (
+              {idOption === "Others" ? (
                 <View className="items-start w-full">
                   <View className="w-full mt-mid">
                     <Title text={`Mention your identity for ${name}:`} />

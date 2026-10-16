@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
-  Image,
-  Animated,
   LayoutAnimation,
   Platform,
   UIManager,
-  useWindowDimensions,
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { SubHeading, Describe, Title, Description } from "@/src/components/Texts";
+import { Title, Description } from "@/src/components/Texts";
 
 
 if (Platform.OS === "android") {
@@ -144,7 +140,6 @@ const faqs = [
 
 const Help = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const { width } = useWindowDimensions();
 
   const toggle = (index: number) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);

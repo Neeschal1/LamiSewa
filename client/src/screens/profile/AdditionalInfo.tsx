@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
@@ -18,7 +17,6 @@ import {
   CustomDropdown,
   Description,
   ErrorText,
-  InputFields,
   PrimaryButton,
   Title,
 } from "@/src/components/systemComponentsLayout";

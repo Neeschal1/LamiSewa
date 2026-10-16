@@ -1,6 +1,6 @@
 import { API } from "@/src/constants/apiEndpoints";
 import api from "../api";
-import axios from "axios";
+import { isAxiosError } from "axios";
 
 const Privacy = async () => {
     console.log("Reached to Privacy!!!");
@@ -14,7 +14,7 @@ const Privacy = async () => {
         }
     } catch (e) {
         console.log("Error occured in Privacy section!", e)
-        if (axios.isAxiosError(e)) {
+        if (isAxiosError(e)) {
         const status = e.response?.status;
         const response = e.response?.data;
         console.log("Error Status in Privacy section: ", status);

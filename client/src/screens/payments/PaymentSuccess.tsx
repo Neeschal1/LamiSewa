@@ -1,6 +1,5 @@
 import {
   Dimensions,
-  StyleSheet,
   Text,
   View,
   Image,
@@ -12,10 +11,7 @@ import {
   SubTitle,
   Title,
 } from "@/src/components/Texts";
-import { Ionicons } from "@expo/vector-icons";
-import React, { FC, useState } from "react";
-import Modal from "react-native-modal";
-import { PaymentOptionProps } from "./PaymentComponentTypes";
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";

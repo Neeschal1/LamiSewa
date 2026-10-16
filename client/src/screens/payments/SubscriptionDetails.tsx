@@ -9,9 +9,7 @@ import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
   Description,
-  MainScreenName,
   SubTitle,
-  TextualButton,
   Title,
 } from "@/src/components/systemComponentsLayout";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -78,14 +76,13 @@ const SubscriptionDetails = () => {
             {selectedPackage.packagetype}
           </Text>
           <Text className="font-Poppinsregular text-background text-center text-description">
-            Get access to view full user's profile, unlimited textings and many
-            more...
+            Get access to view full user profiles, unlimited texting and more...
           </Text>
         </View>
 
         <View className="flex items-start justify-center p-screen gap-extralarge">
           <View className="flex items-start gap-small">
-            <Title text="What's included?" />
+            <Title text="What is included?" />
             {PackageDetails()}
           </View>
 
