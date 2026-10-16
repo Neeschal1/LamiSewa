@@ -14,7 +14,22 @@ SECRET_KEY = Config.SECRET_KEY
 
 
 # Allowed hosts to access this backend system
-ALLOWED_HOSTS = [os.getenv('DOMAIN_NAME_1'), Config.DOMAIN_NAME_2, Config.DOMAIN_NAME_3, "192.168.1.78", "192.168.1.76", ]
+_hosts = [
+    os.getenv('DOMAIN_NAME_1'),
+    Config.DOMAIN_NAME_2,
+    Config.DOMAIN_NAME_3,
+    "127.0.0.1",
+    "localhost",
+    "192.168.1.78",
+    "192.168.1.76",
+    "192.168.100.18",
+    ".ngrok.io",
+    ".ngrok-free.app",
+    ".trycloudflare.com",
+]
+ALLOWED_HOSTS = [h for h in _hosts if h]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Root URL to hit, i. e. url of project of an entire application
