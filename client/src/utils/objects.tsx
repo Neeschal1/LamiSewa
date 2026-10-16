@@ -118,6 +118,13 @@ export const DietItems = [
   { label: "Non-Vegetarian", value: "Non-Vegetarian" },
 ];
 
+export const MangalikItems = [
+  { label: "Manglik", value: "YES" },
+  { label: "Non-Manglik", value: "NO" },
+  { label: "Partially Manglik", value: "PARTIAL" },
+  { label: "Not Known", value: "UNKNOWN" },
+];
+
 export const DegreeItems = [
   { label: "SEE / SLC", value: "SEE" },
   { label: "+2 / Higher Secondary", value: "PLUS_TWO" },
