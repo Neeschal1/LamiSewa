@@ -1,18 +1,23 @@
 import { API } from "@/src/constants/apiEndpoints";
 import api from "../api";
-import { saveRefreshTokens, saveTokens } from "@/src/storage/SecureTokens";
-import { useAuth } from "@/src/auth/AuthContext";
 
-const HandleFingerPrintLoginVerification = async (useremail: string | any) => {
-  const credentialsData: any = {
-    email: useremail,
+const HandleFingerPrintLoginVerification = async (useremail: string | null) => {
+  if (!useremail) {
+    throw { response: { status: 400, data: { Message: "No saved account for biometric login." } } };
+  }
+  const res = await api.post(API.ACCOUNTS.FINGERPRINTSCANNERLOGIN, {
+    email: useremail.trim().toLowerCase(),
+  });
+  const access = res.data?.Tokens?.accesstoken;
+  const refresh = res.data?.Tokens?.refreshtoken;
+  if (!access || !refresh) {
+    throw { response: { status: 401, data: { Message: "Biometric login failed." } } };
+  }
+  return {
+    accessToken: access,
+    refreshToken: refresh,
+    hasProfile: res.data?.UserprofileStatus === true,
   };
-  const res = await api.post(
-    API.ACCOUNTS.FINGERPRINTSCANNERLOGIN,
-    credentialsData,
-  );
-  await saveRefreshTokens(res["data"]["Tokens"]["refreshtoken"]);
-  return res;
 };
 
 export default HandleFingerPrintLoginVerification;

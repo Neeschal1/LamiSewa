@@ -1,32 +1,40 @@
-import "../global.css"
+import "../global.css";
 import Fonts from "../src/utils/fonts";
 import { useFonts } from "expo-font";
-import StackNavigation from '../src/constants/Navigation'
+import StackNavigation from "../src/constants/Navigation";
 import { AuthProvider } from "@/src/auth/AuthProvider";
 import { useEffect } from "react";
-import { AppState } from "react-native"
+import { AppState, Platform } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
 
-export default function RootLayout() {
-
-   useEffect(() => {
-  const hideBar = async () => {
-    try {
-      await NavigationBar.setVisibilityAsync("hidden");
-    } catch {}
-  };
-
-  hideBar();
-
-  const sub = AppState.addEventListener("change", state => {
-    if (state === "active") {
-      hideBar();
+const hideSystemBar = async () => {
+  if (Platform.OS !== "android") return;
+  try {
+    const modern = NavigationBar as unknown as {
+      setHidden?: (hidden: boolean) => void;
+      setVisibilityAsync?: (v: "visible" | "hidden") => Promise<void>;
+      setBehaviorAsync?: (b: string) => Promise<void>;
+    };
+    if (typeof modern.setHidden === "function") {
+      modern.setHidden(true);
+    } else if (typeof modern.setVisibilityAsync === "function") {
+      await modern.setVisibilityAsync("hidden");
     }
-  });
+    if (typeof modern.setBehaviorAsync === "function") {
+      await modern.setBehaviorAsync("overlay-swipe");
+    }
+  } catch {}
+};
 
-  return () => sub.remove();
-}, []);
-  
+export default function RootLayout() {
+  useEffect(() => {
+    hideSystemBar();
+    const sub = AppState.addEventListener("change", (state) => {
+      if (state === "active") hideSystemBar();
+    });
+    return () => sub.remove();
+  }, []);
+
   const [fontsLoaded] = useFonts(Fonts);
 
   if (!fontsLoaded) {

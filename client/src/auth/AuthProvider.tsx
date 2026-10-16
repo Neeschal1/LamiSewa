@@ -2,10 +2,27 @@ import React, { createContext, useEffect, useState } from "react";
 import {
   clearToken,
   getAccessTokens,
-  saveTokens,
+  getRefreshTokens,
+  saveAuthTokens,
 } from "../storage/SecureTokens";
 import { AuthContext } from "./AuthContext";
-import { GetStringDataAsync } from "../storage/ProfileDataAsync";
+import {
+  GetStringDataAsync,
+  StoreStringDataAsync,
+  DeleteStringDataAsync,
+} from "../storage/ProfileDataAsync";
+import { refreshAccessToken as rotateToken } from "../services/api";
+import { jwtDecode } from "jwt-decode";
+
+const isExpired = (token: string): boolean => {
+  try {
+    const payload = jwtDecode<{ exp?: number }>(token);
+    if (!payload.exp) return false;
+    return payload.exp * 1000 <= Date.now() + 15000;
+  } catch {
+    return true;
+  }
+};
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
@@ -16,30 +33,71 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loadingTokens();
   }, []);
 
+  const readProfileFlag = async (): Promise<boolean> => {
+    const state = await GetStringDataAsync("ProfileScreenStatus");
+    return state === "AllCompleted";
+  };
+
   const loadingTokens = async () => {
     try {
-      const storedToken = await getAccessTokens();
+      let storedToken = await getAccessTokens();
+      if (storedToken && isExpired(storedToken)) {
+        storedToken = await rotateToken();
+      }
+      if (!storedToken) {
+        const refresh = await getRefreshTokens();
+        if (refresh) storedToken = await rotateToken();
+      }
       setToken(storedToken);
-      const state = await GetStringDataAsync("ProfileScreenStatus");
-      setProfileCompleted(state === "AllCompleted");
-    } catch (error) {
+      setProfileCompleted(storedToken ? await readProfileFlag() : false);
+    } catch {
       setToken(null);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const login = async (accessToken: string) => {
-    await saveTokens(accessToken);
+  const login = async (
+    accessToken: string,
+    refreshToken: string | null = null,
+    hasProfile: boolean | null = null
+  ) => {
+    const storedRefresh =
+      refreshToken ?? (await getRefreshTokens()) ?? "";
+    await saveAuthTokens(accessToken, storedRefresh);
     setToken(accessToken);
-    const state = await GetStringDataAsync("ProfileScreenStatus");
-    setProfileCompleted(state === "AllCompleted");
+    if (hasProfile === true) {
+      await StoreStringDataAsync("ProfileScreenStatus", "AllCompleted");
+      setProfileCompleted(true);
+    } else if (hasProfile === false) {
+      await DeleteStringDataAsync("ProfileScreenStatus");
+      setProfileCompleted(false);
+    } else {
+      setProfileCompleted(await readProfileFlag());
+    }
+  };
+
+  const refreshAccessToken = async (): Promise<string | null> => {
+    const next = await rotateToken();
+    setToken(next);
+    return next;
   };
 
   const logout = async () => {
-    await clearToken();
-    setToken(null);
-    setProfileCompleted(false);
+    try {
+      const refresh = await getRefreshTokens();
+      if (refresh) {
+        const { default: api } = await import("../services/api");
+        await api
+          .post("/api/token/blacklist/", { refresh })
+          .catch(() => null);
+      }
+    } catch {
+    } finally {
+      await clearToken();
+      setToken(null);
+      setProfileCompleted(false);
+    }
   };
 
   return (
@@ -50,6 +108,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         profileCompleted,
         setProfileCompleted,
         login,
+        refreshAccessToken,
         logout,
       }}
     >

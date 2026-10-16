@@ -154,7 +154,7 @@ class UserAuth:
                 
                 if result["success"] == True:
                     userinfo = User.objects.get(username = username)
-                    cache.set(f"users_info_{userinfo}", result, timeout=120)     
+                    cache.set(f"users_info_{userinfo.username}", result, timeout=120)     
                     
                 if not result["success"]:
                     return Response({"Message": result["error"]},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -197,8 +197,16 @@ class UserAuth:
                 return Response({"Message": "Failed to reset your password!"}, status=status.HTTP_404_NOT_FOUND)
             
             if user:
-                stored_otp_code_for_password_reset = cache.get(f'users_account_reset_password_status_{user.email}') 
-                if stored_otp_code_for_password_reset["status"] == True:
+                stored_otp_code_for_password_reset = cache.get(f'users_account_reset_password_status_{user.username}')
+                if stored_otp_code_for_password_reset is None:
+                    return Response({"Message": "OTP has expired or was not found. Please request a new one."}, status=status.HTTP_400_BAD_REQUEST)
+                if stored_otp_code_for_password_reset.get("status") == True:
+                    from django.contrib.auth.password_validation import validate_password
+                    from django.core.exceptions import ValidationError
+                    try:
+                        validate_password(password, user)
+                    except ValidationError as ve:
+                        return Response({"Message": "; ".join(ve.messages)}, status=status.HTTP_400_BAD_REQUEST)
                     user.set_password(password)
                     user.save()
                     cache.delete(f'users_account_reset_password_status_{user.username}')

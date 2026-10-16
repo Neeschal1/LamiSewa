@@ -1,11 +1,12 @@
-import { createContext, useContext, Dispatch, SetStateAction  } from "react";
+import { createContext, useContext, Dispatch, SetStateAction } from "react";
 
 export type AuthContextType = {
   token: string | null;
   isLoading: boolean;
-  login: (token: string) => Promise<void>;
+  login: (accessToken: string, refreshToken?: string | null, hasProfile?: boolean | null) => Promise<void>;
   profileCompleted: boolean;
   setProfileCompleted: Dispatch<SetStateAction<boolean>>;
+  refreshAccessToken: () => Promise<string | null>;
   logout: () => Promise<void>;
 };
 
