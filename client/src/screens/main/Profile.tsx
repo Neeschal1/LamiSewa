@@ -18,6 +18,7 @@ import { Ionicons } from "@expo/vector-icons";
 import {
   Describe,
   Description,
+  ErrorText,
   Heading,
   MainScreenName,
   SecondaryButton,
@@ -178,6 +179,7 @@ const Profile: FC = () => {
   const [shareVisible, setShareVisible] = useState<boolean>(false);
   const [subscription, setSubscription] = useState<any | null>(null);
   const [packageVisible, setPackageVisible] = useState<boolean>(false);
+  const [fetchError, setFetchError] = useState<string>("");
   const [myStory, setMyStory] = useState<any | null>(null);
   const [featuredPhotos, setFeaturedPhotos] = useState<string[]>([]);
   const [avatarOptions, setAvatarOptions] = useState<boolean>(false);
@@ -196,9 +198,13 @@ const Profile: FC = () => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
+    setFetchError("");
     try {
-      await refreshProfile();
-    } catch {}
+      const fresh = await refreshProfile();
+      if (!fresh) setFetchError("Could not load profile. Check connection and retry.");
+    } catch (e: any) {
+      setFetchError(e?.response?.data?.message ?? e?.response?.data?.Message ?? "Could not load profile. Check connection and retry.");
+    }
     try {
       setFollowers(await fetchFollowers());
     } catch {}
@@ -306,10 +312,18 @@ const Profile: FC = () => {
 
 useEffect(() => {
   const loadAll = async () => {
+    setFetchError("");
     let fresh: any = null;
     try {
       fresh = await fetchProfile();
-    } catch {}
+      if (!fresh) {
+        setFetchError("Could not load profile. Check connection and retry.");
+        return;
+      }
+    } catch (e: any) {
+      setFetchError(e?.response?.data?.message ?? e?.response?.data?.Message ?? "Could not load profile. Check connection and retry.");
+      return;
+    }
     const [f1, f2, sub, storyList, photos] = await Promise.all([
       fetchFollowers().catch(() => []),
       fetchFollowing().catch(() => []),
@@ -449,6 +463,14 @@ const featuredUrls: string[] = featuredPhotos;
                   </Text>
                 </TouchableOpacity>
               </View>
+              {fetchError ? (
+                <View className="mt-2 w-full items-center gap-small">
+                  <ErrorText text={fetchError} />
+                  <TouchableOpacity onPress={onRefresh} className="bg-primaryred px-6 py-2 rounded-2xl">
+                    <Text className="font-Poppinsmedium text-background">Retry</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : null}
             </View>
           </View>
         </View>
