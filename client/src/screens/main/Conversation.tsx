@@ -108,9 +108,10 @@ const Conversation: FC = () => {
   useEffect(() => {
     const connect = async () => {
       try {
-        await getAccessTokens();
+        const token = await getAccessTokens();
         const base = (process.env.EXPO_PUBLIC_DJANGO_DEVELOPMENT_SERVER_URL ?? "").replace(/^http/, "ws");
-        ws.current = new WebSocket(`${base}/ws/chat/${threadId}/`);
+        const query = token ? `?token=${encodeURIComponent(token)}` : "";
+        ws.current = new WebSocket(`${base}/ws/chat/${threadId}/${query}`);
         ws.current.onmessage = (e) => {
           try {
             const data = JSON.parse(e.data);

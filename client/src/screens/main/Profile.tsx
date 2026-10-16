@@ -11,8 +11,9 @@ import {
   Pressable,
   Linking,
   Switch,
+  RefreshControl,
 } from "react-native";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useCallback } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
   Describe,
@@ -161,8 +162,9 @@ const { width, height } = Dimensions.get("window");
 
 const Profile: FC = () => {
   const { logout } = useAuth();
-  const { data: cached, fetchProfile } = useProfile();
+  const { data: cached, fetchProfile, refreshProfile } = useProfile();
   const [enabled, setEnabled] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserData | null>(cached);
   const [followers, setFollowers] = useState<any[]>([]);
   const [following, setFollowing] = useState<any[]>([]);
@@ -172,6 +174,25 @@ const Profile: FC = () => {
   const [packageVisible, setPackageVisible] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await refreshProfile();
+    } catch {}
+    try {
+      setFollowers(await fetchFollowers());
+    } catch {}
+    try {
+      setFollowing(await fetchFollowing());
+    } catch {}
+    try {
+      const sub = await fetchSubscriptionStatus();
+      setSubscribed(!!sub?.is_subscribed);
+      setSubscription(sub?.is_subscribed ? sub : null);
+    } catch {}
+    setRefreshing(false);
+  }, [refreshProfile]);
 
   const handleLogOut = async () => {
     await logout();
@@ -224,6 +245,7 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
     <View className="flex-1 items-center justify-start bg-background">
       <ScrollView
         showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         contentContainerStyle={{
           alignItems: "center",
         }}
