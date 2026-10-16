@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "expo-router";
 import ToastManager, { Toast } from "toastify-react-native";
 import {
+  CustomDropdown,
   Description,
   InputFields,
   MainScreenName,
@@ -11,6 +12,21 @@ import {
   Title,
   toastConfig,
 } from "@/src/components/systemComponentsLayout";
+import {
+  CommunityItems,
+  DegreeItems,
+  DietItems,
+  GenderOption,
+  GotraItems,
+  HeightItems,
+  MaritalStatusItems,
+  ProfileOptions,
+  ReligionItems,
+  ResidencyStatusItems,
+  WeightItems,
+  WorkingItems,
+} from "@/src/utils/objects";
+import { DropdownItem } from "@/src/components/componentsType";
 import { NavigationProps } from "@/src/components/componentsType";
 import { useProfile } from "@/src/profile/ProfileProvider";
 import { updateOwnProfile } from "@/src/services/profile/updateProfile";
@@ -19,20 +35,49 @@ const Field = ({
   label,
   value,
   onChange,
-  board = "default",
   placeholder = "",
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
-  board?: "default" | "email-address" | "number-pad";
   placeholder?: string;
 }) => (
   <View className="w-full gap-small">
     <Title text={label} />
-    <InputFields plchldr={placeholder || label} state={value} setState={onChange} board={board} />
+    <InputFields plchldr={placeholder || label} state={value} setState={onChange} board="default" />
   </View>
 );
+
+const EditDropdown = ({
+  label,
+  value,
+  onChange,
+  choices,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  choices: DropdownItem[];
+}) => {
+  const [open, setOpen] = useState(false);
+  const [items, setItems] = useState<DropdownItem[]>(choices);
+  return (
+    <View className="w-full gap-small">
+      <Title text={label} />
+      <CustomDropdown
+        open={open}
+        value={value || null}
+        items={items}
+        setOpen={setOpen}
+        setValue={(v: any) => onChange(typeof v === "function" ? v(value) : v ?? "")}
+        setItems={setItems}
+      />
+    </View>
+  );
+};
+
+const clean = (obj: Record<string, string>) =>
+  Object.fromEntries(Object.entries(obj).filter(([, v]) => v.trim() !== ""));
 
 const EditProfile: FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -44,11 +89,21 @@ const EditProfile: FC = () => {
   const [fullname, setFullname] = useState("");
   const [nickname, setNickname] = useState("");
   const [bio, setBio] = useState("");
+  const [handler, setHandler] = useState("");
   const [gender, setGender] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [marital, setMarital] = useState("");
+  const [gotra, setGotra] = useState("");
+  const [residency, setResidency] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
   const [religion, setReligion] = useState("");
+  const [community, setCommunity] = useState("");
+  const [diet, setDiet] = useState("");
+  const [qualification, setQualification] = useState("");
+  const [college, setCollege] = useState("");
+  const [working, setWorking] = useState("");
   const [occupation, setOccupation] = useState("");
   const [company, setCompany] = useState("");
 
@@ -60,11 +115,22 @@ const EditProfile: FC = () => {
         setFullname(profile?.basic_info?.fullname ?? "");
         setNickname(profile?.basic_info?.nickname ?? "");
         setBio(profile?.basic_info?.bio ?? "");
-        setGender(profile?.basic_info?.gender ?? "");
+        setHandler(profile?.basic_info?.profile_handler ?? "");
+        const g = profile?.basic_info?.gender ?? "";
+        setGender(g === "OTHERS" ? "OTHER" : g);
         setCity(profile?.personal_info?.current_city ?? "");
         setCountry(profile?.personal_info?.current_living_country ?? "");
         setMarital(profile?.personal_info?.maritalstatus ?? "");
+        setGotra(profile?.personal_info?.gotra ?? "");
+        setResidency(profile?.personal_info?.residency_status ?? "");
+        setHeight(profile?.additional_info?.height ?? "");
+        setWeight(profile?.additional_info?.weight ?? "");
         setReligion(profile?.additional_info?.religion ?? "");
+        setCommunity(profile?.additional_info?.community ?? "");
+        setDiet(profile?.additional_info?.diet ?? "");
+        setQualification(profile?.career_info?.highest_qualification ?? "");
+        setCollege(profile?.career_info?.college_name ?? "");
+        setWorking(profile?.career_info?.working_as ?? "");
         setOccupation(profile?.career_info?.occupation ?? "");
         setCompany(profile?.career_info?.company_or_organization_name ?? "");
       }
@@ -74,14 +140,18 @@ const EditProfile: FC = () => {
   }, [data, fetchProfile]);
 
   const handleSave = async () => {
+    if (!username.trim()) {
+      Toast.show({ type: "error", text1: "Username cannot be empty.", position: "center", visibilityTime: 2500, autoHide: true });
+      return;
+    }
     setSaving(true);
     try {
       await updateOwnProfile({
         username: username.trim(),
-        basic_info: { fullname: fullname.trim(), nickname: nickname.trim(), bio: bio.trim(), gender: gender.trim() },
-        personal_info: { current_city: city.trim(), current_living_country: country.trim(), maritalstatus: marital.trim() },
-        additional_info: { religion: religion.trim() },
-        career_info: { occupation: occupation.trim(), company_or_organization_name: company.trim() },
+        basic_info: clean({ fullname, nickname, bio, profile_handler: handler, gender }),
+        personal_info: clean({ current_city: city, current_living_country: country, maritalstatus: marital, gotra, residency_status: residency }),
+        additional_info: clean({ height, weight, religion, community, diet }),
+        career_info: clean({ highest_qualification: qualification, college_name: college, working_as: working, occupation, company_or_organization_name: company }),
       });
       await fetchProfile(true);
       Toast.show({ type: "success", text1: "Profile updated.", position: "center", visibilityTime: 2500, autoHide: true });
@@ -110,31 +180,41 @@ const EditProfile: FC = () => {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <StatusBar hidden={false} translucent />
+      <View className="p-screen pt-2">
+        <MainScreenName text="Edit Profile" />
+        <Description text={`Profile ID: ${data?.profile?.profileid ?? "-"} (cannot be changed)`} />
+      </View>
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
-        <View className="p-screen gap-large">
-          <MainScreenName text="Edit Profile" />
-          <Description text={`Profile ID: ${data?.profile?.profileid ?? "-"} (cannot be changed)`} />
+        <View className="px-screen pb-4 gap-large">
           <Field label="Username" value={username} onChange={setUsername} placeholder="@username" />
           <Field label="Full name" value={fullname} onChange={setFullname} />
           <Field label="Nickname" value={nickname} onChange={setNickname} />
           <Field label="Bio" value={bio} onChange={setBio} />
-          <Field label="Gender" value={gender} onChange={setGender} />
+          <EditDropdown label="Profile handler" value={handler} onChange={setHandler} choices={ProfileOptions.map((o) => ({ label: o.option, value: o.option }))} />
+          <EditDropdown label="Gender" value={gender} onChange={setGender} choices={GenderOption.map((o) => ({ label: o.option, value: o.value === "OTHERS" ? "OTHER" : o.value }))} />
           <Field label="City" value={city} onChange={setCity} />
           <Field label="Country" value={country} onChange={setCountry} />
-          <Field label="Marital status" value={marital} onChange={setMarital} />
-          <Field label="Religion" value={religion} onChange={setReligion} />
+          <EditDropdown label="Marital status" value={marital} onChange={setMarital} choices={MaritalStatusItems} />
+          <EditDropdown label="Gotra" value={gotra} onChange={setGotra} choices={GotraItems} />
+          <EditDropdown label="Residency status" value={residency} onChange={setResidency} choices={ResidencyStatusItems} />
+          <EditDropdown label="Height" value={height} onChange={setHeight} choices={HeightItems} />
+          <EditDropdown label="Weight" value={weight} onChange={setWeight} choices={WeightItems} />
+          <EditDropdown label="Religion" value={religion} onChange={setReligion} choices={ReligionItems} />
+          <EditDropdown label="Community" value={community} onChange={setCommunity} choices={CommunityItems} />
+          <EditDropdown label="Diet" value={diet} onChange={setDiet} choices={DietItems} />
+          <EditDropdown label="Highest qualification" value={qualification} onChange={setQualification} choices={DegreeItems} />
+          <Field label="College name" value={college} onChange={setCollege} />
+          <EditDropdown label="Working as" value={working} onChange={setWorking} choices={WorkingItems} />
           <Field label="Occupation" value={occupation} onChange={setOccupation} />
           <Field label="Organization" value={company} onChange={setCompany} />
-          {saving ? (
-            <ActivityIndicator />
-          ) : (
-            <PrimaryButton text="Save changes" action={handleSave} />
-          )}
-          <Text className="font-Poppinsregular text-darkvariant text-center text-description">
-            Saving refreshes your match embedding.
-          </Text>
         </View>
       </ScrollView>
+      <View className="px-screen pb-screen pt-2 bg-background gap-small border-t border-darkvariant/10">
+        {saving ? <ActivityIndicator /> : <PrimaryButton text="Save changes" action={handleSave} />}
+        <Text className="font-Poppinsregular text-darkvariant text-center text-description">
+          Saving refreshes your match embeddings.
+        </Text>
+      </View>
       <ToastManager config={toastConfig} />
     </SafeAreaView>
   );

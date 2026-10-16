@@ -35,6 +35,7 @@ const FeaturedPhoto = () => {
   const [validImagesDict, setValidImagesDict] = useState<string | any>()
 
   const [error, setError] = useState<boolean | any>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const [localUri, setLocalUri] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -52,10 +53,12 @@ const FeaturedPhoto = () => {
   }, [profileData]);
 
   const pickAndUpload = async (index: number) => {
-    setError(null);
+    setError(false);
+    setErrorMessage("");
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      setError("Permission denied");
+      setError(true);
+      setErrorMessage("Gallery permission denied.");
       return;
     }
 
@@ -76,6 +79,9 @@ const FeaturedPhoto = () => {
         updated[index] = url;
         return updated;
       });
+    } else {
+      setError(true);
+      setErrorMessage("Upload failed. Check your connection and try again.");
     }
 
     setLoading(false);
@@ -85,7 +91,11 @@ const FeaturedPhoto = () => {
     const validImages = images.filter(
       (image): image is string => image !== null,
     );
-    console.log(validImages);
+    if (validImages.length === 0) {
+      setError(true);
+      setErrorMessage("Add at least one photo before saving.");
+      return;
+    }
     const imageObject = validImages.reduce(
       (acc, image, index) => {
         acc[`image${index + 1}`] = image;
@@ -118,6 +128,11 @@ const FeaturedPhoto = () => {
 
   return (
     <View className="bg-background flex p-screen justify-between flex-1">
+      {error ? (
+        <Text className="font-Poppinsregular text-primaryred text-center pb-2">
+          {errorMessage || "Something went wrong."}
+        </Text>
+      ) : null}
       <View className="flex flex-1 flex-wrap flex-row justify-between">
         {images.map((image, index) => (
           <TouchableOpacity

@@ -30,6 +30,8 @@ import {
   RootStackParamList,
 } from "@/src/components/componentsType";
 import { useNavigation } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
+import Modal from "react-native-modal";
 import { useAuth } from "@/src/auth/AuthContext";
 import { useProfile } from "@/src/profile/ProfileProvider";
 import { fetchFollowers, fetchFollowing } from "@/src/services/privacy/follow";
@@ -202,6 +204,7 @@ const Profile: FC = () => {
   const [following, setFollowing] = useState<any[]>([]);
   const [showList, setShowList] = useState<"followers" | "following" | null>(null);
   const [subscribed, setSubscribed] = useState<boolean>(false);
+  const [shareVisible, setShareVisible] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -222,6 +225,17 @@ useEffect(() => {
     try {
       const data = await fetchProfile();
       setUserData(data);
+    } catch (error: any) {
+      console.log("FETCH USER ERROR:", error);
+    }
+  };
+
+  fetchUserBasicInfo();
+}, [fetchProfile]);
+
+useFocusEffect(
+  React.useCallback(() => {
+    const refreshLists = async () => {
       try {
         setFollowers(await fetchFollowers());
       } catch {}
@@ -232,13 +246,10 @@ useEffect(() => {
         const sub = await fetchSubscriptionStatus();
         setSubscribed(!!sub?.is_subscribed);
       } catch {}
-    } catch (error: any) {
-      console.log("FETCH USER ERROR:", error);
-    }
-  };
-
-  fetchUserBasicInfo();
-}, [fetchProfile]);
+    };
+    refreshLists();
+  }, [])
+);
 
 useEffect(() => {
   if (cached) setUserData(cached);
@@ -280,7 +291,10 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
             <TouchableOpacity className="flex items-center justify-center bg-background w-12 h-12 rounded-full">
               <Ionicons name="menu" size={24} color="black" />
             </TouchableOpacity>
-            <TouchableOpacity className="flex items-center justify-center bg-background w-12 h-12 rounded-full">
+            <TouchableOpacity
+              onPress={() => setShareVisible(true)}
+              className="flex items-center justify-center bg-background w-12 h-12 rounded-full"
+            >
               <Ionicons name="share-social-outline" size={24} color="black" />
             </TouchableOpacity>
           </View>
@@ -329,12 +343,6 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
                 </View>
               </View>
               <SubTitle text={`${userData?.basic_info.bio}`} />
-              {profileLink ? (
-                <View className="items-center gap-small mt-2">
-                  <QRCode value={profileLink} size={140} />
-                  <Description text={profileLink} />
-                </View>
-              ) : null}
               <View className="flex flex-row gap-mid">
                 <TouchableOpacity
                   onPress={() => setShowList(showList === "followers" ? null : "followers")}
@@ -532,6 +540,25 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
         </View>
         <View className="flex flex-row gap-4"></View>
       </ScrollView>
+      <Modal
+        isVisible={shareVisible}
+        onBackdropPress={() => setShareVisible(false)}
+        onBackButtonPress={() => setShareVisible(false)}
+        style={{ justifyContent: "flex-end", margin: 0 }}
+      >
+        <View className="bg-background rounded-t-3xl p-screen items-center gap-large">
+          <View className="w-12 h-1.5 rounded-full bg-darkvariant/40" />
+          <SubTitle text="Share your profile" />
+          {profileLink ? <QRCode value={profileLink} size={180} /> : null}
+          {profileLink ? <Description text={profileLink} /> : null}
+          <TouchableOpacity
+            onPress={() => setShareVisible(false)}
+            className="bg-primaryred rounded-2xl py-3 px-10"
+          >
+            <Text className="font-Poppinsmedium text-background">Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };

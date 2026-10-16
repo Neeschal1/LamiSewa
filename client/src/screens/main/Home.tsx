@@ -30,20 +30,17 @@ import { NavigationProps } from "@/src/components/componentsType";
 import { fetchSemanticMatches } from "@/src/services/payments/subscription";
 import { searchProfiles } from "@/src/services/profile/search";
 import { followUser } from "@/src/services/privacy/follow";
+import {
+  clearCachedMatches,
+  getCachedMatches,
+  setCachedMatches,
+  MatchCard as Card,
+} from "@/src/services/matches/matchCache";
 
 const star = require("@/src/assets/icons/star.png");
 const unselect = require("@/src/assets/icons/UnmatchedHeart.png");
 
 const MIN_SCORE = 0.8;
-
-type Card = {
-  name: string;
-  city: string;
-  pic: string;
-  hobbies: string[];
-  raw: any;
-  score?: number;
-};
 
 const toCardFromMatch = (m: any): Card => ({
   name: m?.basic_info?.nickname || m?.basic_info?.fullname || m?.username || "Member",
@@ -69,6 +66,14 @@ const Home: FC = () => {
   const navigation = useNavigation<NavigationProps>();
 
   const loadMatches = useCallback(async () => {
+    const cached = getCachedMatches();
+    if (cached && cached.cards.length > 0) {
+      setCards(cached.cards);
+      setSemanticMode(cached.semantic);
+      setIndex(0);
+      setLoadingMatches(false);
+      return;
+    }
     setLoadingMatches(true);
     setNotice(null);
     try {
@@ -77,14 +82,18 @@ const Home: FC = () => {
         ? matches.filter((m: any) => typeof m?.score !== "number" || m.score >= MIN_SCORE)
         : [];
       if (filtered.length > 0) {
-        setCards(filtered.map(toCardFromMatch));
+        const next = filtered.map(toCardFromMatch);
+        setCachedMatches(next, true);
+        setCards(next);
         setSemanticMode(true);
         setIndex(0);
         return;
       }
       const others = await searchProfiles({});
       if (others.length > 0) {
-        setCards(others.map(toCardFromMatch));
+        const next = others.map(toCardFromMatch);
+        setCachedMatches(next, false);
+        setCards(next);
         setSemanticMode(false);
         setIndex(0);
         return;
