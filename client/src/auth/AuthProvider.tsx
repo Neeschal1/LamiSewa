@@ -12,6 +12,7 @@ import {
   DeleteStringDataAsync,
 } from "../storage/ProfileDataAsync";
 import { refreshAccessToken as rotateToken } from "../services/api";
+import { clearCachedProfile } from "../profile/ProfileProvider";
 import { jwtDecode } from "jwt-decode";
 
 const isExpired = (token: string): boolean => {
@@ -95,6 +96,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch {
     } finally {
       await clearToken();
+      clearCachedProfile();
       setToken(null);
       setProfileCompleted(false);
     }
