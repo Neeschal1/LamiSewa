@@ -1,9 +1,8 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { NavigationProps } from "@/src/components/componentsType";
 import { useInbox } from "./InboxProvider";
+import { navigateFromSlider } from "@/src/constants/navigationRef";
 import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
 
 const lamisewaLogo = require("@/src/assets/images/vectorLogo.png");
@@ -11,7 +10,6 @@ const FALLBACK_PIC = "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f4714
 
 const InboxSlider: FC = () => {
   const { event } = useInbox();
-  const navigation = useNavigation<NavigationProps>();
   const [visible, setVisible] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -32,12 +30,12 @@ const InboxSlider: FC = () => {
     setVisible(false);
     try {
       if (event.ntype === "message" && event.thread_id) {
-        navigation.navigate("Conversation", { threadId: event.thread_id });
+        navigateFromSlider("Conversation", { threadId: event.thread_id });
       } else if (event.ntype === "follow" && event.actor_profileid) {
         const full = await fetchMemberProfile(event.actor_profileid);
-        navigation.navigate("MemberProfile", { profile: full });
+        navigateFromSlider("MemberProfile", { profile: full });
       } else {
-        (navigation as any).navigate("MyTabs", { screen: "Notification" });
+        navigateFromSlider("MyTabs", { screen: "Notification" });
       }
     } catch {}
   };

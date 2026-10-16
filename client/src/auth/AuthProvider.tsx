@@ -14,6 +14,7 @@ import {
 import { refreshAccessToken as rotateToken } from "../services/api";
 import { clearCachedProfile } from "../profile/ProfileProvider";
 import { clearCachedMatches } from "../services/matches/matchCache";
+import { stackNavRef } from "../constants/navigationRef";
 import { jwtDecode } from "jwt-decode";
 
 const isExpired = (token: string): boolean => {
@@ -99,6 +100,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await clearToken();
       clearCachedProfile();
       clearCachedMatches();
+      stackNavRef.current = null;
       setToken(null);
       setProfileCompleted(false);
     }

@@ -9,10 +9,17 @@ import {
 } from "@/src/screens/main/mainScreenLayouts";
 import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { stackNavRef } from "./navigationRef";
 
 const Tab = createBottomTabNavigator();
 
 const MyTabs = () => {
+  const navigation = useNavigation();
+  useEffect(() => {
+    stackNavRef.current = navigation;
+  }, [navigation]);
   return (
     <Tab.Navigator
       initialRouteName="Home"
