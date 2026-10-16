@@ -9,7 +9,7 @@ import { NavigationProps } from "@/src/components/componentsType";
 import { fetchRandomMember, searchProfiles } from "@/src/services/profile/search";
 import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
 import { fetchFollowing, followUser, unfollowUser } from "@/src/services/privacy/follow";
-import { Describe, PrimaryButton, SecondaryButton, Title } from "@/src/components/systemComponentsLayout";
+import { Describe, PrimaryButton, Title } from "@/src/components/systemComponentsLayout";
 import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import { CustomDropdown } from "@/src/components/InputFields";
 import { DropdownItem } from "@/src/components/componentsType";
@@ -113,23 +113,11 @@ const GENDERS = [
   { label: "Others", value: "OTHERS" },
 ];
 
-const ModeButton = ({
-  active,
-  label,
-  onPress,
-}: {
-  active: boolean;
-  label: string;
-  onPress: () => void;
-}) => (
-  <View className="flex-1">
-    {active ? (
-      <PrimaryButton text={label} action={onPress} />
-    ) : (
-      <SecondaryButton text={label} action={onPress} />
-    )}
-  </View>
-);
+const MODES = [
+  { key: "quick", label: "Quick" },
+  { key: "advanced", label: "Advanced" },
+  { key: "idname", label: "ID/Name" },
+] as const;
 
 const Search: FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -323,12 +311,28 @@ const Search: FC = () => {
         <Text className="font-Poppinssemibold text-dark text-screenname">Search</Text>
         {scanError ? <Describe text={scanError} /> : null}
         <View className="flex-row gap-small">
-          <ModeButton active={mode === "quick"} label="Quick" onPress={() => setMode("quick")} />
-          <ModeButton active={mode === "advanced"} label="Advanced" onPress={() => setMode("advanced")} />
-          <ModeButton active={mode === "idname"} label="ID/Name" onPress={() => setMode("idname")} />
-          <View className="flex-1">
-            <PrimaryButton text="QR" action={openScanner} />
-          </View>
+          {MODES.map((m) => (
+            <TouchableOpacity
+              key={m.key}
+              onPress={() => setMode(m.key)}
+              className={`flex-1 px-2 py-2 rounded-full ${mode === m.key ? "bg-primaryred" : "bg-[#ECEBFF]"}`}
+            >
+              <Text
+                numberOfLines={1}
+                className={`font-Poppinsmedium text-center ${mode === m.key ? "text-background" : "text-dark"}`}
+              >
+                {m.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            onPress={openScanner}
+            className="flex-1 px-2 py-2 rounded-full bg-primaryred"
+          >
+            <Text numberOfLines={1} className="font-Poppinsmedium text-center text-background">
+              QR
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {mode !== "idname" ? (
