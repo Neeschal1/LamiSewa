@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Describe, Heading, SubHeading, Title } from "@/src/components/systemComponentsLayout";
 import { NavigationProps } from "@/src/components/componentsType";
 import { followUser, unfollowUser, fetchFollowing, fetchMutual } from "@/src/services/privacy/follow";
-import { createThread } from "@/src/services/chat/chat";
+import { createThreadByProfile } from "@/src/services/chat/chat";
 import { useProfile } from "@/src/profile/ProfileProvider";
 
 const { width, height } = Dimensions.get("window");
@@ -86,9 +86,13 @@ const MemberProfile: FC = () => {
   };
 
   const startChat = async () => {
+    if (!p?.profileid) return;
     try {
-      await createThread(p?.other_user_id ?? p?.userid ?? p?.id);
-      (navigation as any).navigate("Chats");
+      const thread = await createThreadByProfile(p.profileid);
+      (navigation as any).navigate("MyTabs", {
+        screen: "Chats",
+        params: { openThreadId: thread?.id },
+      });
     } catch {}
   };
 
@@ -117,6 +121,11 @@ const MemberProfile: FC = () => {
               <Describe text={basic.bio} />
             </View>
           ) : null}
+          {!checking && !isMutual ? (
+            <Text className="font-Poppinsregular text-darkvariant text-description mt-2">
+              Send one message request — two-way chat unlocks when you follow each other.
+            </Text>
+          ) : null}
           {checking ? (
             <ActivityIndicator className="mt-4" />
           ) : (
@@ -126,11 +135,9 @@ const MemberProfile: FC = () => {
                   {isFollowing ? "Following" : "Follow"}
                 </Text>
               </TouchableOpacity>
-              {isMutual ? (
-                <TouchableOpacity onPress={startChat} className="border border-primaryblue px-6 py-2 rounded-2xl">
-                  <Text className="font-Poppinsmedium text-primaryblue">Message</Text>
-                </TouchableOpacity>
-              ) : null}
+              <TouchableOpacity onPress={startChat} className="border border-primaryblue px-6 py-2 rounded-2xl">
+                <Text className="font-Poppinsmedium text-primaryblue">Message</Text>
+              </TouchableOpacity>
             </View>
           )}
           {featured.length > 0 ? (

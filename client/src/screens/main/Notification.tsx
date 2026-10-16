@@ -49,6 +49,11 @@ const Notification: FC = () => {
     } catch {}
   };
 
+  const bgFor = (kind: string) => {
+    if (kind === "announcement") return "#FDECEC";
+    return "#FFFFFF";
+  };
+
   return (
     <SafeAreaView className="flex flex-1 bg-background">
       <View className="flex-1 items-center w-full justify-start bg-background p-screen">
@@ -68,17 +73,16 @@ const Notification: FC = () => {
         </View>
         {loading ? <ActivityIndicator /> : null}
         <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 12, paddingVertical: 8, alignItems: "center" }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ gap: 12, paddingVertical: 8 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); load(); }} />}
         >
           {items.filter((n) => enabled || !n.is_read).map((n) => (
             <TouchableOpacity
               key={n.id}
               onPress={() => openItem(n.id)}
-              style={{ width: 280 }}
-              className={`flex flex-row gap-small items-center rounded-2xl px-4 py-3 ${n.is_read ? "bg-[#ECEBFF]" : "bg-primaryred/10 border border-primaryred"}`}
+              style={{ backgroundColor: bgFor(n.kind), borderWidth: n.is_read ? 0 : 1, borderColor: "#FF000E" }}
+              className="flex flex-row gap-small items-center rounded-2xl px-4 py-3"
             >
               <Ionicons name={n.is_read ? "mail-open" : "mail-unread"} size={30} color={n.is_read ? "#BBBDC8" : "#FF000E"} />
               <View className="flex-1">

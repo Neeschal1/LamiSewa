@@ -66,7 +66,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except Exception:
             return None
         other = thread.member_b if thread.member_a_id == user_id else thread.member_a
-        if not FollowService().is_mutual(user, other):
+        mutual = FollowService().is_mutual(user, other)
+        if not mutual and Messages.objects.filter(thread=thread, message_user=user).exists():
             return None
         msg = Messages.objects.create(
             thread=thread, message_user=user, message_type="Text", text=text

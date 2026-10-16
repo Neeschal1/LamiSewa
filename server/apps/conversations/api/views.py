@@ -23,6 +23,8 @@ class ConversationView(viewsets.ViewSet):
         for t in threads:
             other = t.member_b if t.member_a_id == request.user.id else t.member_a
             last = t.messages.order_by("-created_date").first()
+            mutual = FollowService().is_mutual(request.user, other)
+            sent_by_me = t.messages.filter(message_user=request.user).exists()
             out.append(
                 {
                     "id": t.id,
@@ -30,23 +32,32 @@ class ConversationView(viewsets.ViewSet):
                     "other_name": other.first_name or other.username,
                     "last_text": last.text if last else "",
                     "last_at": last.created_date if last else t.updated_at,
+                    "mutual": mutual,
+                    "can_message": bool(mutual or not sent_by_me),
                 }
             )
         return Response({"message": "Conversations.", "data": out})
 
     def create(self, request):
         other_id = request.data.get("user_id")
-        if not other_id:
-            return Response({"message": "user_id required."}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            other = User.objects.get(id=other_id)
-        except User.DoesNotExist:
-            return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-        if not FollowService().is_mutual(request.user, other):
-            return Response(
-                {"message": "Chat allowed only after both follow each other."},
-                status=status.HTTP_403_FORBIDDEN,
-            )
+        profileid = str(request.data.get("profileid") or "").strip()
+        other = None
+        if other_id:
+            try:
+                other = User.objects.get(id=other_id)
+            except User.DoesNotExist:
+                return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        elif profileid:
+            from apps.userprofile.models.entities import UserProfile
+
+            try:
+                other = UserProfile.objects.get(profileid=profileid).userid
+            except UserProfile.DoesNotExist:
+                return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({"message": "user_id or profileid required."}, status=status.HTTP_400_BAD_REQUEST)
+        if other.id == request.user.id:
+            return Response({"message": "You cannot message yourself."}, status=status.HTTP_400_BAD_REQUEST)
         a, b = ordered_pair(request.user, other)
         thread, _ = Thread.objects.get_or_create(member_a=a, member_b=b)
         return Response(
@@ -85,15 +96,30 @@ class MessageView(viewsets.ViewSet):
         if request.user.id not in (thread.member_a_id, thread.member_b_id):
             return Response({"message": "Forbidden."}, status=status.HTTP_403_FORBIDDEN)
         other = thread.member_b if thread.member_a_id == request.user.id else thread.member_a
-        if not FollowService().is_mutual(request.user, other):
+        mutual = FollowService().is_mutual(request.user, other)
+        if not mutual and Messages.objects.filter(thread=thread, message_user=request.user).exists():
             return Response(
-                {"message": "Chat allowed only after both follow each other."},
+                {"message": "You can send only one message until you both follow each other."},
                 status=status.HTTP_403_FORBIDDEN,
             )
         msg = Messages.objects.create(
             thread=thread, message_user=request.user, message_type="Text", text=text
         )
         Thread.objects.filter(id=thread.id).update()
+        if not mutual:
+            try:
+                from apps.notifications.models.entities import Notification
+
+                Notification.objects.create(
+                    recipient=other,
+                    actor=request.user,
+                    kind="message",
+                    title="New message request",
+                    body=f"{request.user.first_name or request.user.username} sent you a message request.",
+                    data={"thread": thread.id},
+                )
+            except Exception:
+                pass
         try:
             from channels.layers import get_channel_layer
             from asgiref.sync import async_to_sync

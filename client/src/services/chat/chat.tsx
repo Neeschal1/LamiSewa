@@ -11,6 +11,11 @@ export const createThread = async (user_id: number) => {
   return res.data?.data;
 };
 
+export const createThreadByProfile = async (profileid: string) => {
+  const res = await api.post(API.CHAT.CONVERSATIONS, { profileid });
+  return res.data?.data;
+};
+
 export const fetchMessages = async (thread: number) => {
   const res = await api.get(API.CHAT.MESSAGES, { params: { thread } });
   return res.data?.data ?? [];

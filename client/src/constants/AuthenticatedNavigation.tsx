@@ -101,14 +101,7 @@ const AuthenticatedNavigation = () => {
       <Stack.Screen
         name="MemberProfile"
         component={MemberProfile}
-        options={({ route }) => ({
-          headerShown: true,
-          headerTitle: (route.params as { profile?: any } | undefined)?.profile?.basic_info?.fullname
-            ?? (route.params as { profile?: any } | undefined)?.profile?.username
-            ?? "Profile",
-          headerTitleAlign: "center" as const,
-          headerTintColor: "#000000",
-        })}
+        options={{ headerShown: false }}
       />
       <Stack.Screen name="TermsOfUse" component={TermsOfUse} options={OthersScreens("TermsOfUse", "Please Read these Terms before using our Services.")} />
       <Stack.Screen name="AboutUs" component={AboutUs} options={OthersScreens("AboutUs", "About the Team behind LamiSewa.")} />

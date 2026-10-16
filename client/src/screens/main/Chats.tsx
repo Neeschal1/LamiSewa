@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import {
   Description,
@@ -44,16 +45,20 @@ const Chats: FC = () => {
   const [activeThread, setActiveThread] = useState<any | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [draft, setDraft] = useState("");
+  const [sendError, setSendError] = useState("");
   const [loading, setLoading] = useState(true);
   const ws = useRef<WebSocket | null>(null);
+  const route = useRoute<any>();
   const { data: profileData } = useProfile();
   const myPic = (profileData as any)?.basic_info?.profile_picture ?? "";
   const myProfileId = (profileData as any)?.profile?.profileid ?? "";
 
   useEffect(() => {
     const load = async () => {
+      let list: any[] = [];
       try {
-        setThreads(await fetchConversations());
+        list = await fetchConversations();
+        setThreads(list);
       } catch {}
       try {
         setMutual(await fetchMutual());
@@ -61,6 +66,18 @@ const Chats: FC = () => {
       try {
         setStories(await fetchStories());
       } catch {}
+      const openId = route.params?.openThreadId;
+      if (openId) {
+        const target = list.find((t: any) => t.id === openId);
+        if (target) {
+          try {
+            setMessages(await fetchMessages(target.id));
+          } catch {
+            setMessages([]);
+          }
+          setActiveThread(target);
+        }
+      }
       setLoading(false);
     };
     load();
@@ -92,6 +109,7 @@ const Chats: FC = () => {
 
   const openThread = async (thread: any) => {
     setActiveThread(thread);
+    setSendError("");
     try {
       setMessages(await fetchMessages(thread.id));
     } catch {
@@ -114,12 +132,19 @@ const Chats: FC = () => {
 
   const handleSend = async () => {
     if (!activeThread || !draft.trim()) return;
+    if (activeThread.can_message === false) {
+      setSendError("You can send only one message until you both follow each other.");
+      return;
+    }
     const text = draft.trim();
     setDraft("");
+    setSendError("");
     try {
       const saved = await sendMessage(activeThread.id, text);
       if (saved?.id) setMessages((m) => [...m, saved]);
-    } catch {}
+    } catch (e: any) {
+      setSendError(e?.response?.data?.message ?? "Message not sent.");
+    }
     try {
       ws.current?.send(JSON.stringify({ text }));
     } catch {}
@@ -248,12 +273,21 @@ const Chats: FC = () => {
                 value={draft}
                 onChangeText={setDraft}
                 placeholder="Message"
+                editable={activeThread.can_message !== false}
                 className="flex-1 border border-darkvariant/30 rounded-2xl px-4 py-3 font-Poppinsregular"
               />
               <TouchableOpacity onPress={handleSend} className="bg-primaryred rounded-full p-3">
                 <Ionicons name="send" size={20} color="white" />
               </TouchableOpacity>
             </View>
+            {activeThread.can_message === false ? (
+              <Text className="font-Poppinsregular text-darkvariant text-description mt-2">
+                Message request sent — two-way chat unlocks when you follow each other.
+              </Text>
+            ) : null}
+            {sendError ? (
+              <Text className="font-Poppinsregular text-primaryred text-description mt-2">{sendError}</Text>
+            ) : null}
           </View>
         )}
       </View>
