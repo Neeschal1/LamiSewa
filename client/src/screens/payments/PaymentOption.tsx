@@ -1,7 +1,8 @@
 import { MainScreenName, SubTitle, Title } from "@/src/components/Texts";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Image, Dimensions, ActivityIndicator } from "react-native";
+import { View, TouchableOpacity, Text, Image, Dimensions } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import Modal from "react-native-modal";
 import * as WebBrowser from "expo-web-browser";
 import {
@@ -178,7 +179,7 @@ const PaymentOption = ({
         >
           <View className="flex flex-row gap-mid justify-center items-center">
             {paying ? (
-              <ActivityIndicator color="white" />
+              <Ionicons name="diamond-outline" color="white" size={22} />
             ) : (
               <Ionicons name="diamond-outline" color="white" size={22} />
             )}
@@ -187,6 +188,7 @@ const PaymentOption = ({
             </Text>
           </View>
         </TouchableOpacity>
+        {paying ? <LottieLoadingAnimation /> : null}
       </View>
     </Modal>
   );

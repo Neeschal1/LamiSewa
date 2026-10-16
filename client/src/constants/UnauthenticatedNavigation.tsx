@@ -15,7 +15,8 @@ import {
   OnboardingScreen,
 } from "@/src/screens/extras/ExtraScreenLayout";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { View } from "react-native";
+import { LottieLoadingAnimation } from "./LoadingAnimation";
 import { DeleteStringDataAsync, GetStringDataAsync } from "../storage/ProfileDataAsync";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -38,7 +39,7 @@ const UnauthenticatedNavigation = () => {
   }, []);
 
   if (initialScreen === null) {
-    return (<View className="flex-1 justify-center items-center"><ActivityIndicator size="large" /></View>);
+    return (<View className="flex-1 justify-center items-center"><LottieLoadingAnimation /></View>);
   }
 
   return (

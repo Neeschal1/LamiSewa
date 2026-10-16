@@ -1,4 +1,5 @@
-import { View, Text, StatusBar, FlatList, TouchableOpacity, Image, ActivityIndicator } from "react-native";
+import { View, Text, StatusBar, FlatList, TouchableOpacity, Image } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -47,7 +48,7 @@ const Followers: FC = () => {
             Followers{users.length > 0 ? ` (${users.length})` : ""}
           </Text>
         </View>
-        {loading ? <ActivityIndicator size="large" className="mt-8" /> : null}
+        {loading ? <LottieLoadingAnimation /> : null}
         {!loading && users.length === 0 ? (
           <View className="flex-1 items-center justify-center">
             <Describe text="No followers" />

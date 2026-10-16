@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   Image,
   Text,
-  ActivityIndicator,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
@@ -185,12 +184,6 @@ const CasualInfo = () => {
                   source={imageSource}
                   className="w-[110px] h-[110px] rounded-full"
                 />
-
-                {loading && (
-                  <View className="absolute inset-0 bg-black/40 rounded-full items-center justify-center">
-                    <ActivityIndicator size="small" color="#fff" />
-                  </View>
-                )}
               </TouchableOpacity>
 
               {imageUrl && !loading ? (

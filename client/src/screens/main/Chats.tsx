@@ -5,10 +5,10 @@ import {
   Image,
   ScrollView,
   Text,
-  ActivityIndicator,
   Modal,
   Dimensions,
 } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -204,7 +204,7 @@ const Chats: FC = () => {
   if (loading) {
     return (
       <SafeAreaView className="flex-1 bg-background items-center justify-center">
-        <ActivityIndicator />
+        <LottieLoadingAnimation />
       </SafeAreaView>
     );
   }
@@ -212,6 +212,7 @@ const Chats: FC = () => {
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["bottom", "left", "right"]}>
       <StatusBar hidden={false} translucent />
+      {uploadingStory ? <LottieLoadingAnimation /> : null}
       <View className="flex-1 w-full bg-background p-screen">
         <MainScreenName text="Messages" />
         <View className="mt-large gap-mid">
@@ -248,7 +249,7 @@ const Chats: FC = () => {
                   style={{ width: PLUS_SIZE, height: PLUS_SIZE, right: 0, bottom: 0 }}
                 >
                   {uploadingStory ? (
-                    <ActivityIndicator size="small" color="white" />
+                    <SubHeading text="..." />
                   ) : (
                     <SubHeading text="+" />
                   )}

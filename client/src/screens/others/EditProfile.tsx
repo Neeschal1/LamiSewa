@@ -1,4 +1,5 @@
-import { View, ScrollView, StatusBar, ActivityIndicator, Text } from "react-native";
+import { View, ScrollView, StatusBar, Text } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "expo-router";
@@ -174,7 +175,7 @@ const EditProfile: FC = () => {
   if (loading) {
     return (
       <SafeAreaView className="flex-1 bg-background items-center justify-center">
-        <ActivityIndicator size="large" />
+        <LottieLoadingAnimation />
       </SafeAreaView>
     );
   }
@@ -212,7 +213,7 @@ const EditProfile: FC = () => {
         </View>
       </ScrollView>
       <View className="px-screen pb-screen pt-2 bg-background gap-small border-t border-darkvariant/10">
-        {saving ? <ActivityIndicator /> : <PrimaryButton text="Save changes" action={handleSave} />}
+        {saving ? <LottieLoadingAnimation /> : <PrimaryButton text="Save changes" action={handleSave} />}
         <Text className="font-Poppinsregular text-darkvariant text-center text-description">
           Saving refreshes your match embeddings.
         </Text>

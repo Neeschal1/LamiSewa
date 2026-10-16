@@ -1,4 +1,5 @@
-import { View, Text, StatusBar, TextInput, TouchableOpacity, FlatList, Image, ActivityIndicator, Modal } from "react-native";
+import { View, Text, StatusBar, TextInput, TouchableOpacity, FlatList, Image, Modal } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "expo-router";
@@ -111,7 +112,7 @@ const Search: FC = () => {
         <TouchableOpacity onPress={runSearch} className="bg-primaryred rounded-2xl py-3 items-center">
           <Text className="font-Poppinsmedium text-background">Search</Text>
         </TouchableOpacity>
-        {loading ? <ActivityIndicator /> : null}
+        {loading ? <LottieLoadingAnimation /> : null}
         <FlatList
           data={results}
           keyExtractor={(item, i) => item?.profileid ?? String(i)}

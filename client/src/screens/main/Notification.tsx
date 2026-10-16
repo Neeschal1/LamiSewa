@@ -3,11 +3,11 @@ import {
   StatusBar,
   Switch,
   ScrollView,
-  ActivityIndicator,
   TouchableOpacity,
   Text,
   RefreshControl,
 } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -78,7 +78,7 @@ const Notification: FC = () => {
             <Text className="font-Poppinsmedium text-primaryblue text-description">Mark all as read</Text>
           </TouchableOpacity>
         </View>
-        {loading ? <ActivityIndicator /> : null}
+        {loading ? <LottieLoadingAnimation /> : null}
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ gap: 12, paddingVertical: 8 }}

@@ -12,8 +12,8 @@ import {
   Linking,
   Switch,
   RefreshControl,
-  ActivityIndicator,
 } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useEffect, useState, useCallback } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -832,9 +832,7 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
         </View>
       </Modal>
       {(uploadingAvatar || uploadingCover || loggingOut) && (
-        <View className="absolute inset-0 items-center justify-center bg-black/40">
-          <ActivityIndicator size="large" color="#FFFFFF" />
-        </View>
+        <LottieLoadingAnimation />
       )}
       <Modal
         isVisible={packageVisible}

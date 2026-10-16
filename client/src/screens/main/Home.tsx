@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
-  ActivityIndicator,
 } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import { Gesture, GestureDetector, Directions } from "react-native-gesture-handler";
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { BlurView } from "expo-blur";
@@ -220,7 +220,7 @@ const Home: FC = () => {
   if (loadingMatches) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator size="large" />
+        <LottieLoadingAnimation />
       </View>
     );
   }

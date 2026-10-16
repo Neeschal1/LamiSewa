@@ -4,12 +4,12 @@ import {
   TouchableOpacity,
   Image,
   Text,
-  ActivityIndicator,
   TextInput,
   FlatList,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
@@ -265,7 +265,7 @@ const Conversation: FC = () => {
   if (loading) {
     return (
       <SafeAreaView className="flex-1 bg-background items-center justify-center">
-        <ActivityIndicator size="large" />
+        <LottieLoadingAnimation />
       </SafeAreaView>
     );
   }

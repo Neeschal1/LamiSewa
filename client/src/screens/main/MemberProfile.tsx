@@ -1,4 +1,5 @@
-import { View, Text, ScrollView, StatusBar, Image, ImageBackground, TouchableOpacity, Dimensions, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, StatusBar, Image, ImageBackground, TouchableOpacity, Dimensions } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -132,7 +133,7 @@ const MemberProfile: FC = () => {
             </Text>
           ) : null}
           {checking ? (
-            <ActivityIndicator className="mt-4" />
+            <LottieLoadingAnimation />
           ) : (
             <View className="flex-row gap-mid mt-4">
               <TouchableOpacity onPress={toggleFollow} className={`px-6 py-2 rounded-2xl ${isFollowing ? "border border-primaryblue" : "bg-primaryred"}`}>

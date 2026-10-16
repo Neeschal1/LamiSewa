@@ -1,4 +1,5 @@
-import { View, ScrollView, StatusBar, ActivityIndicator } from "react-native";
+import { View, ScrollView, StatusBar } from "react-native";
+import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "expo-router";
@@ -70,7 +71,7 @@ const ChangePassword: FC = () => {
             <InputPassword plchldr="***********" state={confirm} setState={setConfirm} board="default" visibility={seeConfirm} setVisibility={setSeeConfirm} />
           </View>
           {error ? <ErrorText text={error} /> : null}
-          {saving ? <ActivityIndicator /> : <PrimaryButton text="Update password" action={handleSave} />}
+          {saving ? <LottieLoadingAnimation /> : <PrimaryButton text="Update password" action={handleSave} />}
         </View>
       </ScrollView>
       <ToastManager config={toastConfig} />
