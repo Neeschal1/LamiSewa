@@ -287,11 +287,6 @@ const Conversation: FC = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      {typingName ? (
-        <Text className="font-Poppinsregular text-primaryblue text-description px-screen py-1">
-          {typingName} is typing...
-        </Text>
-      ) : null}
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1" keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
         <FlatList
           data={data}
@@ -308,6 +303,17 @@ const Conversation: FC = () => {
         ) : null}
         {sendError ? (
           <Text className="font-Poppinsregular text-primaryred text-description px-screen pb-1">{sendError}</Text>
+        ) : null}
+        {typingName ? (
+          <View className="flex-row items-center gap-2 px-screen pb-1">
+            <Image
+              source={{ uri: thread?.other_pic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg" }}
+              style={{ width: 26, height: 26, borderRadius: 13 }}
+            />
+            <Text className="font-Poppinsregular text-dark text-description">
+              {typingName} is typing...
+            </Text>
+          </View>
         ) : null}
         <View className="flex-row gap-mid items-center px-screen py-3 border-t border-darkvariant/10">
           <TextInput

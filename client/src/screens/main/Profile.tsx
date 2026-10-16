@@ -181,6 +181,10 @@ const Profile: FC = () => {
   const [viewers, setViewers] = useState<any[]>([]);
   const [viewersVisible, setViewersVisible] = useState<boolean>(false);
   const [uploadingAvatar, setUploadingAvatar] = useState<boolean>(false);
+  const [coverOptions, setCoverOptions] = useState<boolean>(false);
+  const [coverViewer, setCoverViewer] = useState<boolean>(false);
+  const [deleteCoverConfirm, setDeleteCoverConfirm] = useState<boolean>(false);
+  const [uploadingCover, setUploadingCover] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -248,6 +252,38 @@ const Profile: FC = () => {
     });
   };
 
+  const updateCoverPhoto = async () => {
+    setCoverOptions(false);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") return;
+    const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 0.8 });
+    if (result.canceled) return;
+    setUploadingCover(true);
+    try {
+      const url = await UploadImages(result.assets[0].uri);
+      if (url) {
+        await updateOwnProfile({ basic_info: { cover_picture: url } });
+        await refreshProfile();
+      }
+    } catch {
+    } finally {
+      setUploadingCover(false);
+    }
+  };
+
+  const deleteCoverPhoto = async () => {
+    setDeleteCoverConfirm(false);
+    setCoverOptions(false);
+    setUploadingCover(true);
+    try {
+      await updateOwnProfile({ basic_info: { cover_picture: "__default__" } });
+      await refreshProfile();
+    } catch {
+    } finally {
+      setUploadingCover(false);
+    }
+  };
+
   const handleLogOut = async () => {
     await logout();
   };
@@ -293,24 +329,25 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
       >
         <StatusBar hidden={false} translucent />
 
-        <ImageBackground
-          source={{ uri: userData?.basic_info.cover_picture }}
-          style={{
-            width: width,
-            height: height * 0.22,
-          }}
-          className="items-end pt-10 pr-6 w-full flex-end"
-          resizeMode="cover"
-        >
-          <View className="flex w-full justify-end pt-4 items-end flex-row gap-small">
-            {subscribed ? (
-              <TouchableOpacity
-                onPress={() => setPackageVisible(true)}
-                className="w-12 h-12 rounded-full bg-[#2277F7] items-center justify-center"
-              >
-                <Ionicons name="diamond" size={24} color="#F2F1FF" />
-              </TouchableOpacity>
-            ) : null}
+        <Pressable onPress={() => setCoverOptions(true)}>
+          <ImageBackground
+            source={{ uri: userData?.basic_info.cover_picture }}
+            style={{
+              width: width,
+              height: height * 0.22,
+            }}
+            className="items-end pt-10 pr-6 w-full flex-end"
+            resizeMode="cover"
+          >
+            <View className="flex w-full justify-end pt-4 items-end flex-row gap-small" pointerEvents="box-none">
+              {subscribed ? (
+                <TouchableOpacity
+                  onPress={() => setPackageVisible(true)}
+                  className="w-12 h-12 rounded-full bg-[#2277F7] items-center justify-center"
+                >
+                  <Ionicons name="diamond" size={24} color="#F2F1FF" />
+                </TouchableOpacity>
+              ) : null}
             <TouchableOpacity className="flex items-center justify-center bg-background w-12 h-12 rounded-full">
               <Ionicons name="menu" size={24} color="black" />
             </TouchableOpacity>
@@ -322,6 +359,7 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
             </TouchableOpacity>
           </View>
         </ImageBackground>
+        </Pressable>
 
         <View
           style={{
@@ -665,6 +703,97 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
           >
             <Text className="font-Poppinsmedium text-background">Close</Text>
           </TouchableOpacity>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={coverOptions}
+        onBackdropPress={() => setCoverOptions(false)}
+        onBackButtonPress={() => setCoverOptions(false)}
+        style={{ justifyContent: "flex-end", margin: 0 }}
+      >
+        <View className="bg-background rounded-t-3xl p-screen items-center gap-large">
+          <View className="w-12 h-1.5 rounded-full bg-darkvariant/40" />
+          <SubTitle text="Cover photo" />
+          <View className="w-full gap-mid">
+            <TouchableOpacity
+              onPress={() => {
+                setCoverOptions(false);
+                setDeleteCoverConfirm(true);
+              }}
+              className="flex-row items-center gap-mid py-3 border-b border-darkvariant/10"
+            >
+              <Ionicons name="trash-outline" size={24} color="#FF000E" />
+              <SubTitle text="Delete cover picture" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCoverOptions(false);
+                setCoverViewer(true);
+              }}
+              className="flex-row items-center gap-mid py-3 border-b border-darkvariant/10"
+            >
+              <Ionicons name="eye-outline" size={24} color="black" />
+              <SubTitle text="View cover picture" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={updateCoverPhoto} className="flex-row items-center gap-mid py-3">
+              <Ionicons name="camera-outline" size={24} color="black" />
+              <SubTitle text={uploadingCover ? "Uploading..." : "Update cover photo"} />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => setCoverOptions(false)}
+            className="bg-primaryred rounded-2xl py-3 px-10"
+          >
+            <Text className="font-Poppinsmedium text-background">Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={coverViewer}
+        onBackdropPress={() => setCoverViewer(false)}
+        onBackButtonPress={() => setCoverViewer(false)}
+        style={{ margin: 0 }}
+      >
+        <View className="flex-1 bg-black items-center justify-center">
+          <Image
+            source={{ uri: userData?.basic_info.cover_picture }}
+            style={{ width: width * 0.94, height: height * 0.5, borderRadius: 16 }}
+            resizeMode="contain"
+          />
+          <TouchableOpacity
+            onPress={() => setCoverViewer(false)}
+            className="absolute top-14 right-6 w-11 h-11 rounded-full bg-black/60 items-center justify-center"
+          >
+            <Ionicons name="close" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={deleteCoverConfirm}
+        onBackdropPress={() => setDeleteCoverConfirm(false)}
+        onBackButtonPress={() => setDeleteCoverConfirm(false)}
+        style={{ justifyContent: "flex-end", margin: 0 }}
+      >
+        <View className="bg-background rounded-t-3xl p-screen items-center gap-large">
+          <SubTitle text="Are you sure that you want to delete your cover photo?" />
+          <View className="flex-row w-full gap-mid">
+            <View className="flex-1">
+              <TouchableOpacity
+                onPress={deleteCoverPhoto}
+                className="bg-primaryred rounded-2xl py-3 items-center"
+              >
+                <Text className="font-Poppinsmedium text-background">Yes</Text>
+              </TouchableOpacity>
+            </View>
+            <View className="flex-1">
+              <TouchableOpacity
+                onPress={() => setDeleteCoverConfirm(false)}
+                className="border border-darkvariant/40 rounded-2xl py-3 items-center"
+              >
+                <Text className="font-Poppinsmedium text-dark">No</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </Modal>
       <Modal

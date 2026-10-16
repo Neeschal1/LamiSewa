@@ -37,6 +37,8 @@ SECTION_MODEL_FIELDS = {
 
 
 class OwnProfileUpdate:
+    RESET_COVER = "__default__"
+
     def update(self, request) -> dict:
         try:
             profile = UserProfile.objects.get(userid=request.user)
@@ -60,6 +62,10 @@ class OwnProfileUpdate:
             if not isinstance(section, dict) or not section:
                 continue
             cleaned = {k: v for k, v in section.items() if k in allowed}
+            if key == "basic_info" and cleaned.get("cover_picture") == self.RESET_COVER:
+                from env_config import Config
+
+                cleaned["cover_picture"] = Config.DEFAULTUSERCOVER or ""
             if not cleaned:
                 continue
             try:

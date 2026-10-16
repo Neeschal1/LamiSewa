@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import {
   Description,
@@ -70,6 +70,17 @@ const Chats: FC = () => {
   useEffect(() => {
     load();
   }, [load]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const refreshThreads = async () => {
+        try {
+          setThreads(await fetchConversations());
+        } catch {}
+      };
+      refreshThreads();
+    }, [])
+  );
 
   useEffect(() => {
     if (!event || event.ntype !== "message" || !event.thread_id) return;
