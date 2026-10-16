@@ -6,13 +6,12 @@ import {
   ScrollView,
   Text,
   ActivityIndicator,
-  TextInput,
   Modal,
   Dimensions,
 } from "react-native";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import {
   Description,
@@ -22,10 +21,10 @@ import {
   Title,
 } from "@/src/components/systemComponentsLayout";
 import { Ionicons } from "@expo/vector-icons";
-import { fetchConversations, fetchMessages, sendMessage } from "@/src/services/chat/chat";
+import { NavigationProps } from "@/src/components/componentsType";
+import { fetchConversations } from "@/src/services/chat/chat";
 import { fetchMutual } from "@/src/services/privacy/follow";
 import { fetchStories, uploadStory } from "@/src/services/profile/stories";
-import { getAccessTokens } from "@/src/storage/SecureTokens";
 import { useProfile } from "@/src/profile/ProfileProvider";
 import UploadImages from "@/src/utils/uploadImages";
 
@@ -36,53 +35,39 @@ const PLUS_SIZE = STORY_SIZE * 0.35;
 
 const myProfile = require("@/src/assets/images/myPP.png");
 
+const isGeneral = (t: any) => t.mutual === true || (t.i_sent === true && t.they_sent === true);
+
 const Chats: FC = () => {
+  const navigation = useNavigation<NavigationProps>();
   const [threads, setThreads] = useState<any[]>([]);
   const [mutual, setMutual] = useState<any[]>([]);
   const [stories, setStories] = useState<any[]>([]);
   const [viewer, setViewer] = useState<string | null>(null);
   const [uploadingStory, setUploadingStory] = useState(false);
-  const [activeThread, setActiveThread] = useState<any | null>(null);
-  const [messages, setMessages] = useState<any[]>([]);
-  const [draft, setDraft] = useState("");
-  const [sendError, setSendError] = useState("");
+  const [tab, setTab] = useState<"general" | "requests">("general");
   const [loading, setLoading] = useState(true);
-  const ws = useRef<WebSocket | null>(null);
-  const route = useRoute<any>();
   const { data: profileData } = useProfile();
   const myPic = (profileData as any)?.basic_info?.profile_picture ?? "";
   const myProfileId = (profileData as any)?.profile?.profileid ?? "";
 
-  useEffect(() => {
-    const load = async () => {
-      let list: any[] = [];
-      try {
-        list = await fetchConversations();
-        setThreads(list);
-      } catch {}
-      try {
-        setMutual(await fetchMutual());
-      } catch {}
-      try {
-        setStories(await fetchStories());
-      } catch {}
-      const openId = route.params?.openThreadId;
-      if (openId) {
-        const target = list.find((t: any) => t.id === openId);
-        if (target) {
-          try {
-            setMessages(await fetchMessages(target.id));
-          } catch {
-            setMessages([]);
-          }
-          setActiveThread(target);
-        }
-      }
-      setLoading(false);
-    };
-    load();
-    return () => ws.current?.close();
+  const load = useCallback(async () => {
+    try {
+      setThreads(await fetchConversations());
+    } catch {}
+    try {
+      setMutual(await fetchMutual());
+    } catch {}
+    try {
+      setStories(await fetchStories());
+    } catch {}
+    setLoading(false);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      load();
+    }, [load])
+  );
 
   const storyFor = (profileid: string) => stories.find((s: any) => s.profileid === profileid);
 
@@ -107,48 +92,13 @@ const Chats: FC = () => {
     }
   };
 
-  const openThread = async (thread: any) => {
-    setActiveThread(thread);
-    setSendError("");
-    try {
-      setMessages(await fetchMessages(thread.id));
-    } catch {
-      setMessages([]);
-    }
-    try {
-      ws.current?.close();
-      const token = await getAccessTokens();
-      const base = (process.env.EXPO_PUBLIC_DJANGO_DEVELOPMENT_SERVER_URL ?? "").replace(/^http/, "ws");
-      ws.current = new WebSocket(`${base}/ws/chat/${thread.id}/`);
-      void token;
-      ws.current.onmessage = (e) => {
-        try {
-          const data = JSON.parse(e.data);
-          if (data?.id) setMessages((m) => [...m, data]);
-        } catch {}
-      };
-    } catch {}
+  const openConversation = (thread: any) => {
+    navigation.navigate("Conversation", { threadId: thread.id });
   };
 
-  const handleSend = async () => {
-    if (!activeThread || !draft.trim()) return;
-    if (activeThread.can_message === false) {
-      setSendError("You can send only one message until you both follow each other.");
-      return;
-    }
-    const text = draft.trim();
-    setDraft("");
-    setSendError("");
-    try {
-      const saved = await sendMessage(activeThread.id, text);
-      if (saved?.id) setMessages((m) => [...m, saved]);
-    } catch (e: any) {
-      setSendError(e?.response?.data?.message ?? "Message not sent.");
-    }
-    try {
-      ws.current?.send(JSON.stringify({ text }));
-    } catch {}
-  };
+  const general = threads.filter(isGeneral);
+  const requests = threads.filter((t) => !isGeneral(t));
+  const shown = tab === "general" ? general : requests;
 
   if (loading) {
     return (
@@ -236,60 +186,47 @@ const Chats: FC = () => {
             })}
           </ScrollView>
         </View>
-        {!activeThread ? (
-          <ScrollView className="mt-large">
-            {threads.length === 0 ? (
-              <Description text="No messages" />
-            ) : (
-              threads.map((t: any) => (
-                <TouchableOpacity
-                  key={t.id}
-                  onPress={() => openThread(t)}
-                  className="flex-row items-center gap-mid py-3 border-b border-darkvariant/10"
-                >
-                  <Ionicons name="person-circle" size={44} color="#888" />
-                  <View className="flex-1">
-                    <Text className="font-Poppinsmedium text-dark">{t.other_name}</Text>
-                    <Description text={t.last_text ?? ""} />
-                  </View>
-                </TouchableOpacity>
-              ))
-            )}
-          </ScrollView>
-        ) : (
-          <View className="flex-1 mt-large">
-            <TouchableOpacity onPress={() => { setActiveThread(null); ws.current?.close(); }} className="mb-2">
-              <Text className="font-Poppinsmedium text-primaryblue">Back</Text>
-            </TouchableOpacity>
-            <ScrollView className="flex-1">
-              {messages.map((m: any) => (
-                <View key={m.id} className="py-1">
-                  <Text className="font-Poppinsregular text-dark">{m.text}</Text>
+        <View className="flex-row gap-mid mt-large">
+          <TouchableOpacity
+            onPress={() => setTab("general")}
+            className={`px-5 py-2 rounded-full ${tab === "general" ? "bg-primaryred" : "bg-[#ECEBFF]"}`}
+          >
+            <Text className={`font-Poppinsmedium ${tab === "general" ? "text-background" : "text-dark"}`}>
+              General{general.length > 0 ? ` (${general.length})` : ""}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setTab("requests")}
+            className={`px-5 py-2 rounded-full ${tab === "requests" ? "bg-primaryred" : "bg-[#ECEBFF]"}`}
+          >
+            <Text className={`font-Poppinsmedium ${tab === "requests" ? "text-background" : "text-dark"}`}>
+              Requests{requests.length > 0 ? ` (${requests.length})` : ""}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView className="mt-mid">
+          {shown.length === 0 ? (
+            <Description text={tab === "general" ? "No conversations yet" : "No message requests"} />
+          ) : (
+            shown.map((t: any) => (
+              <TouchableOpacity
+                key={t.id}
+                onPress={() => openConversation(t)}
+                className="flex-row items-center gap-mid py-3 border-b border-darkvariant/10"
+              >
+                <Image
+                  source={{ uri: t.other_pic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg" }}
+                  style={{ width: 52, height: 52, borderRadius: 26 }}
+                />
+                <View className="flex-1">
+                  <Text className="font-Poppinsmedium text-dark">{t.other_name}</Text>
+                  <Description text={t.last_text || "No messages yet"} />
                 </View>
-              ))}
-            </ScrollView>
-            <View className="flex-row gap-mid items-center mt-2">
-              <TextInput
-                value={draft}
-                onChangeText={setDraft}
-                placeholder="Message"
-                editable={activeThread.can_message !== false}
-                className="flex-1 border border-darkvariant/30 rounded-2xl px-4 py-3 font-Poppinsregular"
-              />
-              <TouchableOpacity onPress={handleSend} className="bg-primaryred rounded-full p-3">
-                <Ionicons name="send" size={20} color="white" />
+                {tab === "requests" ? <Ionicons name="mail-unread-outline" size={20} color="#FF000E" /> : null}
               </TouchableOpacity>
-            </View>
-            {activeThread.can_message === false ? (
-              <Text className="font-Poppinsregular text-darkvariant text-description mt-2">
-                Message request sent — two-way chat unlocks when you follow each other.
-              </Text>
-            ) : null}
-            {sendError ? (
-              <Text className="font-Poppinsregular text-primaryred text-description mt-2">{sendError}</Text>
-            ) : null}
-          </View>
-        )}
+            ))
+          )}
+        </ScrollView>
       </View>
       <Modal visible={viewer !== null} transparent animationType="fade" onRequestClose={() => setViewer(null)}>
         <View className="flex-1 bg-black items-center justify-center">

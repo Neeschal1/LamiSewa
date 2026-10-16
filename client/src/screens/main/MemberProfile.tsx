@@ -3,7 +3,7 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { Describe, Heading, SubHeading, Title } from "@/src/components/systemComponentsLayout";
+import { Describe, Title } from "@/src/components/systemComponentsLayout";
 import { NavigationProps } from "@/src/components/componentsType";
 import { followUser, unfollowUser, fetchFollowing, fetchMutual } from "@/src/services/privacy/follow";
 import { createThreadByProfile } from "@/src/services/chat/chat";
@@ -89,28 +89,27 @@ const MemberProfile: FC = () => {
     if (!p?.profileid) return;
     try {
       const thread = await createThreadByProfile(p.profileid);
-      (navigation as any).navigate("MyTabs", {
-        screen: "Chats",
-        params: { openThreadId: thread?.id },
-      });
+      if (thread?.id) navigation.navigate("Conversation", { threadId: thread.id });
     } catch {}
   };
 
   return (
     <SafeAreaView className="flex-1 bg-background">
-      <StatusBar translucent hidden={false} />
+      <StatusBar hidden />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <ImageBackground source={{ uri: cover }} style={{ width, height: height * 0.32 }} resizeMode="cover">
+        <ImageBackground source={{ uri: cover }} style={{ width, height: height * 0.22 }} resizeMode="cover">
           <TouchableOpacity onPress={() => navigation.goBack()} className="mt-12 ml-4 w-11 h-11 rounded-full bg-black/50 items-center justify-center">
             <Ionicons name="arrow-back" size={22} color="white" />
           </TouchableOpacity>
         </ImageBackground>
-        <View style={{ marginTop: -60 }} className="px-screen">
-          <View className="flex-row items-end gap-mid">
+        <View className="px-screen pt-4">
+          <View className="flex-row items-center gap-mid">
             <Image source={{ uri: pic }} style={{ width: 110, height: 110, borderRadius: 60, borderWidth: 3, borderColor: "#0066FF" }} />
-            <View className="flex-1 pb-1">
-              <Heading text={name} />
-              {basic?.nickname ? <SubHeading text={`@${basic.nickname}`} /> : null}
+            <View className="flex-1">
+              <Text className="font-Poppinssemibold text-dark text-[22px]">{name}</Text>
+              {basic?.nickname ? (
+                <Text className="font-Poppinsregular text-darkvariant text-description">@{basic.nickname}</Text>
+              ) : null}
               {typeof p?.score === "number" ? (
                 <Text className="font-Poppinsmedium text-primaryblue">{Math.round(p.score * 100)}% match</Text>
               ) : null}

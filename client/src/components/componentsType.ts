@@ -16,6 +16,7 @@ export type RootStackParamList = {
   
   // mains
   Chats: undefined;
+  Conversation: { threadId: number } | undefined;
   Home: undefined;
   Notification: undefined;
   Profile: undefined;

@@ -24,16 +24,30 @@ class ConversationView(viewsets.ViewSet):
             other = t.member_b if t.member_a_id == request.user.id else t.member_a
             last = t.messages.order_by("-created_date").first()
             mutual = FollowService().is_mutual(request.user, other)
-            sent_by_me = t.messages.filter(message_user=request.user).exists()
+            i_sent = t.messages.filter(message_user=request.user).exists()
+            they_sent = t.messages.exclude(message_user=request.user).exists()
+            try:
+                other_profile = other.profile
+                other_profileid = other_profile.profileid
+            except Exception:
+                other_profileid = ""
+            try:
+                other_pic = other.profile.basic_info.profile_picture
+            except Exception:
+                other_pic = ""
             out.append(
                 {
                     "id": t.id,
                     "other_user_id": other.id,
+                    "other_profileid": other_profileid,
+                    "other_pic": other_pic,
                     "other_name": other.first_name or other.username,
                     "last_text": last.text if last else "",
                     "last_at": last.created_date if last else t.updated_at,
                     "mutual": mutual,
-                    "can_message": bool(mutual or not sent_by_me),
+                    "i_sent": i_sent,
+                    "they_sent": they_sent,
+                    "can_message": bool(mutual or not i_sent),
                 }
             )
         return Response({"message": "Conversations.", "data": out})
@@ -79,6 +93,7 @@ class MessageView(viewsets.ViewSet):
             return Response({"message": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         if request.user.id not in (thread.member_a_id, thread.member_b_id):
             return Response({"message": "Forbidden."}, status=status.HTTP_403_FORBIDDEN)
+        thread.messages.exclude(message_user=request.user).filter(seen=False).update(seen=True)
         msgs = thread.messages.order_by("created_date")[:200]
         return Response(
             {"message": "Messages.", "data": MessageSerializer(msgs, many=True).data}
