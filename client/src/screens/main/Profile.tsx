@@ -41,6 +41,7 @@ import { fetchSubscriptionStatus } from "@/src/services/payments/subscription";
 import { fetchStories, fetchStoryViewers, uploadStory } from "@/src/services/profile/stories";
 import { updateOwnProfile } from "@/src/services/profile/updateProfile";
 import UploadImages from "@/src/utils/uploadImages";
+import { APP_BUILD, APP_VERSION } from "@/src/constants/appBuild";
 import QRCode from "react-native-qrcode-svg";
 
 type OthersScreen =
@@ -603,6 +604,9 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
           </View>
         </View>
         <View className="flex flex-row gap-4"></View>
+        <Text className="font-Poppinsregular text-darkvariant text-center text-description pb-4">
+          {`LamiSewa v${APP_VERSION} (${APP_BUILD})`}
+        </Text>
       </ScrollView>
       <Modal
         isVisible={shareVisible}

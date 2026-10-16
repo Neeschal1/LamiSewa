@@ -132,6 +132,9 @@ const FeaturedPhoto = () => {
           return;
         }
         navigation.goBack()
+      } else {
+        setError(true);
+        setErrorMessage("Server did not save photos. Try again.");
       }
       setLoading(false)
     } catch (err) {
@@ -139,7 +142,13 @@ const FeaturedPhoto = () => {
         const status = err.response?.status;
         const response = err.response?.data;
         console.log("Status: ", status, "\nData: ", response)
+        setError(true);
+        setErrorMessage(typeof response?.message === "string" ? response.message : "Could not save photos. Check connection and server, then try again.");
+      } else {
+        setError(true);
+        setErrorMessage("Could not save photos. Try again.");
       }
+      setLoading(false)
     } finally {
       setLoading(false)
     }
