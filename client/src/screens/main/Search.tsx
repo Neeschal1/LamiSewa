@@ -325,15 +325,15 @@ const Search: FC = () => {
               </Text>
             </TouchableOpacity>
           ))}
-          <TouchableOpacity
-            onPress={openScanner}
-            className="flex-1 px-2 py-2 rounded-full bg-primaryred"
-          >
-            <Text numberOfLines={1} className="font-Poppinsmedium text-center text-background">
-              QR
-            </Text>
-          </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          onPress={openScanner}
+          className="w-full py-2 rounded-full bg-primaryred"
+        >
+          <Text numberOfLines={1} className="font-Poppinsmedium text-center text-background">
+            QR
+          </Text>
+        </TouchableOpacity>
 
         {mode !== "idname" ? (
           <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
