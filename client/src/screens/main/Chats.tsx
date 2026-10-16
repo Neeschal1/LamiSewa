@@ -9,9 +9,9 @@ import {
   Modal,
   Dimensions,
 } from "react-native";
-import React, { FC, useCallback, useRef, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import {
   Description,
@@ -24,11 +24,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { NavigationProps } from "@/src/components/componentsType";
 import { fetchConversations } from "@/src/services/chat/chat";
 import { fetchMutual } from "@/src/services/privacy/follow";
-import { fetchStories, uploadStory } from "@/src/services/profile/stories";
+import { fetchStories, fetchStoryViewers, recordStoryView, uploadStory } from "@/src/services/profile/stories";
 import { useProfile } from "@/src/profile/ProfileProvider";
+import { useInbox } from "@/src/notifications/InboxProvider";
 import UploadImages from "@/src/utils/uploadImages";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const STORY_SIZE = width * 0.18;
 const BORDER_SIZE = STORY_SIZE + 8;
 const PLUS_SIZE = STORY_SIZE * 0.35;
@@ -44,59 +45,95 @@ const Chats: FC = () => {
   const [threads, setThreads] = useState<any[]>([]);
   const [mutual, setMutual] = useState<any[]>([]);
   const [stories, setStories] = useState<any[]>([]);
-  const [viewer, setViewer] = useState<string | null>(null);
+  const [viewer, setViewer] = useState<any | null>(null);
+  const [storyViewers, setStoryViewers] = useState<any[]>([]);
+  const [storyViewersVisible, setStoryViewersVisible] = useState<boolean>(false);
   const [uploadingStory, setUploadingStory] = useState(false);
   const [tab, setTab] = useState<"general" | "requests">("general");
   const [loading, setLoading] = useState(true);
-  const [banner, setBanner] = useState<any | null>(null);
-  const lastSeen = useRef<Record<number, string>>({});
-  const bannerTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { data: profileData } = useProfile();
-  const myPic = (profileData as any)?.basic_info?.profile_picture ?? "";
-  const myProfileId = (profileData as any)?.profile?.profileid ?? "";
+  const { event } = useInbox();
 
-  const load = useCallback(async (silent = false) => {
+  const load = useCallback(async () => {
     try {
-      const list = await fetchConversations();
+      const [list, people, storyList] = await Promise.all([
+        fetchConversations(),
+        fetchMutual(),
+        fetchStories(),
+      ]);
       setThreads(list);
-      if (silent) {
-        list.forEach((t: any) => {
-          const key = `${t.last_at ?? ""}|${t.last_text ?? ""}`;
-          const prev = lastSeen.current[t.id];
-          if (prev !== undefined && prev !== key && t.last_by_me === false && t.last_text) {
-            setBanner(t);
-            if (bannerTimer.current) clearTimeout(bannerTimer.current);
-            bannerTimer.current = setTimeout(() => setBanner(null), 4500);
-          }
-          lastSeen.current[t.id] = key;
-        });
-      } else {
-        list.forEach((t: any) => {
-          lastSeen.current[t.id] = `${t.last_at ?? ""}|${t.last_text ?? ""}`;
-        });
-      }
-    } catch {}
-    try {
-      setMutual(await fetchMutual());
-    } catch {}
-    try {
-      setStories(await fetchStories());
+      setMutual(people);
+      setStories(storyList);
     } catch {}
     setLoading(false);
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      load();
-      const timer = setInterval(() => load(true), 15000);
-      return () => {
-        clearInterval(timer);
-        if (bannerTimer.current) clearTimeout(bannerTimer.current);
-      };
-    }, [load])
-  );
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  useEffect(() => {
+    if (!event || event.ntype !== "message" || !event.thread_id) return;
+    setThreads((prev) => {
+      const i = prev.findIndex((t: any) => t.id === event.thread_id);
+      const now = new Date().toISOString();
+      if (i >= 0) {
+        const next = [...prev];
+        const current = next[i];
+        next.splice(i, 1);
+        next.unshift({
+          ...current,
+          last_text: event.body ?? current.last_text,
+          last_at: now,
+          last_by_me: false,
+          unread: (current.unread ?? 0) + 1,
+          they_sent: true,
+        });
+        return next;
+      }
+      return [
+        {
+          id: event.thread_id,
+          other_profileid: event.other_profileid ?? "",
+          other_pic: event.other_pic ?? "",
+          other_name: event.other_name ?? event.title,
+          last_text: event.body ?? "",
+          last_at: now,
+          last_by_me: false,
+          unread: 1,
+          mutual: false,
+          i_sent: false,
+          they_sent: true,
+          can_message: true,
+        },
+        ...prev,
+      ];
+    });
+  }, [event]);
+  const { data: profileData } = useProfile();
+  const myPic = (profileData as any)?.basic_info?.profile_picture ?? "";
+  const myProfileId = (profileData as any)?.profile?.profileid ?? "";
 
   const storyFor = (profileid: string) => stories.find((s: any) => s.profileid === profileid);
+
+  const openStory = async (story: any) => {
+    if (!story?.has_story) return;
+    setViewer(story);
+    if (story.profileid !== myProfileId && story.id) {
+      try {
+        await recordStoryView(story.id);
+      } catch {}
+    }
+  };
+
+  const openOwnViewers = async () => {
+    if (!viewer?.id) return;
+    try {
+      setStoryViewers(await fetchStoryViewers(viewer.id));
+    } catch {
+      setStoryViewers([]);
+    }
+    setStoryViewersVisible(true);
+  };
 
   const addStory = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -136,32 +173,10 @@ const Chats: FC = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
-      <StatusBar hidden={false} />
+    <SafeAreaView className="flex-1 bg-background" edges={["bottom", "left", "right"]}>
+      <StatusBar hidden={false} translucent />
       <View className="flex-1 w-full bg-background p-screen">
         <MainScreenName text="Messages" />
-        {banner ? (
-          <TouchableOpacity
-            onPress={() => {
-              setBanner(null);
-              openConversation(banner);
-            }}
-            className="flex-row items-center gap-mid bg-[#ECEBFF] border border-primaryblue rounded-2xl px-4 py-3 mb-2"
-          >
-            <Image
-              source={{ uri: banner.other_pic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg" }}
-              style={{ width: 44, height: 44, borderRadius: 22 }}
-            />
-            <View className="flex-1">
-              <Text className="font-Poppinsmedium text-dark text-subheading" numberOfLines={1}>
-                {banner.other_name} sent you a message
-              </Text>
-              <Text className="font-Poppinsregular text-dark text-description" numberOfLines={1}>
-                {banner.last_text}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ) : null}
         <View className="mt-large gap-mid">
           <Title text="People you've followed" />
           <ScrollView horizontal showsHorizontalScrollIndicator={true} contentContainerStyle={{ paddingHorizontal: 4, gap: 12 }}>
@@ -169,7 +184,7 @@ const Chats: FC = () => {
               className="items-center"
               onPress={() => {
                 const mine = storyFor(myProfileId);
-                if (mine?.has_story) setViewer(mine.story);
+                if (mine?.has_story) openStory(mine);
                 else addStory();
               }}
               disabled={uploadingStory}
@@ -212,7 +227,7 @@ const Chats: FC = () => {
                   key={u.profileid}
                   className="items-center"
                   disabled={!story?.has_story}
-                  onPress={() => story?.has_story && setViewer(story.story)}
+                  onPress={() => story?.has_story && openStory(story)}
                 >
                   {story?.has_story ? (
                     <View
@@ -286,8 +301,19 @@ const Chats: FC = () => {
       </View>
       <Modal visible={viewer !== null} transparent animationType="fade" onRequestClose={() => setViewer(null)}>
         <View className="flex-1 bg-black items-center justify-center">
-          {viewer ? (
-            <Image source={{ uri: viewer }} style={{ width: width * 0.92, height: width * 1.3, borderRadius: 16 }} resizeMode="contain" />
+          {viewer?.story ? (
+            <Image source={{ uri: viewer.story }} style={{ width: width * 0.92, height: width * 1.3, borderRadius: 16 }} resizeMode="contain" />
+          ) : null}
+          {viewer?.profileid === myProfileId && viewer?.has_story ? (
+            <TouchableOpacity
+              onPress={openOwnViewers}
+              className="absolute bottom-12 flex-row items-center gap-2 bg-black/60 px-5 py-2 rounded-full"
+            >
+              <Ionicons name="eye-outline" size={18} color="white" />
+              <Text className="font-Poppinsregular text-white text-description">
+                Viewed{viewer?.storyviews ? ` by ${viewer.storyviews}` : ""}
+              </Text>
+            </TouchableOpacity>
           ) : null}
           <TouchableOpacity
             onPress={() => setViewer(null)}
@@ -295,6 +321,41 @@ const Chats: FC = () => {
           >
             <Ionicons name="close" size={24} color="white" />
           </TouchableOpacity>
+        </View>
+      </Modal>
+      <Modal
+        visible={storyViewersVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setStoryViewersVisible(false)}
+      >
+        <View className="flex-1 bg-black/70 items-center justify-center p-screen">
+          <View className="bg-background rounded-3xl p-screen w-full gap-mid" style={{ maxHeight: height * 0.6 }}>
+            <Text className="font-Poppinssemibold text-dark text-heading text-center">
+              Viewed by {storyViewers.length}
+            </Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {storyViewers.length === 0 ? <Description text="No views yet." /> : null}
+              {storyViewers.map((v: any) => (
+                <View key={v.profileid} className="flex-row items-center gap-mid py-2 border-b border-darkvariant/10">
+                  <Image
+                    source={{ uri: v.pic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg" }}
+                    style={{ width: 44, height: 44, borderRadius: 22 }}
+                  />
+                  <View className="flex-1">
+                    <Text className="font-Poppinsmedium text-dark text-subheading">{v.name ?? v.username}</Text>
+                    <Description text={`@${v.username}`} />
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+            <TouchableOpacity
+              onPress={() => setStoryViewersVisible(false)}
+              className="bg-primaryred rounded-2xl py-3 items-center"
+            >
+              <Text className="font-Poppinsmedium text-background">Close</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>

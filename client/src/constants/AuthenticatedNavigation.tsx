@@ -5,6 +5,8 @@ import { Describe, SubHeading, Title } from "../components/Texts";
 import { Chats, Home, NearYou, Profile, Search, UserDetails } from "../screens/main/mainScreenLayouts";
 import Conversation from "../screens/main/Conversation";
 import MemberProfile from "../screens/main/MemberProfile";
+import { InboxProvider } from "../notifications/InboxProvider";
+import InboxSlider from "../notifications/InboxSlider";
 import { Followers, Following } from "../screens/profile/profileScreenLayout";
 import { PaymentSuccess, SubscriptionDetails } from "../screens/payments/PaymentLayout";
 import MyTabs from "./BottomTabNavigation";
@@ -52,7 +54,9 @@ const AuthenticatedNavigation = () => {
   }
 
   return (
-    <Stack.Navigator initialRouteName={subscriptionScreen} screenOptions={{headerShown: false}}>
+    <InboxProvider>
+      <InboxSlider />
+      <Stack.Navigator initialRouteName={subscriptionScreen} screenOptions={{headerShown: false}}>
       <Stack.Screen name="Chats" component={Chats} options={optionsScreens} />
       <Stack.Screen name="Conversation" component={Conversation} options={{ headerShown: false }} />
       <Stack.Screen name="Home" component={Home} options={optionsScreens} />
@@ -109,6 +113,7 @@ const AuthenticatedNavigation = () => {
       <Stack.Screen name="AboutUs" component={AboutUs} options={OthersScreens("AboutUs", "About the Team behind LamiSewa.")} />
       <Stack.Screen name="VerifyId" component={VerifyId} options={ProfileScreens("VerifyId")} />
     </Stack.Navigator>
+    </InboxProvider>
   );
 };
 

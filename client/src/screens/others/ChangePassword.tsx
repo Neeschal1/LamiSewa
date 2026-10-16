@@ -52,10 +52,10 @@ const ChangePassword: FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <SafeAreaView className="flex-1 bg-background" edges={["bottom", "left", "right"]}>
       <StatusBar hidden={false} translucent />
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
-        <View className="p-screen gap-large">
+        <View className="p-screen pt-12 gap-large">
           <MainScreenName text="Change Password" />
           <View className="gap-small">
             <Title text="Current password" />

@@ -10,3 +10,8 @@ export const markNotificationRead = async (id: number) => {
   const res = await api.patch(`${API.NOTIFICATIONS.LIST}${id}/`, {});
   return res.data?.data;
 };
+
+export const markAllNotificationsRead = async () => {
+  const res = await api.post(`${API.NOTIFICATIONS.LIST}read-all/`, {});
+  return res.data;
+};

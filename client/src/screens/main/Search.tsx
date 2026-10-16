@@ -78,8 +78,8 @@ const Search: FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex flex-1 bg-background">
-      <View className="flex-1 bg-background p-screen gap-mid">
+    <SafeAreaView className="flex flex-1 bg-background" edges={["bottom", "left", "right"]}>
+      <View className="flex-1 bg-background p-screen pt-12 gap-mid">
         <StatusBar hidden={false} translucent />
         <View className="flex-row items-center justify-between">
           <Text className="font-Poppinssemibold text-dark text-screenname">Search</Text>

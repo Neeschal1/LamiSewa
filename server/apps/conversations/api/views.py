@@ -141,6 +141,37 @@ class MessageView(viewsets.ViewSet):
             except Exception:
                 pass
         try:
+            from apps.notifications.services.push import push_to_user
+            from apps.userprofile.models.entities import UserProfile
+
+            try:
+                sender_profile = UserProfile.objects.get(userid=request.user)
+                sender_pic = sender_profile.basic_info.profile_picture
+                sender_name = (
+                    sender_profile.basic_info.fullname
+                    or sender_profile.basic_info.nickname
+                    or sender_profile.username
+                )
+                sender_profileid = sender_profile.profileid
+            except Exception:
+                sender_pic = ""
+                sender_name = request.user.first_name or request.user.username
+                sender_profileid = ""
+            push_to_user(
+                other.id,
+                {
+                    "ntype": "message",
+                    "title": sender_name,
+                    "body": text,
+                    "thread_id": thread.id,
+                    "other_profileid": sender_profileid,
+                    "other_name": sender_name,
+                    "other_pic": sender_pic,
+                },
+            )
+        except Exception:
+            pass
+        try:
             from channels.layers import get_channel_layer
             from asgiref.sync import async_to_sync
 

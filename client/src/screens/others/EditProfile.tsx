@@ -180,9 +180,9 @@ const EditProfile: FC = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <SafeAreaView className="flex-1 bg-background" edges={["bottom", "left", "right"]}>
       <StatusBar hidden={false} translucent />
-      <View className="p-screen pt-2">
+      <View className="p-screen pt-12">
         <MainScreenName text="Edit Profile" />
         <Description text={`Profile ID: ${data?.profile?.profileid ?? "-"} (cannot be changed)`} />
       </View>

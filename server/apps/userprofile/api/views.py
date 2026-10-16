@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from apps.userprofile.models.entities import *
 from .serializers import *
 from rest_framework import viewsets, status, validators
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
@@ -459,6 +460,7 @@ class StoryView(viewsets.ViewSet):
             pic = ""
             name = profile.username
         return {
+            "id": story.id if story else None,
             "profileid": profile.profileid,
             "username": profile.username,
             "name": name,
@@ -483,13 +485,21 @@ class StoryView(viewsets.ViewSet):
 
     def list(self, request):
         from apps.userprofile.models.entities import UsersStories
+        from django.utils import timezone
+        from datetime import timedelta
 
         me, audience = self._audience(request)
         if me is None:
             return Response({"message": "Complete your profile first."}, status=status.HTTP_404_NOT_FOUND)
+        since = timezone.now() - timedelta(hours=24)
         out = []
         for profile in audience:
-            story = UsersStories.objects.filter(userprofileid=profile).exclude(story="").order_by("-id").first()
+            story = (
+                UsersStories.objects.filter(userprofileid=profile, created_at__gt=since)
+                .exclude(story="")
+                .order_by("-id")
+                .first()
+            )
             out.append(self._serialize(profile, story))
         return Response({"message": "Stories.", "data": out}, status=status.HTTP_200_OK)
 
@@ -508,3 +518,56 @@ class StoryView(viewsets.ViewSet):
             {"message": "Story uploaded.", "data": self._serialize(me, story)},
             status=status.HTTP_201_CREATED,
         )
+
+    @action(detail=True, methods=["post"], url_path="view")
+    def record_view(self, request, pk=None):
+        from apps.userprofile.models.entities import UserProfile, UsersStories, StoryView
+        from django.db.models import F
+
+        try:
+            me = UserProfile.objects.get(userid=request.user)
+        except UserProfile.DoesNotExist:
+            return Response({"message": "Complete your profile first."}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            story = UsersStories.objects.get(id=pk)
+        except UsersStories.DoesNotExist:
+            return Response({"message": "Story not found."}, status=status.HTTP_404_NOT_FOUND)
+        if story.userprofileid_id == me.id:
+            return Response({"message": "Own story.", "data": {"views": story.storyviews}})
+        _, created = StoryView.objects.get_or_create(story=story, viewer=me)
+        if created:
+            UsersStories.objects.filter(id=story.id).update(storyviews=F("storyviews") + 1)
+            story.refresh_from_db(fields=["storyviews"])
+        return Response({"message": "Viewed.", "data": {"views": story.storyviews}})
+
+    @action(detail=True, methods=["get"], url_path="viewers")
+    def viewers(self, request, pk=None):
+        from apps.userprofile.models.entities import UserProfile, UsersStories
+
+        try:
+            me = UserProfile.objects.get(userid=request.user)
+        except UserProfile.DoesNotExist:
+            return Response({"message": "Complete your profile first."}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            story = UsersStories.objects.get(id=pk, userprofileid=me)
+        except UsersStories.DoesNotExist:
+            return Response({"message": "Story not found."}, status=status.HTTP_404_NOT_FOUND)
+        out = []
+        for view in story.views.select_related("viewer"):
+            try:
+                basic = view.viewer.basic_info
+                pic = basic.profile_picture
+                name = basic.fullname or basic.nickname or view.viewer.username
+            except Exception:
+                pic = ""
+                name = view.viewer.username
+            out.append(
+                {
+                    "profileid": view.viewer.profileid,
+                    "username": view.viewer.username,
+                    "name": name,
+                    "pic": pic,
+                    "viewed_at": view.viewed_at,
+                }
+            )
+        return Response({"message": "Viewers.", "data": out})

@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from apps.notifications.models.entities import Notification
@@ -24,6 +25,11 @@ class NotificationView(viewsets.ViewSet):
         item.save(update_fields=["is_read"])
         return Response({"message": "Marked read.", "data": NotificationSerializer(item).data})
 
+    @action(detail=False, methods=["post"], url_path="read-all")
+    def read_all(self, request):
+        Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
+        return Response({"message": "All marked read."})
+
     def create(self, request):
         if not request.user.is_staff:
             return Response({"message": "Admin only."}, status=status.HTTP_403_FORBIDDEN)
@@ -36,6 +42,7 @@ class NotificationView(viewsets.ViewSet):
         payload_data = request.data.get("data", {})
         if isinstance(recipient, str) and recipient.lower() == "all":
             from django.contrib.auth.models import User
+            from apps.notifications.services.push import push_to_user
 
             ids = list(User.objects.filter(is_active=True).values_list("id", flat=True))
             items = [
@@ -50,6 +57,8 @@ class NotificationView(viewsets.ViewSet):
                 for uid in ids
             ]
             Notification.objects.bulk_create(items, batch_size=500)
+            for uid in ids:
+                push_to_user(uid, {"ntype": "announcement", "title": title[:120], "body": body})
             return Response(
                 {"message": f"Broadcast to {len(items)} users.", "data": {"count": len(items)}},
                 status=status.HTTP_201_CREATED,
@@ -62,6 +71,15 @@ class NotificationView(viewsets.ViewSet):
             body=body,
             data=payload_data,
         )
+        try:
+            from apps.notifications.services.push import push_to_user
+
+            push_to_user(
+                item.recipient_id,
+                {"ntype": kind, "title": item.title, "body": item.body},
+            )
+        except Exception:
+            pass
         return Response(
             {"message": "Posted.", "data": NotificationSerializer(item).data},
             status=status.HTTP_201_CREATED,

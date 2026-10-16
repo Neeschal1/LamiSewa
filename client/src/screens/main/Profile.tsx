@@ -31,12 +31,15 @@ import {
   RootStackParamList,
 } from "@/src/components/componentsType";
 import { useNavigation } from "expo-router";
-import { useFocusEffect } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
 import Modal from "react-native-modal";
 import { useAuth } from "@/src/auth/AuthContext";
 import { useProfile } from "@/src/profile/ProfileProvider";
 import { fetchFollowers, fetchFollowing } from "@/src/services/privacy/follow";
 import { fetchSubscriptionStatus } from "@/src/services/payments/subscription";
+import { fetchStories, fetchStoryViewers, uploadStory } from "@/src/services/profile/stories";
+import { updateOwnProfile } from "@/src/services/profile/updateProfile";
+import UploadImages from "@/src/utils/uploadImages";
 import QRCode from "react-native-qrcode-svg";
 
 type OthersScreen =
@@ -172,6 +175,12 @@ const Profile: FC = () => {
   const [shareVisible, setShareVisible] = useState<boolean>(false);
   const [subscription, setSubscription] = useState<any | null>(null);
   const [packageVisible, setPackageVisible] = useState<boolean>(false);
+  const [myStory, setMyStory] = useState<any | null>(null);
+  const [avatarOptions, setAvatarOptions] = useState<boolean>(false);
+  const [avatarViewer, setAvatarViewer] = useState<boolean>(false);
+  const [viewers, setViewers] = useState<any[]>([]);
+  const [viewersVisible, setViewersVisible] = useState<boolean>(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -194,32 +203,77 @@ const Profile: FC = () => {
     setRefreshing(false);
   }, [refreshProfile]);
 
+  const openViewers = async () => {
+    if (!myStory?.id) return;
+    try {
+      setViewers(await fetchStoryViewers(myStory.id));
+    } catch {
+      setViewers([]);
+    }
+    setViewersVisible(true);
+  };
+
+  const pickAvatarImage = async (afterPick: (url: string) => Promise<void>) => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") return;
+    const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 0.8 });
+    if (result.canceled) return;
+    setUploadingAvatar(true);
+    try {
+      const url = await UploadImages(result.assets[0].uri);
+      if (url) await afterPick(url);
+    } catch {
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
+  const uploadAvatarAsStory = async () => {
+    setAvatarOptions(false);
+    await pickAvatarImage(async (url) => {
+      try {
+        const saved = await uploadStory(url);
+        if (saved?.has_story) setMyStory(saved);
+      } catch {}
+    });
+  };
+
+  const uploadNewAvatar = async () => {
+    setAvatarOptions(false);
+    await pickAvatarImage(async (url) => {
+      try {
+        await updateOwnProfile({ basic_info: { profile_picture: url } });
+        await refreshProfile();
+      } catch {}
+    });
+  };
+
   const handleLogOut = async () => {
     await logout();
   };
 
 useEffect(() => {
-  fetchProfile();
+  const loadAll = async () => {
+    let fresh: any = null;
+    try {
+      fresh = await fetchProfile();
+    } catch {}
+    const [f1, f2, sub, storyList] = await Promise.all([
+      fetchFollowers().catch(() => []),
+      fetchFollowing().catch(() => []),
+      fetchSubscriptionStatus().catch(() => null),
+      fetchStories().catch(() => []),
+    ]);
+    setFollowers(f1);
+    setFollowing(f2);
+    setSubscribed(!!(sub as any)?.is_subscribed);
+    setSubscription((sub as any)?.is_subscribed ? sub : null);
+    const pid = (fresh as any)?.profile?.profileid;
+    const mine = (storyList as any[]).find((s: any) => s.profileid === pid);
+    if (mine?.has_story) setMyStory(mine);
+  };
+  loadAll();
 }, [fetchProfile]);
-
-useFocusEffect(
-  React.useCallback(() => {
-    const refreshLists = async () => {
-      try {
-        setFollowers(await fetchFollowers());
-      } catch {}
-      try {
-        setFollowing(await fetchFollowing());
-      } catch {}
-      try {
-        const sub = await fetchSubscriptionStatus();
-        setSubscribed(!!sub?.is_subscribed);
-        setSubscription(sub?.is_subscribed ? sub : null);
-      } catch {}
-    };
-    refreshLists();
-  }, [])
-);
 
 const profileLink = userData?.profile?.profileid
   ? `lamisewa://profile/${userData.profile.profileid}`
@@ -277,9 +331,7 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
         >
           <View className="flex flex-col w-full items-center gap-mid">
             <Pressable
-              onPress={() => {
-                console.log("Profile pic pressed!");
-              }}
+              onPress={() => setAvatarOptions(true)}
               style={{
                 width: width * 0.35,
                 height: width * 0.35,
@@ -287,7 +339,10 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
                 overflow: "hidden",
               }}
             >
-              <View className="flex py-2 px-2 border-4 border-primaryblue bg-background rounded-full">
+              <View
+                className="flex py-2 px-2 bg-background rounded-full"
+                style={myStory?.has_story ? { borderWidth: 4, borderColor: "#0066FF" } : undefined}
+              >
                 <Image
                   source={{ uri: userData?.basic_info.profile_picture }}
                   style={{
@@ -517,6 +572,95 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
           {profileLink ? <Description text={profileLink} /> : null}
           <TouchableOpacity
             onPress={() => setShareVisible(false)}
+            className="bg-primaryred rounded-2xl py-3 px-10"
+          >
+            <Text className="font-Poppinsmedium text-background">Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={avatarOptions}
+        onBackdropPress={() => setAvatarOptions(false)}
+        onBackButtonPress={() => setAvatarOptions(false)}
+        style={{ justifyContent: "flex-end", margin: 0 }}
+      >
+        <View className="bg-background rounded-t-3xl p-screen items-center gap-large">
+          <View className="w-12 h-1.5 rounded-full bg-darkvariant/40" />
+          <SubTitle text="Profile photo" />
+          <View className="w-full gap-mid">
+            <TouchableOpacity onPress={uploadAvatarAsStory} className="flex-row items-center gap-mid py-3 border-b border-darkvariant/10">
+              <Ionicons name="add-circle-outline" size={24} color="black" />
+              <SubTitle text={uploadingAvatar ? "Uploading..." : "Add to story"} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setAvatarOptions(false);
+                setAvatarViewer(true);
+              }}
+              className="flex-row items-center gap-mid py-3 border-b border-darkvariant/10"
+            >
+              <Ionicons name="eye-outline" size={24} color="black" />
+              <SubTitle text="View profile picture" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={uploadNewAvatar} className="flex-row items-center gap-mid py-3">
+              <Ionicons name="camera-outline" size={24} color="black" />
+              <SubTitle text="Upload profile picture" />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => setAvatarOptions(false)}
+            className="bg-primaryred rounded-2xl py-3 px-10"
+          >
+            <Text className="font-Poppinsmedium text-background">Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={avatarViewer}
+        onBackdropPress={() => setAvatarViewer(false)}
+        onBackButtonPress={() => setAvatarViewer(false)}
+        style={{ margin: 0 }}
+      >
+        <View className="flex-1 bg-black items-center justify-center">
+          <Image
+            source={{ uri: userData?.basic_info.profile_picture }}
+            style={{ width: width * 0.92, height: width * 1.1, borderRadius: 16 }}
+            resizeMode="contain"
+          />
+          <TouchableOpacity
+            onPress={() => setAvatarViewer(false)}
+            className="absolute top-14 right-6 w-11 h-11 rounded-full bg-black/60 items-center justify-center"
+          >
+            <Ionicons name="close" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={viewersVisible}
+        onBackdropPress={() => setViewersVisible(false)}
+        onBackButtonPress={() => setViewersVisible(false)}
+        style={{ justifyContent: "flex-end", margin: 0 }}
+      >
+        <View className="bg-background rounded-t-3xl p-screen items-center gap-large" style={{ maxHeight: height * 0.6 }}>
+          <View className="w-12 h-1.5 rounded-full bg-darkvariant/40" />
+          <SubTitle text={`Viewed by ${viewers.length}`} />
+          <ScrollView className="w-full" showsVerticalScrollIndicator={false}>
+            {viewers.length === 0 ? <Description text="No views yet." /> : null}
+            {viewers.map((v: any) => (
+              <View key={v.profileid} className="flex-row items-center gap-mid py-2 border-b border-darkvariant/10">
+                <Image
+                  source={{ uri: v.pic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg" }}
+                  style={{ width: 44, height: 44, borderRadius: 22 }}
+                />
+                <View className="flex-1">
+                  <SubTitle text={v.name ?? v.username} />
+                  <Description text={`@${v.username}`} />
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+          <TouchableOpacity
+            onPress={() => setViewersVisible(false)}
             className="bg-primaryred rounded-2xl py-3 px-10"
           >
             <Text className="font-Poppinsmedium text-background">Close</Text>

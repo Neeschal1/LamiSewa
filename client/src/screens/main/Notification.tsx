@@ -5,18 +5,18 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
+  Text,
   RefreshControl,
 } from "react-native";
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from "@react-navigation/native";
 import {
   Description,
   MainScreenName,
   SubTitle,
 } from "@/src/components/systemComponentsLayout";
 import { Ionicons } from "@expo/vector-icons";
-import { fetchNotifications, markNotificationRead } from "@/src/services/notifications/notifications";
+import { fetchNotifications, markAllNotificationsRead, markNotificationRead } from "@/src/services/notifications/notifications";
 
 const Notification: FC = () => {
   const [enabled, setEnabled] = useState<boolean>(true);
@@ -36,11 +36,9 @@ const Notification: FC = () => {
     }
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      load();
-    }, [load])
-  );
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const openItem = async (id: number) => {
     try {
@@ -49,13 +47,17 @@ const Notification: FC = () => {
     } catch {}
   };
 
-  const bgFor = (kind: string) => {
-    if (kind === "announcement") return "#FDECEC";
-    return "#FFFFFF";
+  const markAll = async () => {
+    try {
+      await markAllNotificationsRead();
+      setItems((prev) => prev.map((n) => ({ ...n, is_read: true })));
+    } catch {}
   };
 
+  const bgFor = (n: any) => (n.is_read ? "#ECEBFF" : "#FDECEC");
+
   return (
-    <SafeAreaView className="flex flex-1 bg-background">
+    <SafeAreaView className="flex flex-1 bg-background" edges={["bottom", "left", "right"]}>
       <View className="flex-1 items-center w-full justify-start bg-background p-screen">
         <StatusBar hidden={false} translucent />
         <MainScreenName text="Notifications" />
@@ -71,6 +73,11 @@ const Notification: FC = () => {
             thumbColor="#FFFFFF"
           />
         </View>
+        <View className="w-full flex-row justify-end mt-small">
+          <TouchableOpacity onPress={markAll}>
+            <Text className="font-Poppinsmedium text-primaryblue text-description">Mark all as read</Text>
+          </TouchableOpacity>
+        </View>
         {loading ? <ActivityIndicator /> : null}
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -81,7 +88,7 @@ const Notification: FC = () => {
             <TouchableOpacity
               key={n.id}
               onPress={() => openItem(n.id)}
-              style={{ backgroundColor: bgFor(n.kind), borderWidth: n.is_read ? 0 : 1, borderColor: "#FF000E" }}
+              style={{ backgroundColor: bgFor(n) }}
               className="flex flex-row gap-small items-center rounded-2xl px-4 py-3"
             >
               <Ionicons name={n.is_read ? "mail-open" : "mail-unread"} size={30} color={n.is_read ? "#BBBDC8" : "#FF000E"} />

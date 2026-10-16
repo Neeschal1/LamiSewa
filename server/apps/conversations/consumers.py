@@ -4,6 +4,29 @@ from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
 
 
+class InboxConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        user = self.scope.get("user")
+        if not user or user.is_anonymous:
+            await self.close()
+            return
+        self.group = f"user_{user.id}"
+        await self.channel_layer.group_add(self.group, self.channel_name)
+        await self.accept()
+
+    async def disconnect(self, _code):
+        try:
+            await self.channel_layer.group_discard(self.group, self.channel_name)
+        except Exception:
+            pass
+
+    async def receive(self, text_data=None, bytes_data=None):
+        return
+
+    async def inbox_event(self, event):
+        await self.send(text_data=json.dumps({"kind": "inbox", **event.get("event", {})}))
+
+
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope.get("user")
@@ -58,6 +81,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.group, {"type": "chat.message", "data": msg}
         )
+        try:
+            other_id = await self._other_id(user.id, self.thread_id)
+            if other_id:
+                await self.channel_layer.group_send(
+                    f"user_{other_id}",
+                    {
+                        "type": "inbox.event",
+                        "event": {
+                            "ntype": "message",
+                            "title": user.first_name or user.username,
+                            "body": text,
+                            "thread_id": self.thread_id,
+                        },
+                    },
+                )
+        except Exception:
+            pass
 
     async def chat_message(self, event):
         await self.send(text_data=json.dumps({"kind": "message", **event.get("data", {})}))
@@ -88,6 +128,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except Thread.DoesNotExist:
             return False
         return user_id in (t.member_a_id, t.member_b_id)
+
+    @database_sync_to_async
+    def _other_id(self, user_id, thread_id):
+        from apps.conversations.models.entities import Thread
+
+        try:
+            thread = Thread.objects.get(id=thread_id)
+        except Thread.DoesNotExist:
+            return None
+        return thread.member_b_id if thread.member_a_id == user_id else thread.member_a_id
 
     @database_sync_to_async
     def _mark_seen(self, user_id, thread_id):

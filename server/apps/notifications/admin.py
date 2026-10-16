@@ -12,6 +12,8 @@ class NotificationAdmin(admin.ModelAdmin):
 
     @admin.action(description="Broadcast selected notification to all users")
     def broadcast_to_all_users(self, request, queryset):
+        from apps.notifications.services.push import push_to_user
+
         total = 0
         for item in queryset:
             ids = User.objects.filter(is_active=True).exclude(id=item.recipient_id).values_list("id", flat=True)
@@ -28,4 +30,6 @@ class NotificationAdmin(admin.ModelAdmin):
             ]
             Notification.objects.bulk_create(copies, batch_size=500)
             total += len(copies)
+            for uid in ids:
+                push_to_user(uid, {"ntype": item.kind, "title": item.title, "body": item.body})
         self.message_user(request, f"Broadcast {total} copies to all users.")

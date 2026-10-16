@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 from .choices import *
 from env_config import Config
 
@@ -147,7 +148,23 @@ class UsersStories(models.Model):
     userprofileid = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='stories')
     story = models.URLField(blank=True)
     storyviews = models.IntegerField(default=0)
-    
+    created_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return f"Story kept by: {self.userprofileid.userid.first_name} | {self.userprofileid.profileid}"
+
+
+class StoryView(models.Model):
+    story = models.ForeignKey(UsersStories, on_delete=models.CASCADE, related_name='views')
+    viewer = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='story_views')
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['story', 'viewer'], name='unique_story_view')
+        ]
+        ordering = ['-viewed_at']
+
+    def __str__(self):
+        return f"{self.viewer.username} viewed story {self.story_id}"
     
