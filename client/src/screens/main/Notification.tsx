@@ -32,7 +32,7 @@ const Notification: FC = () => {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const { event } = useInbox();
+  const { event, connected } = useInbox();
 
   const load = useCallback(async () => {
     try {
@@ -55,6 +55,12 @@ const Notification: FC = () => {
     if (!["message", "follow", "announcement"].includes(event.ntype)) return;
     load();
   }, [event, load]);
+
+  useEffect(() => {
+    if (connected) return;
+    const timer = setInterval(() => load(), 20000);
+    return () => clearInterval(timer);
+  }, [connected, load]);
 
   const openItem = async (n: any) => {
     try {

@@ -17,13 +17,17 @@ export type InboxEvent = {
   other_pic?: string;
 } | null;
 
-const InboxContext = createContext<{ event: InboxEvent }>({ event: null });
+const InboxContext = createContext<{ event: InboxEvent; connected: boolean }>({
+  event: null,
+  connected: false,
+});
 
 export const useInbox = () => useContext(InboxContext);
 
 export const InboxProvider = ({ children }: { children: React.ReactNode }) => {
   const { token } = useAuth();
   const [event, setEvent] = useState<InboxEvent>(null);
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
     if (!token) return;
@@ -37,6 +41,7 @@ export const InboxProvider = ({ children }: { children: React.ReactNode }) => {
         if (!t || closed) return;
         const base = (process.env.EXPO_PUBLIC_DJANGO_DEVELOPMENT_SERVER_URL ?? "").replace(/^http/, "ws");
         ws = new WebSocket(`${base}/ws/inbox/?token=${encodeURIComponent(t)}`);
+        ws.onopen = () => setConnected(true);
         ws.onmessage = (e) => {
           try {
             const data = JSON.parse(e.data);
@@ -44,9 +49,11 @@ export const InboxProvider = ({ children }: { children: React.ReactNode }) => {
           } catch {}
         };
         ws.onclose = () => {
+          setConnected(false);
           if (!closed) retry = setTimeout(connect, 5000);
         };
         ws.onerror = () => {
+          setConnected(false);
           try {
             ws?.close();
           } catch {}
@@ -58,6 +65,7 @@ export const InboxProvider = ({ children }: { children: React.ReactNode }) => {
     connect();
     return () => {
       closed = true;
+      setConnected(false);
       if (retry) clearTimeout(retry);
       try {
         ws?.close();
@@ -65,6 +73,6 @@ export const InboxProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [token]);
 
-  const value = { event };
+  const value = { event, connected };
   return <InboxContext.Provider value={value}>{children}</InboxContext.Provider>;
 };
