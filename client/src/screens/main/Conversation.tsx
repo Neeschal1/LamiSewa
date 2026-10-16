@@ -33,6 +33,16 @@ const fmtTime = (iso: string) => {
   }
 };
 
+const fmtDateTime = (iso: string) => {
+  try {
+    const d = new Date(iso);
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${d.getDate()} ${months[d.getMonth()]}, ${fmtTime(iso)}`;
+  } catch {
+    return "";
+  }
+};
+
 const dayLabel = (iso: string) => {
   try {
     const d = new Date(iso);
@@ -166,7 +176,7 @@ const Conversation: FC = () => {
               <Text className="font-Poppinsregular text-white text-subheading">{item.text}</Text>
               <View className="flex-row justify-end items-center gap-1 mt-1">
                 <Text className="font-Poppinsregular text-white/80" style={{ fontSize: 10 }}>
-                  {fmtTime(item.created_date)}
+                  {fmtDateTime(item.created_date)}
                 </Text>
                 <Text className="font-Poppinsregular text-white/80" style={{ fontSize: 10 }}>
                   {item.seen ? "✓✓ Seen" : "✓ Delivered"}
@@ -185,7 +195,7 @@ const Conversation: FC = () => {
             <View className="bg-[#ECEBFF] rounded-2xl rounded-bl-sm px-3 py-2" style={{ maxWidth: "70%" }}>
               <Text className="font-Poppinsregular text-dark text-subheading">{item.text}</Text>
               <Text className="font-Poppinsregular text-darkvariant mt-1" style={{ fontSize: 10 }}>
-                {fmtTime(item.created_date)}
+                {fmtDateTime(item.created_date)}
               </Text>
             </View>
           </View>
