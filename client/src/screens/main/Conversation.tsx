@@ -6,8 +6,8 @@ import {
   Text,
   TextInput,
   FlatList,
-  KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from "react-native";
 import { LottieLoadingAnimation } from "@/src/constants/LoadingAnimation";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
@@ -77,6 +77,7 @@ const Conversation: FC = () => {
   const [loading, setLoading] = useState(true);
   const [myId, setMyId] = useState<number | null>(null);
   const [typingName, setTypingName] = useState("");
+  const [kbHeight, setKbHeight] = useState(0);
   const ws = useRef<WebSocket | null>(null);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const typingSent = useRef(false);
@@ -115,6 +116,21 @@ const Conversation: FC = () => {
       load();
     }, [load])
   );
+
+  useEffect(() => {
+    const show = Keyboard.addListener(
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
+      (e) => setKbHeight(e.endCoordinates.height)
+    );
+    const hide = Keyboard.addListener(
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
+      () => setKbHeight(0)
+    );
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
 
   useEffect(() => {
     const connect = async () => {
@@ -287,7 +303,7 @@ const Conversation: FC = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1" keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
+      <View className="flex-1">
         <FlatList
           data={data}
           inverted
@@ -295,6 +311,7 @@ const Conversation: FC = () => {
           renderItem={renderItem}
           contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12 }}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         />
         {thread?.can_message === false ? (
           <Text className="font-Poppinsregular text-darkvariant text-description px-screen pb-1">
@@ -328,7 +345,8 @@ const Conversation: FC = () => {
             <Ionicons name="send" size={20} color="white" />
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+        <View style={{ height: kbHeight > 0 ? kbHeight : 12 }} />
+      </View>
     </SafeAreaView>
   );
 };
