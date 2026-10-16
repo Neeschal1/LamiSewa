@@ -49,21 +49,21 @@ const InboxSlider: FC = () => {
     <View className="absolute top-2 left-4 right-4 z-50">
       <TouchableOpacity
         onPress={openEvent}
-        className="flex-row items-center gap-mid rounded-2xl px-4 py-3"
-        style={{ backgroundColor: "#E4E0F7", elevation: 8 }}
+        className="flex-row items-center gap-mid rounded-2xl px-4 py-4"
+        style={{ backgroundColor: "#E4E0F7", elevation: 8, minHeight: 92 }}
       >
         {isAdmin ? (
-          <Image source={lamisewaLogo} style={{ width: 48, height: 48, borderRadius: 24 }} resizeMode="cover" />
+          <Image source={lamisewaLogo} style={{ width: 60, height: 60, borderRadius: 30 }} resizeMode="cover" />
         ) : pic ? (
-          <Image source={{ uri: pic }} style={{ width: 48, height: 48, borderRadius: 24 }} />
+          <Image source={{ uri: pic }} style={{ width: 60, height: 60, borderRadius: 30 }} />
         ) : (
           <View
             className="items-center justify-center bg-white"
-            style={{ width: 48, height: 48, borderRadius: 24 }}
+            style={{ width: 60, height: 60, borderRadius: 30 }}
           >
             <Ionicons
               name={event.ntype === "message" ? "chatbox" : "notifications"}
-              size={24}
+              size={28}
               color="#7B7B7B"
             />
           </View>
