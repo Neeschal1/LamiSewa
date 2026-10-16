@@ -56,6 +56,12 @@ const Notification: FC = () => {
 
   const bgFor = (n: any) => (n.is_read ? "#ECEBFF" : "#FDECEC");
 
+  const kindIcon = (kind: string) => {
+    if (kind === "follow") return "person-add";
+    if (kind === "message") return "chatbox";
+    return "notifications";
+  };
+
   return (
     <SafeAreaView className="flex flex-1 bg-background" edges={["bottom", "left", "right"]}>
       <View className="flex-1 items-center w-full justify-start bg-background p-screen">
@@ -91,13 +97,36 @@ const Notification: FC = () => {
               key={n.id}
               onPress={() => openItem(n.id)}
               style={{ backgroundColor: bgFor(n) }}
-              className="flex flex-row gap-small items-center rounded-2xl px-4 py-3"
+              className="flex-row items-center gap-mid rounded-2xl px-4 py-3"
             >
-              <Ionicons name={n.is_read ? "mail-open" : "mail-unread"} size={30} color={n.is_read ? "#BBBDC8" : "#FF000E"} />
-              <View className="flex-1">
-                <SubTitle text={n.title} />
-                <Description text={n.body ?? ""} />
+              <View
+                className="items-center justify-center"
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 28,
+                  backgroundColor: n.is_read ? "#FFFFFF" : "#FFFFFF",
+                }}
+              >
+                <Ionicons
+                  name={kindIcon(n.kind)}
+                  size={26}
+                  color={n.is_read ? "#7B7B7B" : "#FF000E"}
+                />
               </View>
+              <View className="flex-1">
+                <Text className="font-Poppinsmedium text-dark text-subheading" numberOfLines={1}>
+                  {n.title}
+                </Text>
+                <Text className="font-Poppinsregular text-darkvariant text-description" numberOfLines={2}>
+                  {n.body ?? ""}
+                </Text>
+              </View>
+              {n.is_read ? null : (
+                <View
+                  style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: "#FF000E" }}
+                />
+              )}
             </TouchableOpacity>
           ))}
         </ScrollView>
