@@ -2,6 +2,7 @@ import { View, Text, StatusBar, FlatList, TouchableOpacity, Image, ActivityIndic
 import React, { FC, useCallback, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 import { NavigationProps } from "@/src/components/componentsType";
 import { fetchFollowers } from "@/src/services/privacy/follow";
 import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
@@ -32,23 +33,33 @@ const Followers: FC = () => {
     if (!u?.profileid) return;
     try {
       const full = await fetchMemberProfile(u.profileid);
-      navigation.navigate("UserDetails", { profile: full });
+      navigation.navigate("MemberProfile", { profile: full });
     } catch {}
   };
 
   return (
     <SafeAreaView className="flex-1 bg-background">
       <StatusBar hidden={false} translucent />
-      <View className="flex-1 bg-background p-screen gap-mid">
-        <Text className="font-Poppinssemibold text-dark text-screenname">
-          Followers{users.length > 0 ? ` (${users.length})` : ""}
-        </Text>
-        {loading ? <ActivityIndicator size="large" /> : null}
-        {!loading && users.length === 0 ? <Describe text="No followers" /> : null}
+      <View className="flex-1 bg-background">
+        <View className="flex-row items-center gap-mid p-screen pb-2">
+          <TouchableOpacity onPress={() => navigation.goBack()} className="w-10 h-10 rounded-full bg-[#ECEBFF] items-center justify-center">
+            <Ionicons name="arrow-back" size={22} color="black" />
+          </TouchableOpacity>
+          <Text className="font-Poppinssemibold text-dark text-heading">
+            Followers{users.length > 0 ? ` (${users.length})` : ""}
+          </Text>
+        </View>
+        {loading ? <ActivityIndicator size="large" className="mt-8" /> : null}
+        {!loading && users.length === 0 ? (
+          <View className="flex-1 items-center justify-center">
+            <Describe text="No followers" />
+          </View>
+        ) : null}
         <FlatList
           data={users}
           keyExtractor={(item) => item.profileid}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16 }}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => openProfile(item)}

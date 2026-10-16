@@ -70,7 +70,7 @@ const Search: FC = () => {
     try {
       const full = await fetchMemberProfile(profileid);
       setScanning(false);
-      navigation.navigate("UserDetails", { profile: full });
+      navigation.navigate("MemberProfile", { profile: full });
     } catch {
       setScanError("Profile not found.");
       setScanning(false);
@@ -117,7 +117,7 @@ const Search: FC = () => {
           keyExtractor={(item, i) => item?.profileid ?? String(i)}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("UserDetails", { profile: item })}
+              onPress={() => navigation.navigate("MemberProfile", { profile: item })}
               className="flex-row items-center gap-mid py-2 border-b border-darkvariant/10"
             >
               <Image

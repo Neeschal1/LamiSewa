@@ -68,21 +68,27 @@ const Notification: FC = () => {
         </View>
         {loading ? <ActivityIndicator /> : null}
         <ScrollView
-          showsVerticalScrollIndicator={false}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 12, paddingVertical: 8, alignItems: "center" }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); load(); }} />}
         >
-          <View className="flex flex-1 gap-mid mt-mid">
-            {items.filter((n) => enabled || !n.is_read).map((n) => (
-              <TouchableOpacity key={n.id} onPress={() => openItem(n.id)} className="flex flex-row gap-small items-center">
-                <Ionicons name={n.is_read ? "mail-open" : "mail-unread"} size={32} color={n.is_read ? "#BBBDC8" : "#FF000E"} />
-                <View className="flex-1">
-                  <SubTitle text={n.title} />
-                  <Description text={n.body ?? ""} />
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
+          {items.filter((n) => enabled || !n.is_read).map((n) => (
+            <TouchableOpacity
+              key={n.id}
+              onPress={() => openItem(n.id)}
+              style={{ width: 280 }}
+              className={`flex flex-row gap-small items-center rounded-2xl px-4 py-3 ${n.is_read ? "bg-[#ECEBFF]" : "bg-primaryred/10 border border-primaryred"}`}
+            >
+              <Ionicons name={n.is_read ? "mail-open" : "mail-unread"} size={30} color={n.is_read ? "#BBBDC8" : "#FF000E"} />
+              <View className="flex-1">
+                <SubTitle text={n.title} />
+                <Description text={n.body ?? ""} />
+              </View>
+            </TouchableOpacity>
+          ))}
         </ScrollView>
+        {!loading && items.length === 0 ? <Description text="No notifications yet." /> : null}
       </View>
     </SafeAreaView>
   );

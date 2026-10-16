@@ -96,16 +96,25 @@ class SemanticMatcher:
             return {"error": "Active subscription required.", "status": 402}
 
         try:
+            my_gender = (me.basic_info.gender or "").strip().upper()
+        except Exception:
+            my_gender = ""
+        opposite = {"MALE": "FEMALE", "FEMALE": "MALE"}.get(my_gender)
+
+        try:
             query_vec = json.loads(mine.embedding or "[]")
         except Exception:
             query_vec = []
         if not query_vec:
             return {"error": "No embedding found for your profile.", "status": 404}
 
-        candidates = []
-        for emb in UserProfileEmbedding.objects.exclude(userprofileid=me).select_related(
+        queryset = UserProfileEmbedding.objects.exclude(userprofileid=me).select_related(
             "userprofileid"
-        ):
+        )
+        if opposite:
+            queryset = queryset.filter(userprofileid__basic_info__gender=opposite)
+        candidates = []
+        for emb in queryset:
             try:
                 vec = json.loads(emb.embedding or "[]")
             except Exception:

@@ -39,6 +39,7 @@ export type RootStackParamList = {
   // Mains
   MyTabs: undefined;
   UserDetails: { profile?: any } | undefined;
+  MemberProfile: { profile?: any } | undefined;
   NearYou: undefined;
   
   // Accounts

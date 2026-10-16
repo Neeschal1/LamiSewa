@@ -3,6 +3,7 @@ import { TouchableOpacity, Text } from "react-native";
 import { RootStackParamList } from "@/src/components/componentsType";
 import { Describe, SubHeading, Title } from "../components/Texts";
 import { Chats, Home, NearYou, Profile, Search, UserDetails } from "../screens/main/mainScreenLayouts";
+import MemberProfile from "../screens/main/MemberProfile";
 import { Followers, Following } from "../screens/profile/profileScreenLayout";
 import { PaymentSuccess, SubscriptionDetails } from "../screens/payments/PaymentLayout";
 import MyTabs from "./BottomTabNavigation";
@@ -54,8 +55,8 @@ const AuthenticatedNavigation = () => {
       <Stack.Screen name="Chats" component={Chats} options={optionsScreens} />
       <Stack.Screen name="Home" component={Home} options={optionsScreens} />
       <Stack.Screen name="Profile" component={Profile} options={optionsScreens} />
-      <Stack.Screen name="Followers" component={Followers} options={optionsScreens} />
-      <Stack.Screen name="Following" component={Following} options={optionsScreens} />
+      <Stack.Screen name="Followers" component={Followers} options={{ headerShown: false }} />
+      <Stack.Screen name="Following" component={Following} options={{ headerShown: false }} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="NearYou" component={NearYou} />
       <Stack.Screen name="SubscriptionDetails" component={SubscriptionDetails}
@@ -97,6 +98,18 @@ const AuthenticatedNavigation = () => {
       <Stack.Screen name="MatchedUsers" component={MatchedUsers} options={ProfileScreens("MatchedUsers")} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} options={OthersScreens("Privacy Policy", "Your Privacy and Personal Data are Important to us.")} />
       <Stack.Screen name="UserDetails" component={UserDetails} options={OthersScreens("Privacy Policy", "Your Privacy and Personal Data are Important to us.")} />
+      <Stack.Screen
+        name="MemberProfile"
+        component={MemberProfile}
+        options={({ route }) => ({
+          headerShown: true,
+          headerTitle: (route.params as { profile?: any } | undefined)?.profile?.basic_info?.fullname
+            ?? (route.params as { profile?: any } | undefined)?.profile?.username
+            ?? "Profile",
+          headerTitleAlign: "center" as const,
+          headerTintColor: "#000000",
+        })}
+      />
       <Stack.Screen name="TermsOfUse" component={TermsOfUse} options={OthersScreens("TermsOfUse", "Please Read these Terms before using our Services.")} />
       <Stack.Screen name="AboutUs" component={AboutUs} options={OthersScreens("AboutUs", "About the Team behind LamiSewa.")} />
       <Stack.Screen name="VerifyId" component={VerifyId} options={ProfileScreens("VerifyId")} />

@@ -30,6 +30,7 @@ import { NavigationProps } from "@/src/components/componentsType";
 import { fetchSemanticMatches } from "@/src/services/payments/subscription";
 import { searchProfiles } from "@/src/services/profile/search";
 import { followUser } from "@/src/services/privacy/follow";
+import { useProfile } from "@/src/profile/ProfileProvider";
 import {
   clearCachedMatches,
   getCachedMatches,
@@ -64,6 +65,9 @@ const Home: FC = () => {
   const opacity = useSharedValue(1);
 
   const navigation = useNavigation<NavigationProps>();
+  const { data: profileData } = useProfile();
+  const myGender = String((profileData as any)?.basic_info?.gender ?? "").toUpperCase();
+  const oppositeGender = myGender === "MALE" ? "FEMALE" : myGender === "FEMALE" ? "MALE" : "";
 
   const loadMatches = useCallback(async () => {
     const cached = getCachedMatches();
@@ -78,8 +82,10 @@ const Home: FC = () => {
     setNotice(null);
     try {
       const matches = await fetchSemanticMatches();
+      const genderOk = (m: any) =>
+        !oppositeGender || String(m?.basic_info?.gender ?? "").toUpperCase() === oppositeGender;
       const filtered = Array.isArray(matches)
-        ? matches.filter((m: any) => typeof m?.score !== "number" || m.score >= MIN_SCORE)
+        ? matches.filter((m: any) => (typeof m?.score !== "number" || m.score >= MIN_SCORE) && genderOk(m))
         : [];
       if (filtered.length > 0) {
         const next = filtered.map(toCardFromMatch);
@@ -89,7 +95,7 @@ const Home: FC = () => {
         setIndex(0);
         return;
       }
-      const others = await searchProfiles({});
+      const others = await searchProfiles(oppositeGender ? { gender: oppositeGender } : {});
       if (others.length > 0) {
         const next = others.map(toCardFromMatch);
         setCachedMatches(next, false);
@@ -115,7 +121,7 @@ const Home: FC = () => {
     } finally {
       setLoadingMatches(false);
     }
-  }, []);
+  }, [oppositeGender]);
 
   useEffect(() => {
     loadMatches();
@@ -143,7 +149,7 @@ const Home: FC = () => {
   const openProfile = useCallback(() => {
     if (!card) return;
     resetSlide();
-    navigation.navigate("UserDetails", { profile: card.raw });
+    navigation.navigate("MemberProfile", { profile: card.raw });
   }, [card, navigation, resetSlide]);
 
   const flingLeft = Gesture.Fling()

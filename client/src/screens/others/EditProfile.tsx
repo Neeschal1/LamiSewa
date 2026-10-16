@@ -30,6 +30,7 @@ import { DropdownItem } from "@/src/components/componentsType";
 import { NavigationProps } from "@/src/components/componentsType";
 import { useProfile } from "@/src/profile/ProfileProvider";
 import { updateOwnProfile } from "@/src/services/profile/updateProfile";
+import { clearCachedMatches } from "@/src/services/matches/matchCache";
 
 const Field = ({
   label,
@@ -154,6 +155,7 @@ const EditProfile: FC = () => {
         career_info: clean({ highest_qualification: qualification, college_name: college, working_as: working, occupation, company_or_organization_name: company }),
       });
       await fetchProfile(true);
+      clearCachedMatches();
       Toast.show({ type: "success", text1: "Profile updated.", position: "center", visibilityTime: 2500, autoHide: true });
       navigation.goBack();
     } catch (e: any) {
