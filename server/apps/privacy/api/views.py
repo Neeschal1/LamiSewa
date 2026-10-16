@@ -44,9 +44,11 @@ class FollowView(viewsets.ViewSet):
                     actor = UserProfile.objects.get(userid=request.user)
                     actor_profileid = actor.profileid
                     actor_name = actor.username
+                    actor_pic = actor.basic_info.profile_picture
                 except Exception:
                     actor_profileid = ""
                     actor_name = request.user.first_name or request.user.username
+                    actor_pic = ""
                 push_to_user(
                     target_user_id,
                     {
@@ -54,6 +56,7 @@ class FollowView(viewsets.ViewSet):
                         "title": "New follower",
                         "body": f"{actor_name} followed you.",
                         "actor_profileid": actor_profileid,
+                        "actor_pic": actor_pic,
                     },
                 )
             except Exception:

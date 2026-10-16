@@ -12,6 +12,7 @@ export type InboxEvent = {
   name?: string;
   typing?: boolean;
   actor_profileid?: string;
+  actor_pic?: string;
   other_profileid?: string;
   other_name?: string;
   other_pic?: string;

@@ -1,10 +1,13 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProps } from "@/src/components/componentsType";
 import { useInbox } from "./InboxProvider";
 import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
+
+const lamisewaLogo = require("@/src/assets/images/vectorLogo.png");
+const FALLBACK_PIC = "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg";
 
 const InboxSlider: FC = () => {
   const { event } = useInbox();
@@ -39,28 +42,42 @@ const InboxSlider: FC = () => {
     } catch {}
   };
 
+  const pic = event.other_pic || event.actor_pic || "";
+  const isAdmin = event.ntype === "announcement" && !pic;
+
   return (
     <View className="absolute top-2 left-4 right-4 z-50">
       <TouchableOpacity
         onPress={openEvent}
-        className="flex-row items-center gap-mid bg-dark rounded-2xl px-4 py-3"
-        style={{ elevation: 8 }}
+        className="flex-row items-center gap-mid rounded-2xl px-4 py-3"
+        style={{ backgroundColor: "#E4E0F7", elevation: 8 }}
       >
-        <Ionicons
-          name={event.ntype === "message" ? "chatbox" : "notifications"}
-          size={26}
-          color="white"
-        />
+        {isAdmin ? (
+          <Image source={lamisewaLogo} style={{ width: 48, height: 48, borderRadius: 24 }} resizeMode="cover" />
+        ) : pic ? (
+          <Image source={{ uri: pic }} style={{ width: 48, height: 48, borderRadius: 24 }} />
+        ) : (
+          <View
+            className="items-center justify-center bg-white"
+            style={{ width: 48, height: 48, borderRadius: 24 }}
+          >
+            <Ionicons
+              name={event.ntype === "message" ? "chatbox" : "notifications"}
+              size={24}
+              color="#7B7B7B"
+            />
+          </View>
+        )}
         <View className="flex-1">
-          <Text className="font-Poppinsmedium text-background text-subheading" numberOfLines={1}>
-            {event.title}
+          <Text className="font-Poppinsmedium text-dark text-subheading" numberOfLines={1}>
+            {event.ntype === "message" ? event.other_name || event.title : event.title}
           </Text>
-          <Text className="font-Poppinsregular text-background/80 text-description" numberOfLines={2}>
+          <Text className="font-Poppinsregular text-darkvariant text-description" numberOfLines={2}>
             {event.body}
           </Text>
         </View>
         <TouchableOpacity onPress={() => setVisible(false)} className="p-1">
-          <Ionicons name="close" size={20} color="white" />
+          <Ionicons name="close" size={20} color="#7B7B7B" />
         </TouchableOpacity>
       </TouchableOpacity>
     </View>
