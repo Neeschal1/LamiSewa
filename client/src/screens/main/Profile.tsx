@@ -6,7 +6,6 @@ import {
   Image,
   Dimensions,
   Text,
-  Touchable,
   ScrollView,
   Pressable,
   Linking,

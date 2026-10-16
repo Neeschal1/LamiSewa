@@ -2,7 +2,6 @@ import {
   ImageBackground,
   StyleSheet,
   Text,
-  Touchable,
   TouchableOpacity,
   View,
 } from "react-native";

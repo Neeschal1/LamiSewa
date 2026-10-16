@@ -114,7 +114,7 @@ export const InputPassword: FC<InputPasswordProps> = ({
 };
 
 export const OTPInputFields: FC<OTPInputProps> = ({ otp, setOtp }) => {
-  const refs = useRef<(TextInput | null)[]>([]);
+  const refs = useRef<Array<React.ElementRef<typeof TextInput> | null>>([]);
 
   const handleChange = (text: string, index: number) => {
     const value = text.replace(/[^0-9]/g, "");
@@ -168,7 +168,7 @@ export const OTPInputFields: FC<OTPInputProps> = ({ otp, setOtp }) => {
 };
 
 export const DOBInput: FC<DOBInputProps> = ({ dob, setDob }) => {
-  const refs = useRef<(TextInput | null)[]>([]);
+  const refs = useRef<Array<React.ElementRef<typeof TextInput> | null>>([]);
 
   const handleChange = (
     text: string,
