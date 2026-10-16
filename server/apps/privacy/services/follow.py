@@ -28,13 +28,23 @@ class FollowService:
         try:
             from apps.notifications.models.entities import Notification
             me = UserProfile.objects.filter(userid=request.user).first()
+            try:
+                actor_pic = me.basic_info.profile_picture if me else ""
+                actor_name = (me.basic_info.fullname or me.username) if me else request.user.first_name
+            except Exception:
+                actor_pic = ""
+                actor_name = (me.username if me else None) or request.user.first_name
             Notification.objects.create(
                 recipient=target.userid,
                 actor=request.user,
                 kind="follow",
                 title="New follower",
-                body=f"{me.username if me else request.user.first_name} followed you.",
-                data={"profileid": me.profileid if me else ""},
+                body=f"{actor_name} followed you.",
+                data={
+                    "profileid": me.profileid if me else "",
+                    "actor_name": actor_name,
+                    "actor_pic": actor_pic,
+                },
             )
         except Exception:
             pass
