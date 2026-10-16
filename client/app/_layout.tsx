@@ -1,9 +1,11 @@
+import "react-native-gesture-handler";
 import "../global.css";
 import Fonts from "../src/utils/fonts";
 import { useFonts } from "expo-font";
 import StackNavigation from "../src/constants/Navigation";
 import { AuthProvider } from "@/src/auth/AuthProvider";
 import { ProfileProvider } from "@/src/profile/ProfileProvider";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { AppState, Platform } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
@@ -43,10 +45,12 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <ProfileProvider>
-        <StackNavigation />
-      </ProfileProvider>
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <ProfileProvider>
+          <StackNavigation />
+        </ProfileProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }
