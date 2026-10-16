@@ -322,15 +322,11 @@ const Search: FC = () => {
         <StatusBar hidden={false} translucent />
         <Text className="font-Poppinssemibold text-dark text-screenname">Search</Text>
         {scanError ? <Describe text={scanError} /> : null}
-        <View className="flex-row gap-mid">
+        <View className="flex-row gap-small">
           <ModeButton active={mode === "quick"} label="Quick" onPress={() => setMode("quick")} />
           <ModeButton active={mode === "advanced"} label="Advanced" onPress={() => setMode("advanced")} />
-        </View>
-        <View className="flex-row gap-mid">
+          <ModeButton active={mode === "idname"} label="ID/Name" onPress={() => setMode("idname")} />
           <View className="flex-1">
-            <ModeButton active={mode === "idname"} label="ID/Name" onPress={() => setMode("idname")} />
-          </View>
-          <View className="w-28">
             <PrimaryButton text="QR" action={openScanner} />
           </View>
         </View>
@@ -406,13 +402,20 @@ const Search: FC = () => {
         ) : (
           <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
             <View className="gap-mid pb-4">
-              <TextInput
-                value={q}
-                onChangeText={onIdChange}
-                placeholder="User ID or Name"
-                className="border border-darkvariant/30 rounded-2xl px-4 py-3 font-Poppinsregular"
-              />
-              <PrimaryButton text="Search" action={() => runIdSearch(q)} />
+              <View className="flex-row gap-mid items-center">
+                <TextInput
+                  value={q}
+                  onChangeText={onIdChange}
+                  placeholder="User ID or Name"
+                  className="flex-1 border border-darkvariant/30 rounded-2xl px-4 py-3 font-Poppinsregular"
+                />
+                <TouchableOpacity
+                  onPress={() => runIdSearch(q)}
+                  className="w-12 h-12 rounded-full bg-primaryred items-center justify-center"
+                >
+                  <Ionicons name="search" size={22} color="white" />
+                </TouchableOpacity>
+              </View>
               {idLoading ? <LottieLoadingAnimation /> : null}
               {idResults.map((item: any) => (
                 <MemberCard key={item.profileid} item={item} />
