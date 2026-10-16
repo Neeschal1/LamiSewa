@@ -120,7 +120,7 @@ const Notification: FC = () => {
         {loading ? <LottieLoadingAnimation /> : null}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ gap: 0, paddingVertical: 8 }}
+          contentContainerStyle={{ gap: 1, paddingVertical: 8 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); load(); }} />}
         >
           {items.filter((n) => enabled || !n.is_read).map((n) => (
