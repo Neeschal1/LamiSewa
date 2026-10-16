@@ -1,11 +1,3 @@
-"""Sentence-transformer embedding service.
-
-Uses `sentence-transformers` (all-MiniLM-L6-v2, 384 dims) when available.
-Falls back to a deterministic hashed bag-of-words embedding so the API
-keeps working (and tests pass) without torch installed. Pinecone can
-replace the DB store later without changing callers.
-"""
-
 import hashlib
 import math
 import threading
@@ -59,7 +51,6 @@ def encode(text: str):
 
 
 def build_profile_summary(payload: dict) -> str:
-    """Build a semantic-search-friendly summary from the staged profile."""
     basic = payload.get("basic_info", {})
     personal = payload.get("personal_info", {})
     additional = payload.get("additional_info", {})

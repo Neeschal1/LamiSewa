@@ -37,7 +37,7 @@ class AdditionalInfo:
             )
         except Exception as e:
             return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
-        
+
 
     def _updateadditionalinfo(self, request, pk) -> Response:
         userinfo = get_object_or_404(UsersAdditionalInfo, id=pk)

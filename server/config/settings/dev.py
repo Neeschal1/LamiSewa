@@ -4,16 +4,13 @@ from env_config import Config
 import os
 
 
-# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
-# Debug: False when it comes to production
 DEBUG = True
 SECRET_KEY = Config.SECRET_KEY
 
 
-# Allowed hosts to access this backend system
 _hosts = [
     os.getenv('DOMAIN_NAME_1'),
     Config.DOMAIN_NAME_2,
@@ -32,15 +29,12 @@ ALLOWED_HOSTS = [h for h in _hosts if h]
 CORS_ALLOW_ALL_ORIGINS = True
 
 
-# Root URL to hit, i. e. url of project of an entire application
 ROOT_URLCONF = "config.urls"
 
 
-# Asynchronous server gateway interface initialization
 ASGI_APPLICATION = "config.asgi.application"
 
 
-# Redis Server Setup with local-memory fallback when Redis is unavailable
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
@@ -48,7 +42,7 @@ CACHES = {
     }
 }
 try:
-    import django_redis  # noqa: F401
+    import django_redis
     CACHES = {
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
@@ -60,7 +54,6 @@ except ImportError:
     pass
 
 
-# Database for development phase only
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",

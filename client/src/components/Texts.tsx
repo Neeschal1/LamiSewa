@@ -67,4 +67,3 @@ export const Describe: FC<TextProps> = ({ text }) => {
     </Text>
   );
 };
-

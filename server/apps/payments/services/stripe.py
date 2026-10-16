@@ -22,8 +22,8 @@ class StripePayment():
             packagestatus = paid.validated_data["package_status"]
 
             checkout_url = None
-            # Card payments go through Stripe Checkout (uses STRIPE_SECRET_KEY);
-            # local wallets (eSewa/Khalti/ConnectIPS) are recorded directly.
+
+
             stripe_methods = {"visa", "mastercard", "master card", "american express"}
             if str(paidvia).strip().lower() in stripe_methods and Config.STRIPE_SECRET_KEY and "paste your" not in str(Config.STRIPE_SECRET_KEY):
                 lineitem = [
@@ -89,4 +89,3 @@ class StripePayment():
             "package_type": active.package_type,
             "expiry_date": active.expiry_date,
         })
-        

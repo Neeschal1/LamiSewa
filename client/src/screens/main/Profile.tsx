@@ -51,7 +51,7 @@ type OthersScreen =
   | "TermsOfUse"
   | "Help"
   | "ContactUs"
-  | "Documents" 
+  | "Documents"
   | "AboutUs"
 
 type AccountType = {
@@ -443,7 +443,7 @@ const featuredUrls: string[] = featuredPhotos;
                   {subscribed ? <Image source={Verification} /> : null}
                 </View>
                 <View className="flex mt-[-10px]">
-                  {/* <Description text={`${userData?.career_info.occupation}`}/> */}
+
                 </View>
               </View>
               <SubTitle text={`${userData?.basic_info.bio}`} />

@@ -58,7 +58,7 @@ const SignupVerification = () => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  
+
   useEffect(() => {
     const userdata = async () => {
       const details = (await getData()) as {
@@ -91,7 +91,6 @@ const SignupVerification = () => {
 
 
   const handleOTPAction = async () => {
-
     let stringOTP = "";
     for (let i = 0; i < otp.length; i++) {
       stringOTP += otp[i];

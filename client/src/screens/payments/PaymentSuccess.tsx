@@ -26,7 +26,6 @@ const screenwidth = Dimensions.get("window").width;
 const successLogo = require("@/src/assets/images/successPayment.png");
 
 const PaymentSuccess = () => {
-
   const navigation = useNavigation<NavigationProps>()
 
   const handleReturnToHome = () => {

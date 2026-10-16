@@ -74,7 +74,7 @@ const CareerInfo: FC = () => {
     setErrorMessage("");
     try {
       setLoading(true);
-      // Stage in AsyncStorage; single create happens at hobbies step.
+
       await saveDraftSection("career_info", {
         highest_qualification: degree,
         college_name: college,

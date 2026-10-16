@@ -6,10 +6,10 @@ from .choices import *
 
 class UserPaymentRecords(models.Model):
     payment_id = models.OneToOneField(User, on_delete=models.CASCADE, related_name="paymentdetail")
-    
+
     def __str__(self):
         return f"{self.payment_id.first_name} | {self.payment_id}"
-    
+
 
 class SubscriptionPackage(models.Model):
     user_record = models.ForeignKey(UserPaymentRecords, on_delete=models.CASCADE, related_name='users_payments')
@@ -21,10 +21,9 @@ class SubscriptionPackage(models.Model):
     paid_via = models.CharField(max_length=16, choices=PAYMENT_METHODS)
     payment_status = models.CharField(max_length=10, default="Paid")
     package_status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="Pending")
-    
+
     def save(self, *args, **kwargs):
         if not self.expiry_date:
-
             if self.package_type == "BASIC":
                 self.expiry_date = timezone.now() + timedelta(days=60)
 

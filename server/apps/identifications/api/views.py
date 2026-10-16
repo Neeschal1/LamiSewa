@@ -9,7 +9,7 @@ import random
 
 class UserIDRecordsSerializersView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UserIDRecordsSerializers)
     def create(self, request):
         userid_record_serializer = UserIDRecordsSerializers(data=request.data)
@@ -20,7 +20,7 @@ class UserIDRecordsSerializersView(viewsets.ViewSet):
 
 class IDVerificationSerializersView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=IDVerificationSerializers)
     def create(self, request):
         document_verification_serializer = IDVerificationSerializers(data=request.data)

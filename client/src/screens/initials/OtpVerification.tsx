@@ -69,23 +69,8 @@ const OtpVerification = () => {
     }
     try {
       setLoading(true);
-      // const userid = Number(await GetStringDataAsync());
-      // console.log(
-      //   "User's ID: ",
-      //   userid,
-      //   "Datatype: ",
-      //   typeof userid,
-      //   "Entered OTP: ",
-      //   stringOTP,
-      //   "Type of entered otp: ",
-      //   typeof stringOTP,
-      // );
-      // const res = await HandleForgotPasswordOTPVerification(userid, stringOTP);
-      // if (res["status"] === 200) {
-      //   setLoading(false);
-      //   console.log("Data: ", res["data"]);
-      //   navigation.navigate("SetNewPassword");
-      // }
+
+
     } catch (e) {
       if (axios.isAxiosError(e)) {
         const status = e.response?.status;
@@ -114,7 +99,7 @@ const OtpVerification = () => {
 
   const handleResend = async () => {
     setTimer(120);
-    // HandleAccountCredentials(name, phoneNumber, email);
+
   };
 
   const formattedTime = `00:${timer.toString().padStart(2, "0")}`;

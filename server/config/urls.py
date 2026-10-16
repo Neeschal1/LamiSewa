@@ -11,7 +11,6 @@ from drf_yasg import openapi
 from rest_framework import permissions
 
 
-# Swagger setup
 schema_view = get_schema_view(
    openapi.Info(
       title="Lamisewa API",
@@ -25,17 +24,17 @@ schema_view = get_schema_view(
    permission_classes=(permissions.AllowAny,),
 )
 
-# Regular routings
+
 urlpatterns = [
-    # Admin setup
+
     path('admin/', admin.site.urls),
-    
-    # JWT pathway
+
+
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
-    
-    # installed local applications
+
+
     path('accounts/', include('apps.accounts.api.urls')),
     path('profiles/', include('apps.userprofile.api.urls')),
     path('identifications/', include('apps.identifications.api.urls')),
@@ -43,8 +42,8 @@ urlpatterns = [
     path('privacy/', include('apps.privacy.api.urls')),
     path('chat/', include('apps.conversations.api.urls')),
     path('notifications/', include('apps.notifications.api.urls')),
-    
-    # swagger docs
+
+
     re_path(r'^docs(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

@@ -126,8 +126,8 @@ const BasicInfo = () => {
   const handleLogOut = async () => {
     await logout();
     await clearToken();
-    // await DeleteStringDataAsync("onboardingState");
-    // await DeleteStringDataAsync("UserInfoScreenStatus");
+
+
   };
 
   return (
@@ -220,16 +220,7 @@ const BasicInfo = () => {
                   <View className="flex-1">
                     <DOBInput dob={date} setDob={setDate} />
                   </View>
-                  {/* <View style={{ width: 110 }}>
-                    <CustomDropdown
-                      open={open}
-                      value={value}
-                      items={items}
-                      setOpen={setOpen}
-                      setValue={setValue}
-                      setItems={setItems}
-                    />
-                  </View> */}
+
                 </View>
               </Animated.View>
 
@@ -270,11 +261,7 @@ const BasicInfo = () => {
                   disability={disabilityStatus}
                 />
               </Animated.View>
-              {/* <View>
-                <TouchableOpacity onPress={handleLogOut}>
-                  <Text>LOGOUT!!!!!!!!!!!!!!!!!</Text>
-                </TouchableOpacity>
-              </View> */}
+
             </View>
           </View>
         </ScrollView>

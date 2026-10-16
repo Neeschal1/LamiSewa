@@ -36,9 +36,9 @@ class PersonalInfo:
                 status=status.HTTP_400_BAD_REQUEST,
             )
         except Exception as e:
-            return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED) 
-    
-    
+            return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
+
+
     def _updatepersonalinfo(self, request, pk) -> Response:
         userinfo = get_object_or_404(UsersPersonalInfo, id=pk)
         serializer = UsersPersonalInfoSerializer(userinfo, data=request.data, partial=True)
@@ -54,8 +54,8 @@ class PersonalInfo:
             {"message": "Couldn't update user's basic info detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
-    
+
+
     def _retrievepersonalinfo(self, request, pk) -> Response:
         personaldata = get_object_or_404(UsersPersonalInfo, id=pk)
         serializer = UsersPersonalInfoSerializer(personaldata, data=request.data, partial=True)
@@ -71,8 +71,8 @@ class PersonalInfo:
             {"message": "Couldn't fetch user's detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
-    
+
+
     def _deletepersonalinfo(self, request, pk) -> Response:
         personaldata = get_object_or_404(UsersPersonalInfo, id=pk)
         if personaldata:

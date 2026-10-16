@@ -20,54 +20,54 @@ from apps.userprofile.services.hobbies import Hobbies
 from apps.userprofile.services.search import ProfileSearch
 from drf_yasg.utils import swagger_auto_schema
 
-    
+
 class UserProfileSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UserProfileSerializer)
     def create(self, request):
         return UserProfileService()._createprofileid(request)
-        
+
     @swagger_auto_schema(request_body=UserProfileSerializer)
     def update(self, request, pk=None):
         return UserProfileService()._updateprofileid(request, pk)
-    
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
         return UserProfileService()._retrieveprofileid(request, pk)
-    
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return UserProfileService()._destroyprofileid(request, pk)
-    
+
     @swagger_auto_schema()
     def list(self, request):
         return UserProfileService()._listprofileid(request)
-        
-            
+
+
 class UsersBasicInfoSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UsersBasicInfoSerializer)
     def create(self, request):
         return BasicInfo()._createbasicinfo(request)
-    
+
     @swagger_auto_schema(request_body=UsersBasicInfoSerializer)
     def update(self, request, pk=None):
         return BasicInfo()._updatebasicinfo(request, pk)
-    
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
         return BasicInfo()._retrievebasicinfo(request, pk)
-    
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return BasicInfo()._destroybasicinfo(request, pk)
-    
+
 
 class UsersFamilyDetailSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UsersFamilyDetailSerializer)
     def create(self, request):
         user = UsersFamilyDetailSerializer(data=request.data)
@@ -95,7 +95,7 @@ class UsersFamilyDetailSerializerView(viewsets.ViewSet):
             {"message": "Couldn't create user's family detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-        
+
     @swagger_auto_schema(request_body=UsersFamilyDetailSerializer)
     def update(self, request, pk=None):
         usersfamilydetail = get_object_or_404(UsersFamilyDetail, id=pk)
@@ -112,7 +112,7 @@ class UsersFamilyDetailSerializerView(viewsets.ViewSet):
             {"message": "Couldn't update user's family detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
         usersfamilydata = get_object_or_404(UsersFamilyDetail, id=pk)
@@ -129,7 +129,7 @@ class UsersFamilyDetailSerializerView(viewsets.ViewSet):
             {"message": "Couldn't fetch user's family detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         usersfamilydata = get_object_or_404(UsersFamilyDetail, id=pk)
@@ -143,51 +143,51 @@ class UsersFamilyDetailSerializerView(viewsets.ViewSet):
             {"message": "Couldn't delete user's family detail!"},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
-    
+
+
 class UsersPersonalInfoSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UsersPersonalInfoSerializer)
     def create(self, request):
         return PersonalInfo()._createpersonalinfo(request)
-    
+
     @swagger_auto_schema(request_body=UsersPersonalInfoSerializer)
     def update(self, request, pk=None):
         return PersonalInfo()._updatepersonalinfo(request, pk)
-    
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
         return PersonalInfo()._retrievepersonalinfo(request, pk)
-    
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return PersonalInfo()._deletepersonalinfo(request, pk)
-    
+
 
 class UsersAdditionalInfoSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UsersAdditionalInfoSerializer)
     def create(self, request):
         return AdditionalInfo()._createadditionalinfo(request)
-    
+
     @swagger_auto_schema(request_body=UsersAdditionalInfoSerializer)
     def update(self, request, pk=None):
         return AdditionalInfo()._updateadditionalinfo(request, pk)
-    
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
         return AdditionalInfo()._retrieveadditionalinfo(request, pk)
-    
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return AdditionalInfo()._deleteadditionalinfo(request, pk)
-        
-        
+
+
 class UsersAstroDetailSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UsersAstroDetailSerializer)
     def create(self, request):
         userastro = UsersAstroDetailSerializer(data=request.data)
@@ -215,7 +215,7 @@ class UsersAstroDetailSerializerView(viewsets.ViewSet):
             {"message": "Couldn't create user's astro detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-        
+
     @swagger_auto_schema(request_body=UsersAstroDetailSerializer)
     def update(self, request, pk=None):
         usersastrodetail = get_object_or_404(UsersAstroDetail, id=pk)
@@ -232,7 +232,7 @@ class UsersAstroDetailSerializerView(viewsets.ViewSet):
             {"message": "Couldn't update user's astro detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
         usersastrodata = get_object_or_404(UsersAstroDetail, id=pk)
@@ -249,7 +249,7 @@ class UsersAstroDetailSerializerView(viewsets.ViewSet):
             {"message": "Couldn't fetch user's astro detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         usersastrodata = get_object_or_404(UsersAstroDetail, id=pk)
@@ -263,27 +263,23 @@ class UsersAstroDetailSerializerView(viewsets.ViewSet):
             {"message": "Couldn't delete user's astro detail!"},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
-    
-    
+
+
 class UsersFeaturedImagesSerializerView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]    
+    permission_classes = [IsAuthenticated]
     @swagger_auto_schema(request_body=UsersFeaturedImagesSerializer)
     def create(self, request):
         return FeaturedPictures()._createfeaturedimages(request)
-    
+
     @swagger_auto_schema(request_body=UsersFeaturedImagesSerializer)
     def update(self, request, pk=None):
         return FeaturedPictures()._updatefeaturedimages(request, pk)
-    
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
         return FeaturedPictures()._retrievefeaturedimages(request, pk)
-    
-    # @swagger_auto_schema()
-    # def list(self, request, pk=None):
-    #     return FeaturedPictures()._listfeaturedimages(request, pk)
-    
+
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return FeaturedPictures()._destroyfeaturedimages(request, pk)
@@ -333,67 +329,65 @@ class FeaturedPhotoView(viewsets.ViewSet):
 
 class UsersHobbiesSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UsersHobbiesSerializer)
     def create(self, request):
         return Hobbies()._createhobbies(request)
-    
+
     @swagger_auto_schema(request_body=UsersHobbiesSerializer)
     def update(self, request, pk=None):
         return Hobbies()._updatehobbies(request, pk)
-    
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
         return Hobbies()._retrievehobbies(request, pk)
-    
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return Hobbies()._destroyhobbies(request, pk)
-    
-    
+
+
 class UsersCareerSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UsersCareerSerializer)
     def create(self, request):
         return Career()._createcareerdetail(request)
-    
+
     @swagger_auto_schema(request_body=UsersCareerSerializer)
     def update(self, request, pk=None):
         return Career()._updatecareerdetail(request, pk)
-    
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
         return Career()._retrievecareerdetail(request, pk)
-    
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return Career()._destroycareerdetail(request, pk)
-    
-    
+
+
 class UsersPartnerPreferenceSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UsersPartnerPreferenceSerializer)
     def create(self, request):
         return PartnerPreference()._createpartnerpreferencedetail(request)
-    
+
     @swagger_auto_schema(request_body=UsersPartnerPreferenceSerializer)
     def update(self, request, pk=None):
         return PartnerPreference()._updatepartnerpreferencedetail(request, pk)
-    
+
     @swagger_auto_schema()
     def retrieve(self, request, pk=None):
         return PartnerPreference()._retrievepartnerpreferencedetail(request, pk)
-    
+
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return PartnerPreference()._destroypartnerpreferencedetail(request, pk)
 
 
 class CompleteProfileView(viewsets.ViewSet):
-    """Single create for the whole staged wizard (called at hobbies step)."""
-
     permission_classes = [IsAuthenticated]
 
     def create(self, request):
@@ -411,8 +405,6 @@ class CompleteProfileView(viewsets.ViewSet):
 
 
 class SemanticMatchView(viewsets.ViewSet):
-    """Semantic search over stored embeddings (subscription-gated)."""
-
     permission_classes = [IsAuthenticated]
 
     def list(self, request):

@@ -8,25 +8,7 @@ import { DeleteStringDataAsync, GetStringDataAsync } from "../storage/ProfileDat
 
 const StackNavigation = () => {
   const { token, isLoading, profileCompleted } = useAuth();
-  // const [profileCompleted, setProfileCompleted] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   const load = async () => {
-  //     const state = await GetStringDataAsync("ProfileScreenStatus");
-  //     console.log("ProfileScreenStatus:", state);
-  //     console.log("Profile completed?:", profileCompleted);
-  //     await DeleteStringDataAsync("ProfileScreenStatus")
-  //     // if (state === "AllCompleted"){
-  //     //   setProfileCompleted(true);
-  //     // } else {
-  //     //   setProfileCompleted(false)
-  //     // }
-  //   };
-
-  //   if (token) {
-  //     load();
-  //   }
-  // }, [token]);
 
   useEffect(() => {
   console.log("profileCompleted state:", profileCompleted);

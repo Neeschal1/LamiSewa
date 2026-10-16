@@ -16,6 +16,6 @@ export {
     OtpVerification,
     Password,
     SetNewPassword,
-    Signup, 
+    Signup,
     SignupVerification
 }

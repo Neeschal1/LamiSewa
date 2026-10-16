@@ -3,7 +3,6 @@ import { ReactNode } from "react";
 import { KeyboardTypeOptions } from "react-native";
 
 export type RootStackParamList = {
-  // initials
   Login: undefined;
   Splash: undefined;
   Welcome: undefined;
@@ -12,17 +11,15 @@ export type RootStackParamList = {
   OtpVerification: undefined;
   Password: undefined;
   SetNewPassword: undefined;
-  SignupVerification: undefined;  
-  
-  // mains
+  SignupVerification: undefined;
+
   Chats: undefined;
   Conversation: { threadId: number } | undefined;
   Home: undefined;
   Notification: undefined;
   Profile: undefined;
-  Search: undefined; 
+  Search: undefined;
 
-  // profile
   UserInfo: undefined;
   BasicInfo: undefined;
   AdditionalInfo: undefined;
@@ -32,43 +29,36 @@ export type RootStackParamList = {
   CasualInfo: undefined;
   Followers: undefined;
   Following: undefined;
-  
-  // Payment
+
   PaymentSuccess: undefined,
   SubscriptionDetails: { from?: string } | undefined,
-  
-  // Mains
+
   MyTabs: undefined;
   UserDetails: { profile?: any } | undefined;
   MemberProfile: { profile?: any } | undefined;
   NearYou: undefined;
-  
-  // Accounts
+
   AccountPassword: undefined;
-  
-  // Id Verification
+
   BasicDetails: undefined;
   Documents: undefined;
   FacialVerification: undefined;
   FinalVerification: undefined;
   Intro: undefined;
   Verify: undefined;
-  
-  // Others
+
   FeaturedPhoto: undefined;
   ChangePassword: undefined;
   ContactUs: undefined;
   EditProfile: undefined;
   AboutUs: undefined;
-  Help: undefined; 
+  Help: undefined;
 
-  // Language: undefined;
   MatchedUsers: undefined;
   PrivacyPolicy: undefined;
   TermsOfUse: undefined;
   VerifyId: undefined;
 
-  // Extras
   OnboardingScreen: undefined;
   CreateProfile: undefined;
   Language: undefined;

@@ -12,7 +12,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 class UserPaymentRecordsSerializersView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UserPaymentRecordsSerializers)
     def create(self, request):
         try:

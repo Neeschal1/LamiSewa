@@ -14,7 +14,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { SubHeading, Describe, Title, Description } from "@/src/components/Texts";
 
-// Enable LayoutAnimation for Android
+
 if (Platform.OS === "android") {
   UIManager.setLayoutAnimationEnabledExperimental?.(true);
 }

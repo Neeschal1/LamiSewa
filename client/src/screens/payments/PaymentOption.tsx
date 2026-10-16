@@ -60,14 +60,13 @@ const PaymentOption = ({
         payment_status: "Paid",
         package_status: "Completed",
       });
-      // Card payments return a Stripe Checkout URL (uses STRIPE_SECRET_KEY
-      // on the backend). Open it in the system browser per Expo v54
-      // expo-web-browser docs, then continue on return.
+
+
       if (data?.URL) {
         await WebBrowser.openBrowserAsync(data.URL);
       }
-      // Subscription page shows once: mark complete so AuthenticatedNavigation
-      // routes straight to MyTabs next time.
+
+
       await StoreStringDataAsync("SubscriptionStatusAfterBuildingUpProfile", "Complete");
       setModalVisible(true);
       onClose();

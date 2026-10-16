@@ -13,12 +13,12 @@ class UserAccountSignupSerializers(serializers.ModelSerializer):
             "password": {"required": True, "write_only": True},
             "is_active" : {"read_only": True}
         }
-        
-        
+
+
 class UserAccountLoginSerializers(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'})
-    
+
 
 class EmailFingerprintVerificationSerializers(serializers.Serializer):
     email = serializers.EmailField()
@@ -28,21 +28,21 @@ class UserAccountCredentialsSetupSerializer(serializers.Serializer):
     contactnumber = serializers.CharField()
     fullname = serializers.CharField()
     email = serializers.EmailField()
-    
+
 
 class VerifyOTPSerializer(serializers.Serializer):
     otp = serializers.CharField()
     email = serializers.EmailField()
-    
+
 
 class FindAccountSerializer(serializers.Serializer):
     contactNumber = serializers.CharField()
-    
-    
+
+
 class CodeVerificationForForgotPasswordSerializers(serializers.Serializer):
     contactNumber = serializers.CharField()
     code = serializers.CharField()
-    
+
 
 class ResetPasswordSerializers(serializers.Serializer):
     contactNumber = serializers.CharField()

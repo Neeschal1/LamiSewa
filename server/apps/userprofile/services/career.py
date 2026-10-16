@@ -33,7 +33,7 @@ class Career:
             {"message": "Couldn't create user's career detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
     def _updatecareerdetail(self, request, pk) -> Response:
         usercareerinfo = get_object_or_404(UsersCareer, id=pk)
         serializer = UsersCareerSerializer(usercareerinfo, data=request.data, partial=True)
@@ -49,7 +49,7 @@ class Career:
             {"message": "Couldn't update user's career info detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
     def _retrievecareerdetail(self, request, pk) -> Response:
         userscareerdata = get_object_or_404(UsersCareer, id=pk)
         serializer = UsersCareerSerializer(userscareerdata, data=request.data, partial=True)
@@ -65,7 +65,7 @@ class Career:
             {"message": "Couldn't fetch user's career detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
     def _destroycareerdetail(self, request, pk) -> Response:
         userscareerdata = get_object_or_404(UsersCareer, id=pk)
         if userscareerdata:

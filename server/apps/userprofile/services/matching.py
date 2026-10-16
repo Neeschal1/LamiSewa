@@ -1,5 +1,3 @@
-"""Semantic matching gated by an active subscription."""
-
 import json
 
 from apps.payments.models.entities import SubscriptionPackage

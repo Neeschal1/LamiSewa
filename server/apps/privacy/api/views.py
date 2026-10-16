@@ -8,7 +8,7 @@ from .serializers import *
 
 class UserPrivacySerializersView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(request_body=UserPrivacySerializers)
     def create(self, request):
         try:

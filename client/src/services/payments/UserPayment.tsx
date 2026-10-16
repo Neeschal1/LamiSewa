@@ -3,9 +3,7 @@ import api from "../api";
 
 const UserPayment = async () => {
     try{
-
     } catch (err) {
-        
     }
 }
 

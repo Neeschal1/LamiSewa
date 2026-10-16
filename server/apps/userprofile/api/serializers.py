@@ -21,7 +21,7 @@ class UserProfileEmbeddingSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "summary": {"read_only": True},
         }
-        
+
 
 class UsersBasicInfoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,8 +39,8 @@ class UsersBasicInfoSerializer(serializers.ModelSerializer):
             "gender": {"required": True},
             "date_of_birth": {"required": True},
         }
-        
-    
+
+
 class UsersPersonalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersPersonalInfo
@@ -52,7 +52,7 @@ class UsersPersonalInfoSerializer(serializers.ModelSerializer):
             "current_city": {"required": True},
             "residency_status": {"required": True},
         }
-        
+
 
 class UsersAdditionalInfoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,7 +66,7 @@ class UsersAdditionalInfoSerializer(serializers.ModelSerializer):
             "diet": {"required": True},
             "community": {"required": True},
         }
-        
+
 
 class UsersFeaturedImagesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,8 +79,8 @@ class FeaturedPhotoSerializer(serializers.ModelSerializer):
         model = FeaturedPhoto
         fields = ["id", "image_url", "position", "created_at"]
         read_only_fields = ["id", "created_at"]
-        
-        
+
+
 class UsersHobbiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersHobbies
@@ -93,8 +93,8 @@ class UsersHobbiesSerializer(serializers.ModelSerializer):
             "hobby4": {"required": True},
             "hobby5": {"required": True},
         }
-        
-        
+
+
 class UsersCareerSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersCareer
@@ -107,8 +107,8 @@ class UsersCareerSerializer(serializers.ModelSerializer):
             "occupation": {"required": True},
             "company_or_organization_name": {"required": True},
         }
-        
-        
+
+
 class UsersFamilyDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersFamilyDetail
@@ -119,8 +119,8 @@ class UsersFamilyDetailSerializer(serializers.ModelSerializer):
             "total_family_members": {"required": True},
             "siblings": {"required": True},
         }
-        
-        
+
+
 class UsersAstroDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersAstroDetail
@@ -131,8 +131,8 @@ class UsersAstroDetailSerializer(serializers.ModelSerializer):
             "sunshine": {"required": True},
             "moon_sign": {"required": True},
         }
-        
-        
+
+
 class UsersPartnerPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersPartnerPreference

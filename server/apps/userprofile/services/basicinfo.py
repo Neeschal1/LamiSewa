@@ -43,7 +43,6 @@ class BasicInfo:
             return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
 
 
-
     def _updatebasicinfo(self, request, pk) -> Response:
         userinfo = get_object_or_404(UsersBasicInfo, id=pk)
         serializer = UsersBasicInfoSerializer(userinfo, data=request.data, partial=True)

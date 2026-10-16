@@ -87,14 +87,14 @@ const HobbiesInfo: FC = () => {
     setErrorMessage("");
     try {
       setLoading(true);
-      // Single create for the whole staged wizard (200 OK expected).
+
       const res = await SubmitCompleteProfileService(hobbies);
       if (res.status === 200) {
         await StoreStringDataAsync("UsersProfileID", res.data?.data?.profileid ?? "");
         await clearDraft();
         await DeleteStringDataAsync("UserProfileStatus");
         await StoreStringDataAsync("ProfileScreenStatus", "AllCompleted");
-        // Show subscription page once after profile creation.
+
         await StoreStringDataAsync("SubscriptionStatusAfterBuildingUpProfile", "Incomplete");
         setProfileCompleted(true);
       }

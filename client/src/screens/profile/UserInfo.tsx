@@ -76,8 +76,8 @@ const UserInfo: FC = () => {
 
     try {
       setLoading(true);
-      // Stage username + privacy in AsyncStorage; the single create happens
-      // at the hobbies step via /complete-profile/.
+
+
       await saveDraftSection("username", userName);
       await saveDraftSection("visible_to_verified_only", verifiedOnly);
       await StoreStringDataAsync("UserProfileStatus", "UserInfoCompleted");

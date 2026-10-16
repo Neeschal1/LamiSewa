@@ -6,28 +6,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = Config.SECRET_KEY
 
 
-# Installed Apps
 INSTALLED_APPS = [
     'daphne',
     'channels',
     'django.contrib.contenttypes',
     'unfold',
-    
-    # default
+
+
     'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    # installed packages
+
+
     'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework',
     'drf_yasg',
-    
-    # installed apps
+
+
     'apps.accounts',
     'apps.details',
     'apps.conversations',
@@ -39,12 +38,11 @@ INSTALLED_APPS = [
 ]
 
 
-# Middlewares
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    
-    # default middlewares
+
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -64,7 +62,6 @@ CORS_ALLOW_METHODS = (
 )
 
 
-# Custom Admin Dashboard Setup
 UNFOLD = {
     "SITE_TITLE": "LamiSewa",
     "SITE_HEADER": "Dashboard",
@@ -72,7 +69,6 @@ UNFOLD = {
 }
 
 
-# Rest framework setup
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -95,7 +91,6 @@ REST_FRAMEWORK = {
 }
 
 
-# JWT tokens timing setup
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
@@ -121,7 +116,6 @@ CHANNEL_LAYERS = {
 }
 
 
-# Templates included
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -138,7 +132,6 @@ TEMPLATES = [
 ]
 
 
-# Passwords for authorization
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -147,14 +140,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
 
-# Static Files
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",

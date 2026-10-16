@@ -1,5 +1,3 @@
-"""Cosine-similarity helpers for profile matching."""
-
 import math
 
 
@@ -13,7 +11,6 @@ def cosine_similarity(a, b) -> float:
 
 
 def rank_candidates(query_vec, candidates, top_k: int = 20):
-    """candidates: iterable of (profile, vector). Returns sorted [(profile, score)]."""
     scored = [(p, cosine_similarity(query_vec, v)) for p, v in candidates]
     scored.sort(key=lambda x: x[1], reverse=True)
     return scored[:top_k]

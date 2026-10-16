@@ -25,12 +25,12 @@ class UserProfileService:
                 profile_id = self._generate_profile_id()
                 if not UserProfile.objects.filter(profileid=profile_id).exists():
                     break
-               
+
             unique_username = UserProfile.objects.filter(username = username).exists()
-            
+
             if unique_username == True:
                 return Response({"Message": "User with that username already exists!"}, status=status.HTTP_409_CONFLICT)
-            
+
             user = User.objects.get(email = useremail)
             profile = UserProfile.objects.create(
                 userid = user,
@@ -89,8 +89,8 @@ class UserProfileService:
                     )
         except Exception:
             return Response({"Message": "Something went wrong!"}, status=status.HTTP_417_EXPECTATION_FAILED)
-        
-    
+
+
     def _listprofileid(self, request):
         try:
             profile = get_object_or_404(UserProfile, userid=request.user)

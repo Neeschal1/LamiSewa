@@ -92,7 +92,7 @@ const AdditionalInfo: FC = () => {
     setErrorMessage("");
     try {
       setLoading(true);
-      // Stage in AsyncStorage; single create happens at hobbies step.
+
       await saveDraftSection("additional_info", {
         height: height,
         weight: weight,

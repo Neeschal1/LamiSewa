@@ -1,10 +1,3 @@
-"""Atomic creation of a full user profile from staged client data.
-
-The client stores each wizard step in AsyncStorage and submits everything
-once, when hobbies are picked. This service creates UserProfile + all
-related rows + a sentence-transformer embedding in one transaction.
-"""
-
 import json
 import random
 

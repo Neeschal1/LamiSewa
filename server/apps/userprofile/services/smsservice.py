@@ -3,16 +3,15 @@ import random
 from env_config import Config
 
 class SendOTP:
-    
     def _send_sms(self, phone_number, name, type):
         otpcode = random.randint(100000, 999999)
-        
+
         payload = {
             "token": Config.SPARROW_SMS_TOKEN,
             "from": f"{Config.SPARROW_SMS_FROM}",
             "to": phone_number,
-            "text": f"""Hey {name}, your LamiSewa {type} code is {otpcode}. This code is valid for 2 minutes. Please do not share it with anyone. 
-            
+            "text": f"""Hey {name}, your LamiSewa {type} code is {otpcode}. This code is valid for 2 minutes. Please do not share it with anyone.
+
               Thank You :)
             Team Lamisewa"""
         }
@@ -23,7 +22,7 @@ class SendOTP:
                 "success": True,
                 "response": response.json()
             }
-            
+
         except Exception as e:
             return {
                 "success": False,

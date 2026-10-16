@@ -13,7 +13,7 @@ class UserAccountSignupSerializersView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "auth"
-    
+
     @swagger_auto_schema(request_body=UserAccountSignupSerializers)
     def create(self, request):
         number_of_users = User.objects.all().count()
@@ -25,12 +25,12 @@ class UserAccountSignupSerializersView(viewsets.ViewSet):
             Password = signup_serializers.validated_data["password"]
             return UserAuth()._signup(FirstName, Email, Username, Password, number_of_users)
 
-   
+
 class UserAccountLoginSerializerView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "auth"
-    
+
     @swagger_auto_schema(request_body=UserAccountLoginSerializers)
     def create(self, request):
         serializers = UserAccountLoginSerializers(data=request.data)
@@ -38,13 +38,13 @@ class UserAccountLoginSerializerView(viewsets.ViewSet):
             email = serializers.validated_data['email']
             password = serializers.validated_data['password']
             return UserAuth()._login(email, password)
-        
+
 
 class UserAccountCredentialsSetupSerializerView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "auth"
-    
+
     @swagger_auto_schema(request_body=UserAccountCredentialsSetupSerializer)
     def create(self, request):
         serializers = UserAccountCredentialsSetupSerializer(data=request.data)
@@ -53,13 +53,13 @@ class UserAccountCredentialsSetupSerializerView(viewsets.ViewSet):
             phonenumber = serializers.validated_data['contactnumber']
             email = serializers.validated_data['email']
             return UserAuth()._verifycredentials(name, phonenumber, email)
-        
-        
+
+
 class VerifyOTPSerializerView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "auth"
-    
+
     @swagger_auto_schema(request_body=VerifyOTPSerializer)
     def create(self, request):
         serializers = VerifyOTPSerializer(data=request.data)
@@ -67,26 +67,26 @@ class VerifyOTPSerializerView(viewsets.ViewSet):
             mail = serializers.validated_data['email']
             otpcode = serializers.validated_data['otp']
             return UserAuth()._verifyotpcode(mail, otpcode)
-        
+
 
 class FindAccountSerializerView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "auth"
-    
+
     @swagger_auto_schema(request_body=FindAccountSerializer)
     def create(self, request):
         serializers = FindAccountSerializer(data=request.data)
         if serializers.is_valid(raise_exception=True):
             phonenumber = serializers.validated_data['contactNumber']
             return UserAuth()._findaccount(phonenumber)
-        
+
 
 class CodeVerificationForForgotPasswordSerializersView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "auth"
-    
+
     @swagger_auto_schema(request_body=CodeVerificationForForgotPasswordSerializers)
     def create(self, request):
         serializers = CodeVerificationForForgotPasswordSerializers(data=request.data)
@@ -94,13 +94,13 @@ class CodeVerificationForForgotPasswordSerializersView(viewsets.ViewSet):
             usersphonenumber = serializers.validated_data['contactNumber']
             userscode = serializers.validated_data['code']
             return UserAuth()._codeverification(usersphonenumber, userscode)
-        
+
 
 class ResetPasswordSerializersView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "auth"
-    
+
     @swagger_auto_schema(request_body=ResetPasswordSerializers)
     def create(self, request):
         serializers = ResetPasswordSerializers(data=request.data)
@@ -108,13 +108,13 @@ class ResetPasswordSerializersView(viewsets.ViewSet):
             usersphonenumber = serializers.validated_data['contactNumber']
             passcode = serializers.validated_data['password']
             return UserAuth()._resetpassword(usersphonenumber, passcode)
-        
+
 
 class EmailFingerprintVerificationSerializersView(viewsets.ViewSet):
     permission_classes = [AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "auth"
-    
+
     @swagger_auto_schema(request_body=EmailFingerprintVerificationSerializers)
     def create(self, request):
         serializers = EmailFingerprintVerificationSerializers(data=request.data)
@@ -132,4 +132,3 @@ class AccountChangePasswordView(viewsets.ViewSet):
         if not current or not new:
             return Response({"Message": "Current and new passwords are required."}, status=status.HTTP_400_BAD_REQUEST)
         return UserAuth()._changepassword(request.user, current, new)
-    

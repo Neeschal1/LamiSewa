@@ -5,7 +5,7 @@ class UserPaymentRecordsSerializers(serializers.ModelSerializer):
     class Meta:
         model = UserPaymentRecords
         fields = '__all__'
-    
+
 class SubscriptionPackageSerializers(serializers.ModelSerializer):
     class Meta:
         model = SubscriptionPackage

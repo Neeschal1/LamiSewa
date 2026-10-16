@@ -119,7 +119,7 @@ const CasualInfo = () => {
 
       const dob = `${year}-${month}-${day}`;
 
-      // Stage in AsyncStorage; single create happens at hobbies step.
+
       await saveDraftSection("basic_info", {
         fullname: fullName,
         nickname: nickName,

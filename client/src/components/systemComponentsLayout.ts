@@ -4,10 +4,9 @@ import { InputFields, InputPassword, OTPInputFields, DOBInput, CustomDropdown } 
 import { toastConfig } from "./ToastConfig"
 
 export {
-    // Texts
-    MainScreenName, 
-    Title, 
-    SubTitle, 
+    MainScreenName,
+    Title,
+    SubTitle,
     Description,
     ErrorText,
     SocialButton,
@@ -15,19 +14,13 @@ export {
     Heading,
     SubHeading,
     Describe,
-
-    //Buttons
     PrimaryButton,
     TextualButton,
     SecondaryButton,
-
-    //InputFields
     InputFields,
     OTPInputFields,
     InputPassword,
     DOBInput,
     CustomDropdown,
-
-    // Toast
     toastConfig
 }

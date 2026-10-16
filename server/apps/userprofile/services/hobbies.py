@@ -33,8 +33,8 @@ class Hobbies:
             {"message": "Couldn't create user's hobbies list."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-        
-    
+
+
     def _updatehobbies(self, request, pk) -> Response:
         usershobbies = get_object_or_404(UsersHobbies, id=pk)
         serializer = UsersHobbiesSerializer(usershobbies, data=request.data, partial=True)
@@ -50,8 +50,8 @@ class Hobbies:
             {"message": "Couldn't update user's hobbies list."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
-    
+
+
     def _retrievehobbies(self, request, pk) -> Response:
         usershobbies = get_object_or_404(UsersHobbies, id=pk)
         serializer = UsersHobbiesSerializer(usershobbies, data=request.data, partial=True)
@@ -67,8 +67,8 @@ class Hobbies:
             {"message": "Couldn't fetch user's hobbies list."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
-    
+
+
     def _destroyhobbies(self, request, pk) -> Response:
         usershobbies = get_object_or_404(UsersHobbies, id=pk)
         if usershobbies:

@@ -55,7 +55,7 @@ const BasicDetails = () => {
                 entering={BounceIn.delay(200).duration(300)}
                 className="flex align-start"
               >
-                <ErrorText text={`${errorMessage}`} /> 
+                <ErrorText text={`${errorMessage}`} />
               </Animated.View>
             ) : null}
           </View>

@@ -32,10 +32,7 @@ const CustomModal: FC<ShowCustomModal> = ({showSuccessModal}) => {
                 <Description text="You exceeded the time to choose a password. Signup your credentials again to continue!" />
               </View>
             </View>
-            {/* <PrimaryButton
-                text="Take me to Signup Screen"
-                action={handleOkay}
-              /> */}
+
           </View>
         </View>
       </View>

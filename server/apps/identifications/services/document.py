@@ -12,11 +12,10 @@ class Documents:
             return Response({"message": "New Record Id created!", "payload": {""}})
         except Exception as e:
             return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)
-    
-    
+
+
     def _createnewdocument(self, fullname: str, dateofbirth: str, permanentaddress: str, documenttype: str, frontside: str, backside: str, livepicture: str, status: str) -> Response:
         try:
-            
             return Response({"Message": ""})
         except Exception as e:
             return Response({"Message": "Something went wrong!", "Exception": str(e)}, status=status.HTTP_417_EXPECTATION_FAILED)

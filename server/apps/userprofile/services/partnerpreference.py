@@ -9,7 +9,7 @@ class PartnerPreference:
     def _createpartnerpreferencedetail(self, request) -> Response:
         partner_preference = UsersPartnerPreferenceSerializer(data=request.data)
         partner_preference_validation = partner_preference.is_valid(raise_exception=True)
-        
+
         preferred_partner_age = partner_preference.validated_data["age_ranging"]
         preferred_partner_maritalstatus = partner_preference.validated_data["maritalstatus"]
         preferred_partner_address = partner_preference.validated_data["living_in"]
@@ -19,7 +19,7 @@ class PartnerPreference:
         preferred_partner_profession = partner_preference.validated_data["partner_profession"]
         preferred_partner_mangalik = partner_preference.validated_data["partner_mangalik"]
         preferred_partner_diet = partner_preference.validated_data["partner_diet"]
-        
+
         partner_preference_summary = f"""
         Preferred Partner's Age: {preferred_partner_age}
         Preferred Partner's Marital Status: {preferred_partner_maritalstatus}
@@ -61,8 +61,8 @@ class PartnerPreference:
             {"message": "Couldn't create user's partner preference detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
-    
+
+
     def _updatepartnerpreferencedetail(self, request, pk) -> Response:
         userpreferredpartnerdetail = get_object_or_404(UsersPartnerPreference, id=pk)
         serializer = UsersPartnerPreferenceSerializer(userpreferredpartnerdetail, data=request.data, partial=True)
@@ -78,8 +78,8 @@ class PartnerPreference:
             {"message": "Couldn't update user's partner preference detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
-    
+
+
     def _retrievepartnerpreferencedetail(self, request, pk) -> Response:
         userpreferredpartnerdetail = get_object_or_404(UsersPartnerPreference, id=pk)
         serializer = UsersPartnerPreferenceSerializer(userpreferredpartnerdetail, data=request.data, partial=True)
@@ -95,8 +95,8 @@ class PartnerPreference:
             {"message": "Couldn't fetch user's partner preference detail."},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
-    
+
+
     def _destroypartnerpreferencedetail(self, request, pk) -> Response:
         userpreferredpartnerdetail = get_object_or_404(UsersPartnerPreference, id=pk)
         if userpreferredpartnerdetail:
@@ -109,4 +109,3 @@ class PartnerPreference:
             {"message": "Couldn't delete user's partner preference!"},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    

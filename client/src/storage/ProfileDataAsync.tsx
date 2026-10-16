@@ -32,7 +32,6 @@ export const DeleteStringDataAsync = async ( key: string ) => {
 };
 
 
-
 export const StoreObjectDataAsync: FC<ProfileData> = async ({ key, value }) => {
   try {
     const objData = JSON.stringify(value);
