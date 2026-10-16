@@ -445,3 +445,66 @@ class MemberDetailAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class StoryView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def _serialize(self, profile, story):
+        try:
+            basic = profile.basic_info
+            pic = basic.profile_picture
+            name = basic.fullname or basic.nickname or profile.username
+        except Exception:
+            pic = ""
+            name = profile.username
+        return {
+            "profileid": profile.profileid,
+            "username": profile.username,
+            "name": name,
+            "pic": pic,
+            "story": story.story if story else "",
+            "storyviews": story.storyviews if story else 0,
+            "has_story": bool(story and story.story),
+        }
+
+    def _audience(self, request):
+        from apps.userprofile.models.entities import UserProfile
+        from apps.privacy.services.follow import FollowService
+
+        try:
+            me = UserProfile.objects.get(userid=request.user)
+        except UserProfile.DoesNotExist:
+            return None, []
+        mutual = FollowService().mutual(request)
+        ids = [m["profileid"] for m in mutual.get("results", [])]
+        others = list(UserProfile.objects.filter(profileid__in=ids))
+        return me, [me] + others
+
+    def list(self, request):
+        from apps.userprofile.models.entities import UsersStories
+
+        me, audience = self._audience(request)
+        if me is None:
+            return Response({"message": "Complete your profile first."}, status=status.HTTP_404_NOT_FOUND)
+        out = []
+        for profile in audience:
+            story = UsersStories.objects.filter(userprofileid=profile).exclude(story="").order_by("-id").first()
+            out.append(self._serialize(profile, story))
+        return Response({"message": "Stories.", "data": out}, status=status.HTTP_200_OK)
+
+    def create(self, request):
+        from apps.userprofile.models.entities import UserProfile, UsersStories
+
+        try:
+            me = UserProfile.objects.get(userid=request.user)
+        except UserProfile.DoesNotExist:
+            return Response({"message": "Complete your profile first."}, status=status.HTTP_404_NOT_FOUND)
+        url = str(request.data.get("story") or "").strip()
+        if not url or len(url) > 500:
+            return Response({"message": "A valid story image URL is required."}, status=status.HTTP_400_BAD_REQUEST)
+        story = UsersStories.objects.create(userprofileid=me, story=url)
+        return Response(
+            {"message": "Story uploaded.", "data": self._serialize(me, story)},
+            status=status.HTTP_201_CREATED,
+        )

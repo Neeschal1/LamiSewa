@@ -18,6 +18,7 @@ router.register('user-profile/partner-preference-detail', UsersPartnerPreference
 router.register('user-profile/complete-profile', CompleteProfileView, basename="completeprofile")
 router.register('matches', SemanticMatchView, basename="semanticmatches")
 router.register('search', ProfileSearchView, basename="profilesearch")
+router.register('stories', StoryView, basename="stories")
 
 urlpatterns = [
     path('me/', OwnProfileUpdateAPIView.as_view(), name="own-profile-update"),

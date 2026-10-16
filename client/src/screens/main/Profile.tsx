@@ -35,44 +35,8 @@ import Modal from "react-native-modal";
 import { useAuth } from "@/src/auth/AuthContext";
 import { useProfile } from "@/src/profile/ProfileProvider";
 import { fetchFollowers, fetchFollowing } from "@/src/services/privacy/follow";
-import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
 import { fetchSubscriptionStatus } from "@/src/services/payments/subscription";
 import QRCode from "react-native-qrcode-svg";
-
-const FollowRow = ({
-  title,
-  emptyText,
-  users,
-  onOpen,
-}: {
-  title: string;
-  emptyText: string;
-  users: any[];
-  onOpen: (u: any) => void;
-}) => (
-  <View className="flex w-full items-start p-screen">
-    <Description text={title} />
-    {users.length === 0 ? (
-      <SubTitle text={emptyText} />
-    ) : (
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-2">
-        <View className="flex-row gap-mid">
-          {users.map((u: any) => (
-            <TouchableOpacity key={u.profileid} onPress={() => onOpen(u)} className="items-center w-20">
-              <Image
-                source={{ uri: u.pic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg" }}
-                style={{ width: 64, height: 64, borderRadius: 32 }}
-              />
-              <Text numberOfLines={1} className="font-Poppinsregular text-dark text-description mt-1">
-                {u.name ?? u.username}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
-    )}
-  </View>
-);
 
 type OthersScreen =
   | "PrivacyPolicy"
@@ -202,19 +166,12 @@ const Profile: FC = () => {
   const [userData, setUserData] = useState<UserData | null>(cached);
   const [followers, setFollowers] = useState<any[]>([]);
   const [following, setFollowing] = useState<any[]>([]);
-  const [showList, setShowList] = useState<"followers" | "following" | null>(null);
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [shareVisible, setShareVisible] = useState<boolean>(false);
+  const [subscription, setSubscription] = useState<any | null>(null);
+  const [packageVisible, setPackageVisible] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
-
-  const openMember = async (u: any) => {
-    if (!u?.profileid) return;
-    try {
-      const full = await fetchMemberProfile(u.profileid);
-      navigation.navigate("UserDetails", { profile: full });
-    } catch {}
-  };
 
   const handleLogOut = async () => {
     await logout();
@@ -245,6 +202,7 @@ useFocusEffect(
       try {
         const sub = await fetchSubscriptionStatus();
         setSubscribed(!!sub?.is_subscribed);
+        setSubscription(sub?.is_subscribed ? sub : null);
       } catch {}
     };
     refreshLists();
@@ -282,12 +240,14 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
           resizeMode="cover"
         >
           <View className="flex w-full justify-end pt-4 items-end flex-row gap-small">
-            <TouchableOpacity
-              onPress={() => navigation.navigate("SubscriptionDetails", { from: "Profile" })}
-              className="w-12 h-12 rounded-full bg-[#2277F7] items-center justify-center"
-            >
-              <Ionicons name="diamond" size={24} color="#F2F1FF" />
-            </TouchableOpacity>
+            {subscribed ? (
+              <TouchableOpacity
+                onPress={() => setPackageVisible(true)}
+                className="w-12 h-12 rounded-full bg-[#2277F7] items-center justify-center"
+              >
+                <Ionicons name="diamond" size={24} color="#F2F1FF" />
+              </TouchableOpacity>
+            ) : null}
             <TouchableOpacity className="flex items-center justify-center bg-background w-12 h-12 rounded-full">
               <Ionicons name="menu" size={24} color="black" />
             </TouchableOpacity>
@@ -345,13 +305,13 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
               <SubTitle text={`${userData?.basic_info.bio}`} />
               <View className="flex flex-row gap-mid">
                 <TouchableOpacity
-                  onPress={() => setShowList(showList === "followers" ? null : "followers")}
+                  onPress={() => navigation.navigate("Followers")}
                   className="flex bg-[#FFFFFF] px-4 py-2 rounded-2xl"
                 >
                   <SubTitle text={`Followers: ${followers.length}`} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => setShowList(showList === "following" ? null : "following")}
+                  onPress={() => navigation.navigate("Following")}
                   className="flex bg-primaryred px-4 py-2 rounded-2xl"
                 >
                   <Text className="font-Poppinsregular text-background text-subheading">
@@ -363,17 +323,19 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
           </View>
         </View>
 
-        <View className="flex py-4">
-          <TouchableOpacity
-            onPress={() => navigation.navigate("SubscriptionDetails", { from: "Profile" })}
-            className="flex flex-row bg-[#9621C5] items-center gap-mid w-full px-20 rounded-xl py-4"
-          >
-            <Ionicons name="diamond" color="white" size={24} />
-            <Text className="font-Poppinsmedium text-background text-subheading">
-              Purchase Membership
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {subscribed ? null : (
+          <View className="flex py-4">
+            <TouchableOpacity
+              onPress={() => navigation.navigate("SubscriptionDetails", { from: "Profile" })}
+              className="flex flex-row bg-[#9621C5] items-center gap-mid w-full px-20 rounded-xl py-4"
+            >
+              <Ionicons name="diamond" color="white" size={24} />
+              <Text className="font-Poppinsmedium text-background text-subheading">
+                Purchase Membership
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         <View className="flex items-start w-full p-screen">
           <View className="flex justify-between flex-row w-full">
@@ -461,13 +423,6 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
           ) : null}
         </View>
 
-        {showList === "followers" ? (
-          <FollowRow title="Followers" emptyText="No followers" users={followers} onOpen={openMember} />
-        ) : null}
-        {showList === "following" ? (
-          <FollowRow title="Following" emptyText="No following" users={following} onOpen={openMember} />
-        ) : null}
-
         <View className="flex w-full items-start p-screen">
           <Description text="Account" />
           <View className="mt-4 gap-mid">
@@ -553,6 +508,33 @@ const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
           {profileLink ? <Description text={profileLink} /> : null}
           <TouchableOpacity
             onPress={() => setShareVisible(false)}
+            className="bg-primaryred rounded-2xl py-3 px-10"
+          >
+            <Text className="font-Poppinsmedium text-background">Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={packageVisible}
+        onBackdropPress={() => setPackageVisible(false)}
+        onBackButtonPress={() => setPackageVisible(false)}
+        style={{ justifyContent: "flex-end", margin: 0 }}
+      >
+        <View className="bg-background rounded-t-3xl p-screen items-center gap-large">
+          <View className="w-12 h-1.5 rounded-full bg-darkvariant/40" />
+          <SubTitle text="Ongoing package" />
+          <View className="w-full gap-small">
+            <View className="flex-row justify-between w-full">
+              <SubTitle text="Package" />
+              <Description text={`${subscription?.package_type ?? "-"}`} />
+            </View>
+            <View className="flex-row justify-between w-full">
+              <SubTitle text="Valid until" />
+              <Description text={`${subscription?.expiry_date ? String(subscription.expiry_date).slice(0, 10) : "-"}`} />
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={() => setPackageVisible(false)}
             className="bg-primaryred rounded-2xl py-3 px-10"
           >
             <Text className="font-Poppinsmedium text-background">Close</Text>

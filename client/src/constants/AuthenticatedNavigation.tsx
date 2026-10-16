@@ -3,6 +3,7 @@ import { TouchableOpacity, Text } from "react-native";
 import { RootStackParamList } from "@/src/components/componentsType";
 import { Describe, SubHeading, Title } from "../components/Texts";
 import { Chats, Home, NearYou, Profile, Search, UserDetails } from "../screens/main/mainScreenLayouts";
+import { Followers, Following } from "../screens/profile/profileScreenLayout";
 import { PaymentSuccess, SubscriptionDetails } from "../screens/payments/PaymentLayout";
 import MyTabs from "./BottomTabNavigation";
 import {AccountPassword} from "../screens/accounts/AccountLayouts";
@@ -53,6 +54,8 @@ const AuthenticatedNavigation = () => {
       <Stack.Screen name="Chats" component={Chats} options={optionsScreens} />
       <Stack.Screen name="Home" component={Home} options={optionsScreens} />
       <Stack.Screen name="Profile" component={Profile} options={optionsScreens} />
+      <Stack.Screen name="Followers" component={Followers} options={optionsScreens} />
+      <Stack.Screen name="Following" component={Following} options={optionsScreens} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="NearYou" component={NearYou} />
       <Stack.Screen name="SubscriptionDetails" component={SubscriptionDetails}

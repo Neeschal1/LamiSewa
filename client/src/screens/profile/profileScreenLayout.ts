@@ -5,6 +5,8 @@ import HobbiesInfo from "./HobbiesInfo";
 import PersonalInfo from "./PersonalInfo";
 import UserInfo from "./UserInfo";
 import CasualInfo from "./CasualInfo";
+import Followers from "./Followers";
+import Following from "./Following";
 
 export {
     UserInfo,
@@ -14,4 +16,6 @@ export {
     HobbiesInfo,
     PersonalInfo,
     CasualInfo,
+    Followers,
+    Following,
 }

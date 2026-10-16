@@ -17,6 +17,7 @@ export const API = {
         COMPLETEPROFILE: "/profiles/user-profile/complete-profile/",
         MATCHES: "/profiles/matches/",
         SEARCH: "/profiles/search/",
+        STORIES: "/profiles/stories/",
         BASICINFO: "/profiles/user-profile/basic-info/",
         CAREERINFO: "/profiles/user-profile/career-info/",
         ASTRODETAILS: "/profiles/user-profile/astro-detail/",
