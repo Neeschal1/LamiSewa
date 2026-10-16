@@ -11,49 +11,43 @@ import {
 import { RootStackParamList } from "../components/componentsType";
 import { Title } from "../components/Texts";
 import { useEffect, useState } from "react";
-import {
-  DeleteStringDataAsync,
-  GetStringDataAsync,
-  StoreStringDataAsync,
-} from "../storage/ProfileDataAsync";
+import { GetStringDataAsync } from "../storage/ProfileDataAsync";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+const ORDER: Array<keyof RootStackParamList> = [
+  "UserInfo",
+  "BasicInfo",
+  "CasualInfo",
+  "PersonalInfo",
+  "AdditionalInfo",
+  "CareerInfo",
+  "HobbiesInfo",
+];
+
+const NEXT_AFTER: Record<string, keyof RootStackParamList> = {
+  UserInfoCompleted: "BasicInfo",
+  BasicInfoCompleted: "PersonalInfo",
+  PersonalInfoCompleted: "AdditionalInfo",
+  AdditionalInfoCompleted: "CareerInfo",
+  CareerInfoCompleted: "HobbiesInfo",
+};
+
 const ProfileScreenNavigation = () => {
-  const [startScreen, setStartScreen] =useState<keyof RootStackParamList | null>(null);
+  const [startScreen, setStartScreen] = useState<keyof RootStackParamList | null>(null);
 
   useEffect(() => {
     const initialScreen = async () => {
       const screenName = await GetStringDataAsync("UserProfileStatus");
-      if (screenName === "HobbiesInfoCompleted") {
-        await DeleteStringDataAsync("UserProfileStatus");
-        await StoreStringDataAsync("ProfileScreenStatus", "AllCompleted")
-        return;
-      } else if (screenName === "CareerInfoCompleted") {
-        await DeleteStringDataAsync("UserProfileStatus");
-        setStartScreen("HobbiesInfo");
-        return;
-      } else if (screenName === "AdditionalInfoCompleted") {
-        await DeleteStringDataAsync("UserProfileStatus");
-        setStartScreen("CareerInfo");
-        return;
-      } else if (screenName === "PersonalInfoCompleted") {
-        await DeleteStringDataAsync("UserProfileStatus");
-        setStartScreen("AdditionalInfo");
-        return;
-      } else if (screenName === "BasicInfoCompleted") {
-        await DeleteStringDataAsync("UserProfileStatus");
-        setStartScreen("PersonalInfo");
-        return;
-      } else if (screenName === "UserInfoCompleted") {
-        await DeleteStringDataAsync("UserProfileStatus");
-        setStartScreen("BasicInfo");
-        return;
-      } else {
-        await DeleteStringDataAsync("UserProfileStatus");
+      if (!screenName) {
         setStartScreen("UserInfo");
         return;
-      } 
+      }
+      if (screenName === "HobbiesInfoCompleted") {
+        setStartScreen(null);
+        return;
+      }
+      setStartScreen(NEXT_AFTER[screenName] ?? "UserInfo");
     };
     initialScreen();
   }, []);
@@ -62,11 +56,13 @@ const ProfileScreenNavigation = () => {
     return null;
   }
 
+  void ORDER;
+
   return (
-    <Stack.Navigator 
-    // initialRouteName="UserInfo"
-    initialRouteName={startScreen} 
-    screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      initialRouteName={startScreen}
+      screenOptions={{ headerShown: false }}
+    >
       <Stack.Screen name="UserInfo" component={UserInfo} options={ProfileScreens("User Info(1/7)")} />
       <Stack.Screen name="BasicInfo" component={BasicInfo} options={ProfileScreens("Basic Info(2/7)")} />
       <Stack.Screen name="CasualInfo" component={CasualInfo} options={ProfileScreens("Casual Info(3/7)")} />

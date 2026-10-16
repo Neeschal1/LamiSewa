@@ -4,200 +4,150 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Dimensions,
+  Text,
+  ActivityIndicator,
+  TextInput,
 } from "react-native";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  Describe,
   Description,
   MainScreenName,
-  SubHeading,
   SubTitle,
   Title,
 } from "@/src/components/systemComponentsLayout";
 import { Ionicons } from "@expo/vector-icons";
-
-const myProfile = require("@/src/assets/images/myPP.png");
-
-const { width } = Dimensions.get("window");
-
-const STORY_SIZE = width * 0.18;
-const BORDER_SIZE = STORY_SIZE + 8;
-const PLUS_SIZE = STORY_SIZE * 0.35;
-
-const Stories = [
-  {
-    item: 1,
-    photo:
-      "https://i.pinimg.com/736x/5a/fe/ea/5afeea9ea22e4c1a34b9a8aa3941fdd0.jpg",
-    name: "Preeti",
-    storyavailable: true,
-  },
-  {
-    item: 2,
-    photo:
-      "https://i.pinimg.com/736x/a2/5f/98/a25f98dd08b3f7f2e304b968b774f3c4.jpg",
-    name: "Shyana",
-    storyavailable: true,
-  },
-  {
-    item: 3,
-    photo:
-      "https://i.pinimg.com/736x/67/c1/d6/67c1d6ddcb6eb37d6920cf732f4d6e80.jpg",
-    name: "Adhya",
-    storyavailable: true,
-  },
-  {
-    item: 4,
-    photo:
-      "https://i.pinimg.com/1200x/7e/23/5e/7e235ea15aa159c2d8af1736c353ec8b.jpg",
-    name: "Samy",
-    storyavailable: true,
-  },
-  {
-    item: 5,
-    photo:
-      "https://i.pinimg.com/1200x/f0/9a/b8/f09ab89712b5b407839a5d51be8dc5a4.jpg",
-    name: "Sandhya",
-    storyavailable: false,
-  },
-  {
-    item: 6,
-    photo:
-      "https://i.pinimg.com/736x/bb/63/ee/bb63ee7ade682b181071909616196c71.jpg",
-    name: "Prakriti",
-    storyavailable: false,
-  },
-  {
-    item: 7,
-    photo:
-      "https://i.pinimg.com/736x/6e/01/47/6e01473a4f4b3a3cab346b92194b41bd.jpg",
-    name: "Aayushma",
-    storyavailable: false,
-  },
-];
+import { fetchConversations, fetchMessages, sendMessage } from "@/src/services/chat/chat";
+import { fetchMutual } from "@/src/services/privacy/follow";
+import { getAccessTokens } from "@/src/storage/SecureTokens";
 
 const Chats: FC = () => {
-  const [day, setDay] = useState(true);
+  const [threads, setThreads] = useState<any[]>([]);
+  const [mutual, setMutual] = useState<any[]>([]);
+  const [activeThread, setActiveThread] = useState<any | null>(null);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [draft, setDraft] = useState("");
+  const [loading, setLoading] = useState(true);
+  const ws = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setThreads(await fetchConversations());
+      } catch {}
+      try {
+        setMutual(await fetchMutual());
+      } catch {}
+      setLoading(false);
+    };
+    load();
+    return () => ws.current?.close();
+  }, []);
+
+  const openThread = async (thread: any) => {
+    setActiveThread(thread);
+    try {
+      setMessages(await fetchMessages(thread.id));
+    } catch {
+      setMessages([]);
+    }
+    try {
+      ws.current?.close();
+      const token = await getAccessTokens();
+      const base = (process.env.EXPO_PUBLIC_DJANGO_DEVELOPMENT_SERVER_URL ?? "").replace(/^http/, "ws");
+      ws.current = new WebSocket(`${base}/ws/chat/${thread.id}/`);
+      void token;
+      ws.current.onmessage = (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          if (data?.id) setMessages((m) => [...m, data]);
+        } catch {}
+      };
+    } catch {}
+  };
+
+  const handleSend = async () => {
+    if (!activeThread || !draft.trim()) return;
+    const text = draft.trim();
+    setDraft("");
+    try {
+      const saved = await sendMessage(activeThread.id, text);
+      if (saved?.id) setMessages((m) => [...m, saved]);
+    } catch {}
+    try {
+      ws.current?.send(JSON.stringify({ text }));
+    } catch {}
+  };
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-background items-center justify-center">
+        <ActivityIndicator />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-background">
       <StatusBar hidden={false} />
-
-      <View className="flex-1 w-full bg-background p-screen items-center">
+      <View className="flex-1 w-full bg-background p-screen">
         <MainScreenName text="Messages" />
-
         <View className="mt-large gap-mid">
-          <Title text="People you’ve followed" />
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingHorizontal: 4,
-              gap: 12,
-            }}
-          >
-            {/* Your Story */}
-
-            <TouchableOpacity className="items-center">
-              <View>
-                {day ? (
-                  <>
-                    <View
-                      className="border-2 border-primaryblue rounded-full items-center justify-center"
-                      style={{
-                        width: BORDER_SIZE,
-                        height: BORDER_SIZE,
-                      }}
-                    >
-                      <Image
-                        source={myProfile}
-                        style={{
-                          width: STORY_SIZE,
-                          height: STORY_SIZE,
-                          borderRadius: STORY_SIZE / 2,
-                        }}
-                      />
-                    </View>
-
-                    <View
-                      className="bg-primaryred rounded-full absolute items-center justify-center"
-                      style={{
-                        width: PLUS_SIZE,
-                        height: PLUS_SIZE,
-                        right: 0,
-                        bottom: 0,
-                      }}
-                    >
-                      <SubHeading text="+" />
-                    </View>
-                  </>
-                ) : (
-                  <Image
-                    source={myProfile}
-                    style={{
-                      width: BORDER_SIZE,
-                      height: BORDER_SIZE,
-                      borderRadius: BORDER_SIZE / 2,
-                    }}
-                  />
-                )}
+          <Title text="Mutual follows" />
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {mutual.map((u: any) => (
+              <View key={u.profileid} className="items-center mr-3">
+                <Image source={{ uri: u.pic }} style={{ width: 64, height: 64, borderRadius: 32 }} />
+                <SubTitle text={u.name ?? u.username} />
               </View>
-
-              <SubTitle text="You" />
-            </TouchableOpacity>
-
-            {/* Other Stories */}
-
-            {Stories.map((story) => (
-              <TouchableOpacity key={story.item} className="items-center">
-                {story.storyavailable ? (
-                  <View
-                    className="border-2 border-primaryblue rounded-full items-center justify-center"
-                    style={{
-                      width: BORDER_SIZE,
-                      height: BORDER_SIZE,
-                    }}
-                  >
-                    <Image
-                      source={{ uri: story.photo }}
-                      style={{
-                        width: STORY_SIZE,
-                        height: STORY_SIZE,
-                        borderRadius: STORY_SIZE / 2,
-                      }}
-                    />
-                  </View>
-                ) : (
-                  <Image
-                    source={{ uri: story.photo }}
-                    style={{
-                      width: BORDER_SIZE,
-                      height: BORDER_SIZE,
-                      borderRadius: BORDER_SIZE / 2,
-                    }}
-                  />
-                )}
-
-                <SubTitle text={story.name} />
-              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
-
-        {/* Empty State */}
-
-        <View className="flex-1 items-center justify-center">
-          <Description text="No messages" />
-        </View>
-
-        <View className="flex w-full items-center justify-center">
-          <TouchableOpacity className="p-midscreen w-[15%] rounded-full bg-primaryred">
-            <Ionicons name="add" size={30} color="#F2F1FF"/>
-          </TouchableOpacity>
-        </View>
+        {!activeThread ? (
+          <ScrollView className="mt-large">
+            {threads.length === 0 ? (
+              <Description text="No messages" />
+            ) : (
+              threads.map((t: any) => (
+                <TouchableOpacity
+                  key={t.id}
+                  onPress={() => openThread(t)}
+                  className="flex-row items-center gap-mid py-3 border-b border-darkvariant/10"
+                >
+                  <Ionicons name="person-circle" size={44} color="#888" />
+                  <View className="flex-1">
+                    <Text className="font-Poppinsmedium text-dark">{t.other_name}</Text>
+                    <Description text={t.last_text ?? ""} />
+                  </View>
+                </TouchableOpacity>
+              ))
+            )}
+          </ScrollView>
+        ) : (
+          <View className="flex-1 mt-large">
+            <TouchableOpacity onPress={() => { setActiveThread(null); ws.current?.close(); }} className="mb-2">
+              <Text className="font-Poppinsmedium text-primaryblue">Back</Text>
+            </TouchableOpacity>
+            <ScrollView className="flex-1">
+              {messages.map((m: any) => (
+                <View key={m.id} className="py-1">
+                  <Text className="font-Poppinsregular text-dark">{m.text}</Text>
+                </View>
+              ))}
+            </ScrollView>
+            <View className="flex-row gap-mid items-center mt-2">
+              <TextInput
+                value={draft}
+                onChangeText={setDraft}
+                placeholder="Message"
+                className="flex-1 border border-darkvariant/30 rounded-2xl px-4 py-3 font-Poppinsregular"
+              />
+              <TouchableOpacity onPress={handleSend} className="bg-primaryred rounded-full p-3">
+                <Ionicons name="send" size={20} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );

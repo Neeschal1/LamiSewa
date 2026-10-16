@@ -15,6 +15,7 @@ from apps.userprofile.services.featuredpictures import FeaturedPictures
 from apps.userprofile.services.career import Career
 from apps.userprofile.services.partnerpreference import PartnerPreference
 from apps.userprofile.services.hobbies import Hobbies
+from apps.userprofile.services.search import ProfileSearch
 from drf_yasg.utils import swagger_auto_schema
 
     
@@ -378,5 +379,17 @@ class SemanticMatchView(viewsets.ViewSet):
             return Response({"message": result["error"]}, status=status_code)
         return Response(
             {"message": "Matches retrieved.", "data": result["results"]},
+            status=status.HTTP_200_OK,
+        )
+
+
+class ProfileSearchView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        result = ProfileSearch().search(request)
+        status_code = result.pop("status", 200)
+        return Response(
+            {"message": "Search results.", "data": result["results"]},
             status=status.HTTP_200_OK,
         )

@@ -31,7 +31,8 @@ import {
 } from "@/src/components/componentsType";
 import { useNavigation } from "expo-router";
 import { useAuth } from "@/src/auth/AuthContext";
-import FetchUsersDetail from "@/src/services/settings/fetchDetails";
+import { useProfile } from "@/src/profile/ProfileProvider";
+import { fetchFollowers, fetchFollowing } from "@/src/services/privacy/follow";
 
 type OthersScreen =
   | "PrivacyPolicy"
@@ -156,8 +157,11 @@ const { width, height } = Dimensions.get("window");
 
 const Profile: FC = () => {
   const { logout } = useAuth();
+  const { data: cached, fetchProfile } = useProfile();
   const [enabled, setEnabled] = useState<boolean>(false);
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(cached);
+  const [followers, setFollowers] = useState<any[]>([]);
+  const [following, setFollowing] = useState<any[]>([]);
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -168,20 +172,21 @@ const Profile: FC = () => {
 useEffect(() => {
   const fetchUserBasicInfo = async () => {
     try {
-      const data = await FetchUsersDetail();
-
-      console.log("User data:", data);
+      const data = await fetchProfile();
       setUserData(data);
+      try {
+        setFollowers(await fetchFollowers());
+      } catch {}
+      try {
+        setFollowing(await fetchFollowing());
+      } catch {}
     } catch (error: any) {
       console.log("FETCH USER ERROR:", error);
-      console.log("STATUS:", error?.response?.status);
-      console.log("RESPONSE:", error?.response?.data);
-      console.log("HEADERS:", error?.response?.headers);
     }
   };
 
   fetchUserBasicInfo();
-}, []);
+}, [fetchProfile]);
 
   return (
     <View className="flex-1 items-center justify-start bg-background">
@@ -260,11 +265,11 @@ useEffect(() => {
               <SubTitle text={`${userData?.basic_info.bio}`} />
               <View className="flex flex-row gap-mid">
                 <TouchableOpacity className="flex bg-[#FFFFFF] px-4 py-2 rounded-2xl">
-                  <SubTitle text="Matching: 28" />
+                  <SubTitle text={`Followers: ${followers.length}`} />
                 </TouchableOpacity>
                 <TouchableOpacity className="flex bg-primaryred px-4 py-2 rounded-2xl">
                   <Text className="font-Poppinsregular text-background text-subheading">
-                    Matched: 12
+                    {`Following: ${following.length}`}
                   </Text>
                 </TouchableOpacity>
               </View>

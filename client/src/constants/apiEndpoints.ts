@@ -13,6 +13,7 @@ export const API = {
         USERPROFILE: "/profiles/userprofile/",
         COMPLETEPROFILE: "/profiles/user-profile/complete-profile/",
         MATCHES: "/profiles/matches/",
+        SEARCH: "/profiles/search/",
         BASICINFO: "/profiles/user-profile/basic-info/",
         CAREERINFO: "/profiles/user-profile/career-info/",
         ASTRODETAILS: "/profiles/user-profile/astro-detail/",
@@ -28,6 +29,17 @@ export const API = {
         SUBSCRIPTION: "/payments/subscription/"
     },
     PRIVACY: {
-        USERSPRIVACY: "/privacy/userprivacy/"
-    }
+        USERSPRIVACY: "/privacy/userprivacy/",
+        FOLLOW: "/privacy/follow/",
+        FOLLOWERS: "/privacy/followers/",
+        FOLLOWING: "/privacy/following/",
+        MUTUAL: "/privacy/mutual/",
+    },
+    CHAT: {
+        CONVERSATIONS: "/chat/conversations/",
+        MESSAGES: "/chat/messages/",
+    },
+    NOTIFICATIONS: {
+        LIST: "/notifications/",
+    },
 }

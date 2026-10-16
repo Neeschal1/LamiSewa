@@ -41,6 +41,8 @@ urlpatterns = [
     path('identifications/', include('apps.identifications.api.urls')),
     path('payments/', include('apps.payments.api.urls')),
     path('privacy/', include('apps.privacy.api.urls')),
+    path('chat/', include('apps.conversations.api.urls')),
+    path('notifications/', include('apps.notifications.api.urls')),
     
     # swagger docs
     re_path(r'^docs(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

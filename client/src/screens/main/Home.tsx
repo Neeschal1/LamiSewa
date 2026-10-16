@@ -8,9 +8,16 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Gesture, GestureDetector, Directions } from "react-native-gesture-handler";
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { BlurView } from "expo-blur";
 import ToastManager, { Toast } from "toastify-react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  runOnJS,
+} from "react-native-reanimated";
 import {
   Heading,
   SubHeading,
@@ -25,9 +32,12 @@ import {
   fetchSemanticMatches,
   fetchSubscriptionStatus,
 } from "@/src/services/payments/subscription";
+import { followUser } from "@/src/services/privacy/follow";
 
 const star = require("@/src/assets/icons/star.png");
 const unselect = require("@/src/assets/icons/UnmatchedHeart.png");
+
+const MIN_SCORE = 0.8;
 
 type Card = {
   name: string;
@@ -40,7 +50,7 @@ type Card = {
 
 const toCardFromMatch = (m: any): Card => ({
   name: m?.basic_info?.nickname || m?.basic_info?.fullname || m?.username || "Member",
-  city: m?.basic_info?.city || m?.basic_info?.fullname ? "" : "",
+  city: m?.personal_info?.current_city || m?.city || "",
   pic:
     m?.basic_info?.profile_picture ||
     "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg",
@@ -63,6 +73,8 @@ const Home: FC = () => {
   const [cards, setCards] = useState<Card[]>(() => DummyUsers.map(toCardFromDummy));
   const [loadingMatches, setLoadingMatches] = useState<boolean>(true);
   const [semanticMode, setSemanticMode] = useState<boolean>(false);
+  const translateX = useSharedValue(0);
+  const opacity = useSharedValue(1);
 
   const navigation = useNavigation<NavigationProps>();
 
@@ -73,8 +85,11 @@ const Home: FC = () => {
         if (sub?.is_subscribed) {
           try {
             const matches = await fetchSemanticMatches();
-            if (Array.isArray(matches) && matches.length > 0) {
-              setCards(matches.map(toCardFromMatch));
+            const filtered = Array.isArray(matches)
+              ? matches.filter((m: any) => typeof m?.score !== "number" || m.score >= MIN_SCORE)
+              : [];
+            if (filtered.length > 0) {
+              setCards(filtered.map(toCardFromMatch));
               setSemanticMode(true);
               setIndex(0);
               return;
@@ -97,35 +112,82 @@ const Home: FC = () => {
 
   const card = useMemo(() => cards[index % Math.max(cards.length, 1)], [cards, index]);
 
-  const handleNextArrow = () => {
+  const resetSlide = useCallback(() => {
+    translateX.value = withSpring(0, { damping: 20, stiffness: 180 });
+    opacity.value = withTiming(1, { duration: 200 });
+  }, [translateX, opacity]);
+
+  const handleNextArrow = useCallback(() => {
     if (cards.length === 0) return;
+    resetSlide();
     setIndex((i) => (i >= cards.length - 1 ? 0 : i + 1));
-  };
+  }, [cards.length, resetSlide]);
 
   const handleBackArrow = () => {
     if (cards.length === 0) return;
+    resetSlide();
     setIndex((i) => (i <= 0 ? cards.length - 1 : i - 1));
   };
 
-  const openProfile = () => {
+  const openProfile = useCallback(() => {
     if (!card) return;
+    resetSlide();
     navigation.navigate("UserDetails", { profile: card.raw });
-  };
+  }, [card, navigation, resetSlide]);
 
-  // Right-to-left swipe opens the visible user's profile.
   const flingLeft = Gesture.Fling()
     .direction(Directions.LEFT)
-    .onEnd(openProfile)
+    .onEnd(() => runOnJS(openProfile)())
     .runOnJS(true);
 
-  const handleMatch = () => {
-    Toast.show({
-      type: "success",
-      text1: `Match request sent to ${card?.name ?? "member"}`,
-      position: "center",
-      visibilityTime: 3000,
-      autoHide: true,
-    });
+  const pan = Gesture.Pan()
+    .activeOffsetX([-15, 15])
+    .onUpdate((e) => {
+      translateX.value = Math.min(0, e.translationX);
+      opacity.value = 1 - Math.min(0.35, Math.abs(e.translationX) / 800);
+    })
+    .onEnd((e) => {
+      if (e.translationX < -110 || e.velocityX < -900) {
+        translateX.value = withTiming(-420, { duration: 220 }, (done) => {
+          if (done) runOnJS(openProfile)();
+        });
+      } else {
+        translateX.value = withSpring(0, { damping: 20, stiffness: 180 });
+        opacity.value = withTiming(1, { duration: 200 });
+      }
+    })
+    .runOnJS(true);
+
+  const composed = Gesture.Race(pan, flingLeft);
+
+  const slideStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+    opacity: opacity.value,
+  }));
+
+  const handleMatch = async () => {
+    if (!card?.raw?.profileid) {
+      handleNextArrow();
+      return;
+    }
+    try {
+      await followUser(card.raw.profileid);
+      Toast.show({
+        type: "success",
+        text1: `Match request sent to ${card?.name ?? "member"}`,
+        position: "center",
+        visibilityTime: 3000,
+        autoHide: true,
+      });
+    } catch {
+      Toast.show({
+        type: "error",
+        text1: "Could not send request.",
+        position: "center",
+        visibilityTime: 3000,
+        autoHide: true,
+      });
+    }
     handleNextArrow();
   };
 
@@ -149,7 +211,8 @@ const Home: FC = () => {
   return (
       <View className="flex-1 w-full items-center justify-center bg-background">
         <StatusBar translucent hidden={false} />
-        <GestureDetector gesture={flingLeft}>
+        <GestureDetector gesture={composed}>
+          <Animated.View style={[{ flex: 1, width: "100%" }, slideStyle]}>
           <ImageBackground
             className="flex flex-1 w-full items-center justify-between pt-20"
             source={{ uri: card.pic }}
@@ -266,6 +329,7 @@ const Home: FC = () => {
             <ToastManager config={toastConfig} />
           </View>
         </ImageBackground>
+        </Animated.View>
         </GestureDetector>
       </View>
   );

@@ -17,6 +17,7 @@ router.register('user-profile/astro-detail', UsersAstroDetailSerializerView, bas
 router.register('user-profile/partner-preference-detail', UsersPartnerPreferenceSerializerView, basename="partnerpreference")
 router.register('user-profile/complete-profile', CompleteProfileView, basename="completeprofile")
 router.register('matches', SemanticMatchView, basename="semanticmatches")
+router.register('search', ProfileSearchView, basename="profilesearch")
 
 urlpatterns = [
     path('', include(router.urls))

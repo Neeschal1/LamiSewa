@@ -3,6 +3,7 @@ import Fonts from "../src/utils/fonts";
 import { useFonts } from "expo-font";
 import StackNavigation from "../src/constants/Navigation";
 import { AuthProvider } from "@/src/auth/AuthProvider";
+import { ProfileProvider } from "@/src/profile/ProfileProvider";
 import { useEffect } from "react";
 import { AppState, Platform } from "react-native";
 import * as NavigationBar from "expo-navigation-bar";
@@ -43,7 +44,9 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <StackNavigation />
+      <ProfileProvider>
+        <StackNavigation />
+      </ProfileProvider>
     </AuthProvider>
   );
 }

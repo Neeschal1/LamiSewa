@@ -8,6 +8,8 @@ SECRET_KEY = Config.SECRET_KEY
 
 # Installed Apps
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.contenttypes',
     'unfold',
     
@@ -30,6 +32,7 @@ INSTALLED_APPS = [
     'apps.details',
     'apps.conversations',
     'apps.privacy',
+    'apps.notifications',
     'apps.userprofile',
     'apps.identifications',
     'apps.payments'
@@ -110,6 +113,10 @@ CORS_ALLOW_CREDENTIALS = True
 
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
+
+CHANNEL_LAYERS = {
+    "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
+}
 
 
 # Templates included

@@ -1,7 +1,5 @@
-import { View } from "react-native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TouchableOpacity, Text } from "react-native";
-import {OtpVerification, SetNewPassword} from "../screens/initials/initialScreensLayout";
 import { RootStackParamList } from "@/src/components/componentsType";
 import { Describe, SubHeading, Title } from "../components/Texts";
 import { Chats, Home, NearYou, Profile, Search, UserDetails } from "../screens/main/mainScreenLayouts";
@@ -10,9 +8,10 @@ import MyTabs from "./BottomTabNavigation";
 import {AccountPassword} from "../screens/accounts/AccountLayouts";
 import {BasicDetails, Documents, FacialVerification, FinalVerification, Intro, Verify} from "../screens/accounts/idverification/IDVerificationLayout";
 import { useEffect, useState } from "react";
-import { DeleteStringDataAsync, GetStringDataAsync } from "../storage/ProfileDataAsync";
+import { View } from "react-native";
+import { GetStringDataAsync, StoreStringDataAsync } from "../storage/ProfileDataAsync";
+import { fetchSubscriptionStatus } from "../services/payments/subscription";
 import { ChangePassword, ContactUs, EditProfile, FeaturedPhoto, Help, Language, MatchedUsers, PrivacyPolicy, TermsOfUse, VerifyId, AboutUs} from "@/src/screens/others/OtherScreensLayout"
-import { HeaderHeightContext } from "@react-navigation/elements";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -21,13 +20,26 @@ const AuthenticatedNavigation = () => {
 
   useEffect(()=>{
     const subscriptionScreenStatus = async () => {
-      const fetchSubscriptionScreenStatus = await GetStringDataAsync("SubscriptionStatusAfterBuildingUpProfile")
-      if (fetchSubscriptionScreenStatus === "Incomplete"){
-        setSubscriptionScreen("SubscriptionDetails")
-        await DeleteStringDataAsync("SubscriptionStatusAfterBuildingUpProfile")
-      } else {
-        setSubscriptionScreen("MyTabs")
+      try {
+        const sub = await fetchSubscriptionStatus().catch(() => null);
+        if (sub?.is_subscribed) {
+          await StoreStringDataAsync("PaymentShown", "true");
+          setSubscriptionScreen("MyTabs");
+          return;
+        }
+      } catch {}
+      const shown = await GetStringDataAsync("PaymentShown");
+      const legacy = await GetStringDataAsync("SubscriptionStatusAfterBuildingUpProfile");
+      if (shown === "true" || legacy === "Complete") {
+        await StoreStringDataAsync("PaymentShown", "true");
+        setSubscriptionScreen("MyTabs");
+        return;
       }
+      if (legacy === "Incomplete") {
+        setSubscriptionScreen("SubscriptionDetails");
+        return;
+      }
+      setSubscriptionScreen("MyTabs");
     }
     subscriptionScreenStatus()
   }, [])
@@ -40,22 +52,24 @@ const AuthenticatedNavigation = () => {
     <Stack.Navigator initialRouteName={subscriptionScreen} screenOptions={{headerShown: false}}>
       <Stack.Screen name="Chats" component={Chats} options={optionsScreens} />
       <Stack.Screen name="Home" component={Home} options={optionsScreens} />
-      {/* <Stack.Screen name="Notification" component={Notification} options={optionsScreens} /> */}
       <Stack.Screen name="Profile" component={Profile} options={optionsScreens} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="NearYou" component={NearYou} />
-      <Stack.Screen name="SubscriptionDetails" component={SubscriptionDetails} 
+      <Stack.Screen name="SubscriptionDetails" component={SubscriptionDetails}
       options={({ navigation }) => ({
-        headerShown: true, 
-        headerTransparent: true, 
-        headerTitle: " ", 
-        headerTintColor: "#F2F1FF", 
+        headerShown: true,
+        headerTransparent: true,
+        headerTitle: " ",
+        headerTintColor: "#F2F1FF",
         headerRight: () => (
-          <TouchableOpacity onPress={() => navigation.navigate("MyTabs")}>
-            <Text style={{ 
-              color: "#F2F1FF", 
-              fontSize: 16, 
-              fontWeight: "400", 
+          <TouchableOpacity onPress={async () => {
+            await StoreStringDataAsync("PaymentShown", "true");
+            navigation.navigate("MyTabs");
+          }}>
+            <Text style={{
+              color: "#F2F1FF",
+              fontSize: 16,
+              fontWeight: "400",
             }}>Skip</Text>
           </TouchableOpacity>
         ),})}/>
@@ -108,12 +122,12 @@ const OthersScreens = (title: string, description: string) => ({
   headerStyle: {
     backgroundColor: "#0066FF",
     height: 100,
-    elevation: 0,  
-    shadowOpacity: 0,     
-    borderBottomWidth: 0, 
-    width: '100%', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
+    elevation: 0,
+    shadowOpacity: 0,
+    borderBottomWidth: 0,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
   },
   headerTitle: () => <View className="flex items-center py-2">
@@ -123,10 +137,3 @@ const OthersScreens = (title: string, description: string) => ({
   headerTintColor: "#FFFFFF",
   headerTitleAlign: "center" as const,
 });
-
-const optionsTabs = {
-  headerShown: true,
-  headerTransparent: true,
-  headerTitle: " ",
-  headerTintColor: " ",
-};

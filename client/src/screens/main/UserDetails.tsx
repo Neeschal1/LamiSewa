@@ -1,9 +1,11 @@
 import { View, Text, ScrollView, StatusBar, Image, ImageBackground, TouchableOpacity, Dimensions } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
 import { Describe, Heading, SubHeading, SubTitle, Title } from '@/src/components/systemComponentsLayout'
+import { followUser, unfollowUser } from '@/src/services/privacy/follow'
+import { createThread } from '@/src/services/chat/chat'
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,6 +36,27 @@ const UserDetails = () => {
   const pic = basic?.profile_picture || basic?.profilepic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg";
   const cover = basic?.cover_picture || pic;
   const name = basic?.fullname || basic?.nickname || p?.username || "Member";
+  const [followState, setFollowState] = useState<"Follow" | "Following">("Follow");
+
+  const toggleFollow = async () => {
+    if (!p?.profileid) return;
+    try {
+      if (followState === "Follow") {
+        await followUser(p.profileid);
+        setFollowState("Following");
+      } else {
+        await unfollowUser(p.profileid);
+        setFollowState("Follow");
+      }
+    } catch {}
+  };
+
+  const startChat = async () => {
+    try {
+      await createThread(p?.other_user_id ?? p?.userid ?? p?.id);
+      (navigation as any).navigate("Chats");
+    } catch {}
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-background">
@@ -54,6 +77,14 @@ const UserDetails = () => {
                 <Text className="font-Poppinsmedium text-primaryblue">{Math.round(p.score * 100)}% match</Text>
               ) : null}
             </View>
+          </View>
+          <View className="flex-row gap-mid mt-3">
+            <TouchableOpacity onPress={toggleFollow} className="bg-primaryred px-6 py-2 rounded-2xl">
+              <Text className="font-Poppinsmedium text-background">{followState}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={startChat} className="border border-primaryblue px-6 py-2 rounded-2xl">
+              <Text className="font-Poppinsmedium text-primaryblue">Message</Text>
+            </TouchableOpacity>
           </View>
           {basic?.bio ? (
             <View className="mt-3">
