@@ -32,7 +32,9 @@ const UserDetails = () => {
       ? p.hobbies
       : p.hobbies.map((h: any) => h?.hobby ?? String(h))
     : [];
-  const featured: string[] = Array.isArray((p as any)?.featured_urls)
+  const featured: string[] = Array.isArray((p as any)?.featured_photos) && (p as any).featured_photos.length > 0
+    ? (p as any).featured_photos
+    : Array.isArray((p as any)?.featured_urls)
     ? (p as any).featured_urls
     : Array.isArray(p?.featured_images)
       ? p.featured_images

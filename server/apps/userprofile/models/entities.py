@@ -167,4 +167,17 @@ class StoryView(models.Model):
 
     def __str__(self):
         return f"{self.viewer.username} viewed story {self.story_id}"
+
+
+class FeaturedPhoto(models.Model):
+    userprofileid = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='featured_photos')
+    image_url = models.URLField()
+    position = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['position', 'id']
+
+    def __str__(self):
+        return f"Featured photo of: {self.userprofileid.username} | {self.image_url[:60]}"
     

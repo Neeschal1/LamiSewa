@@ -53,7 +53,9 @@ const MemberProfile: FC = () => {
   const myCareer = (myData as any)?.career_info ?? {};
   const myHobbies: string[] = (myData as any)?.hobbies ? Object.values((myData as any).hobbies).map((h: any) => String(h)) : [];
   const hobbies: string[] = Array.isArray(p?.hobbies) ? p.hobbies.map((h: any) => String(typeof h === "string" ? h : h?.hobby ?? h)) : [];
-  const featured: string[] = Array.isArray((p as any)?.featured_urls)
+  const featured: string[] = Array.isArray((p as any)?.featured_photos) && (p as any).featured_photos.length > 0
+    ? (p as any).featured_photos
+    : Array.isArray((p as any)?.featured_urls)
     ? (p as any).featured_urls
     : Array.isArray(p?.featured_images) ? p.featured_images : [];
 

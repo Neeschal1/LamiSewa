@@ -25,6 +25,7 @@ export const API = {
         HOBBIESLIST: "/profiles/user-profile/hobbies-list/",
         FAMILYDETAILS: "/profiles/user-profile/family-detail/",
         FEATUREDPHOTOLIST: "/profiles/user-profile/featured-images-details/",
+        FEATUREDPHOTOS: "/profiles/user-profile/featured-photos/",
         PARTNERPREFERENCEDETAIL: "/profiles/user-profile/partner-preference-detail/",
         PERSONALINFO: "/profiles/user-profile/personal-info/"
     },

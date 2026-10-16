@@ -72,6 +72,13 @@ class UsersFeaturedImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsersFeaturedImages
         fields = ['image1', 'image2', 'image3', 'image4', 'image5', 'image6']
+
+
+class FeaturedPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeaturedPhoto
+        fields = ["id", "image_url", "position", "created_at"]
+        read_only_fields = ["id", "created_at"]
         
         
 class UsersHobbiesSerializer(serializers.ModelSerializer):

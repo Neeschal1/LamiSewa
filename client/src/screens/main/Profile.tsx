@@ -32,6 +32,7 @@ import {
   RootStackParamList,
 } from "@/src/components/componentsType";
 import { useNavigation } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import Modal from "react-native-modal";
 import { useAuth } from "@/src/auth/AuthContext";
@@ -39,6 +40,7 @@ import { useProfile } from "@/src/profile/ProfileProvider";
 import { fetchFollowers, fetchFollowing } from "@/src/services/privacy/follow";
 import { fetchSubscriptionStatus } from "@/src/services/payments/subscription";
 import { fetchStories, fetchStoryViewers, uploadStory } from "@/src/services/profile/stories";
+import { fetchFeaturedPhotos } from "@/src/services/profile/featuredPhotos";
 import { updateOwnProfile } from "@/src/services/profile/updateProfile";
 import UploadImages from "@/src/utils/uploadImages";
 import { APP_BUILD, APP_VERSION } from "@/src/constants/appBuild";
@@ -178,6 +180,7 @@ const Profile: FC = () => {
   const [subscription, setSubscription] = useState<any | null>(null);
   const [packageVisible, setPackageVisible] = useState<boolean>(false);
   const [myStory, setMyStory] = useState<any | null>(null);
+  const [featuredPhotos, setFeaturedPhotos] = useState<string[]>([]);
   const [avatarOptions, setAvatarOptions] = useState<boolean>(false);
   const [avatarViewer, setAvatarViewer] = useState<boolean>(false);
   const [viewers, setViewers] = useState<any[]>([]);
@@ -202,6 +205,10 @@ const Profile: FC = () => {
     } catch {}
     try {
       setFollowing(await fetchFollowing());
+    } catch {}
+    try {
+      const photos = await fetchFeaturedPhotos();
+      setFeaturedPhotos(photos.map((p: any) => p.image_url).filter(Boolean));
     } catch {}
     try {
       const sub = await fetchSubscriptionStatus();
@@ -304,16 +311,18 @@ useEffect(() => {
     try {
       fresh = await fetchProfile();
     } catch {}
-    const [f1, f2, sub, storyList] = await Promise.all([
+    const [f1, f2, sub, storyList, photos] = await Promise.all([
       fetchFollowers().catch(() => []),
       fetchFollowing().catch(() => []),
       fetchSubscriptionStatus().catch(() => null),
       fetchStories().catch(() => []),
+      fetchFeaturedPhotos().catch(() => []),
     ]);
     setFollowers(f1);
     setFollowing(f2);
     setSubscribed(!!(sub as any)?.is_subscribed);
     setSubscription((sub as any)?.is_subscribed ? sub : null);
+    setFeaturedPhotos((photos as any[]).map((p: any) => p.image_url).filter(Boolean));
     const pid = (fresh as any)?.profile?.profileid;
     const mine = (storyList as any[]).find((s: any) => s.profileid === pid);
     if (mine?.has_story) setMyStory(mine);
@@ -321,12 +330,22 @@ useEffect(() => {
   loadAll();
 }, [fetchProfile]);
 
+useFocusEffect(
+  React.useCallback(() => {
+    const refreshPhotos = async () => {
+      try {
+        const photos = await fetchFeaturedPhotos();
+        setFeaturedPhotos(photos.map((p: any) => p.image_url).filter(Boolean));
+      } catch {}
+    };
+    refreshPhotos();
+  }, [])
+);
+
 const profileLink = userData?.profile?.profileid
   ? `lamisewa://profile/${userData.profile.profileid}`
   : "";
-const featuredUrls: string[] = Array.isArray((userData as any)?.featured_urls)
-  ? (userData as any).featured_urls
-  : [];
+const featuredUrls: string[] = featuredPhotos;
 
   return (
     <View className="flex-1 items-center justify-start bg-background">

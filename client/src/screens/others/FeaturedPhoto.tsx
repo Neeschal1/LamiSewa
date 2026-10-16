@@ -17,8 +17,7 @@ import {
 import UploadImages from "@/src/utils/uploadImages";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import CreateUsersFeaturedPhoto from "@/src/services/settings/saveFeaturedPhotoes";
-import { useProfile } from "@/src/profile/ProfileProvider";
+import { fetchFeaturedPhotos, saveFeaturedPhotos } from "@/src/services/profile/featuredPhotos";
 import axios from "axios";
 
 const defaultUserImage = require("@/src/assets/images/user.png");
@@ -32,25 +31,25 @@ const FeaturedPhoto = () => {
     null,
     null,
   ]);
-  const [validImagesDict, setValidImagesDict] = useState<string | any>()
-
   const [error, setError] = useState<boolean | any>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [imageUrl, setImageUrl] = useState<string>("");
-  const [localUri, setLocalUri] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const navigation = useNavigation<NavigationProps>();
-  const { data: profileData, refreshProfile } = useProfile();
 
   useEffect(() => {
-    const existing: string[] = Array.isArray((profileData as any)?.featured_urls)
-      ? (profileData as any).featured_urls
-      : [];
-    if (existing.length > 0) {
-      setImages((prev) => prev.map((_, i) => existing[i] ?? null));
-    }
-  }, [profileData]);
+    const prefill = async () => {
+      try {
+        const existing = await fetchFeaturedPhotos();
+        if (existing.length > 0) {
+          setImages((prev) =>
+            prev.map((_, i) => existing[i]?.image_url ?? null)
+          );
+        }
+      } catch {}
+    };
+    prefill();
+  }, []);
 
   const pickAndUpload = async (index: number) => {
     setError(false);
@@ -108,33 +107,15 @@ const FeaturedPhoto = () => {
       setErrorMessage("Add at least one photo before saving.");
       return;
     }
-    const imageObject = validImages.reduce(
-      (acc, image, index) => {
-        acc[`image${index + 1}`] = image;
-        return acc;
-      },
-      {} as Record<string, string>
-    );
-    setValidImagesDict(imageObject)
-    console.log("Valid Image Objects: ", imageObject);
 
     try{
       setLoading(true)
-      console.log("Images to send to server: ", images);
-      const imgdetail = await CreateUsersFeaturedPhoto(imageObject);
-      if(imgdetail.status === 201){
-        const fresh = await refreshProfile();
-        const urls = Array.isArray((fresh as any)?.featured_urls) ? (fresh as any).featured_urls : [];
-        if (urls.length === 0) {
-          setError(true);
-          setErrorMessage("Saved, but the server returned no photos. Restart the server, then pull down on your profile to refresh.");
-          setLoading(false);
-          return;
-        }
+      const saved = await saveFeaturedPhotos(validImages);
+      if (Array.isArray(saved) && saved.length > 0) {
         navigation.goBack()
       } else {
         setError(true);
-        setErrorMessage("Server did not save photos. Try again.");
+        setErrorMessage("Saved, but the server returned no photos. Restart the server, then pull down on your profile to refresh.");
       }
       setLoading(false)
     } catch (err) {

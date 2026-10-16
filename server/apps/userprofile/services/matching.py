@@ -83,7 +83,17 @@ class SemanticMatcher:
         except Exception:
             featured_data = []
         from apps.userprofile.services.media import featured_urls
-        return basic_data, personal_data, additional_data, career_data, hobby_data, featured_urls(profile)
+        from apps.userprofile.services.featuredphotos import FeaturedPhotos
+
+        return (
+            basic_data,
+            personal_data,
+            additional_data,
+            career_data,
+            hobby_data,
+            featured_urls(profile),
+            FeaturedPhotos().urls_for(profile),
+        )
 
     def ranked_matches(self, request, top_k: int = 20):
         try:
@@ -127,7 +137,7 @@ class SemanticMatcher:
         for profile, score in ranked:
             if float(score) < self.MIN_SCORE:
                 continue
-            basic_data, personal_data, additional_data, career_data, hobby_data, featured_data = self._profile_payload(profile)
+            basic_data, personal_data, additional_data, career_data, hobby_data, featured_data, featured_photos = self._profile_payload(profile)
             results.append(
                 {
                     "profileid": profile.profileid,
@@ -140,6 +150,7 @@ class SemanticMatcher:
                     "career_info": career_data,
                     "hobbies": hobby_data,
                     "featured_images": featured_data,
+                    "featured_photos": featured_photos,
                 }
             )
         return {"results": results, "status": 200}

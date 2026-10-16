@@ -108,6 +108,7 @@ class UserProfileService:
                 embedding_data = None
 
             from apps.userprofile.services.media import featured_urls
+            from apps.userprofile.services.featuredphotos import FeaturedPhotos
 
             return Response(
                 {
@@ -119,6 +120,7 @@ class UserProfileService:
                     "hobbies": safe(UsersHobbiesSerializer, getattr(profile, "hobbies", None)),
                     "featured_images": safe(UsersFeaturedImagesSerializer, getattr(profile, "featured_image", None)),
                     "featured_urls": featured_urls(profile),
+                    "featured_photos": FeaturedPhotos().urls_for(profile),
                     "embedding": embedding_data,
                 }
             )

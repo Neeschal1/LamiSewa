@@ -267,8 +267,7 @@ class UsersAstroDetailSerializerView(viewsets.ViewSet):
     
     
 class UsersFeaturedImagesSerializerView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
-    
+    permission_classes = [IsAuthenticated]    
     @swagger_auto_schema(request_body=UsersFeaturedImagesSerializer)
     def create(self, request):
         return FeaturedPictures()._createfeaturedimages(request)
@@ -288,8 +287,50 @@ class UsersFeaturedImagesSerializerView(viewsets.ViewSet):
     @swagger_auto_schema()
     def destroy(self, request, pk=None):
         return FeaturedPictures()._destroyfeaturedimages(request, pk)
-    
-    
+
+
+class FeaturedPhotoView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        from apps.userprofile.services.featuredphotos import FeaturedPhotos
+
+        result = FeaturedPhotos().list(request)
+        code = result.pop("status", 200)
+        if "error" in result:
+            return Response({"message": result["error"]}, status=code)
+        return Response({"message": "Featured photos.", "data": result["results"]}, status=code)
+
+    def create(self, request):
+        from apps.userprofile.services.featuredphotos import FeaturedPhotos
+
+        if isinstance(request.data.get("image_urls"), list):
+            result = FeaturedPhotos().replace(request)
+            code = result.pop("status", 201)
+            if "error" in result:
+                return Response({"message": result["error"]}, status=code)
+            return Response(
+                {"message": "Featured photos saved.", "data": result["results"]},
+                status=code,
+            )
+        result = FeaturedPhotos().add(request)
+        code = result.pop("status", 201)
+        if "error" in result:
+            return Response({"message": result["error"]}, status=code)
+        return Response(
+            {"message": "Featured photo added.", "data": result["result"]}, status=code
+        )
+
+    def destroy(self, request, pk=None):
+        from apps.userprofile.services.featuredphotos import FeaturedPhotos
+
+        result = FeaturedPhotos().remove(request, pk)
+        code = result.pop("status", 200)
+        if "error" in result:
+            return Response({"message": result["error"]}, status=code)
+        return Response({"message": "Featured photo removed."}, status=code)
+
+
 class UsersHobbiesSerializerView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     
@@ -428,7 +469,7 @@ class MemberDetailAPIView(APIView):
             return Response({"message": "Profile not found."}, status=status.HTTP_404_NOT_FOUND)
         if profile.userid_id == request.user.id:
             return Response({"message": "Use your own profile endpoint."}, status=status.HTTP_400_BAD_REQUEST)
-        basic, personal, additional, career, hobbies, featured = SemanticMatcher()._profile_payload(profile)
+        basic, personal, additional, career, hobbies, featured, featured_photos = SemanticMatcher()._profile_payload(profile)
         return Response(
             {
                 "message": "Member profile.",
@@ -442,6 +483,7 @@ class MemberDetailAPIView(APIView):
                     "hobbies": hobbies,
                     "featured_images": featured,
                     "featured_urls": featured,
+                    "featured_photos": featured_photos,
                 },
             },
             status=status.HTTP_200_OK,
