@@ -109,7 +109,9 @@ const Home: FC = () => {
       setNotice("No close matches yet. Complete your profile fully to improve matching.");
     } catch (e: any) {
       const status = e?.response?.status;
-      if (status === 402) {
+      if (status === 429) {
+        setNotice("Too many requests. Wait a moment and retry.");
+      } else if (status === 402) {
         setNotice("An active subscription is required to view recommended matches.");
       } else if (status === 404) {
         setNotice("Complete your profile first to get recommended matches.");

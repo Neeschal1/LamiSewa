@@ -4,12 +4,15 @@ from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.throttling import ScopedRateThrottle
 from ..services.auth import UserAuth
 from drf_yasg.utils import swagger_auto_schema
 
 
 class UserAccountSignupSerializersView(viewsets.ViewSet):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth"
     
     @swagger_auto_schema(request_body=UserAccountSignupSerializers)
     def create(self, request):
@@ -25,6 +28,8 @@ class UserAccountSignupSerializersView(viewsets.ViewSet):
    
 class UserAccountLoginSerializerView(viewsets.ViewSet):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth"
     
     @swagger_auto_schema(request_body=UserAccountLoginSerializers)
     def create(self, request):
@@ -37,6 +42,8 @@ class UserAccountLoginSerializerView(viewsets.ViewSet):
 
 class UserAccountCredentialsSetupSerializerView(viewsets.ViewSet):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth"
     
     @swagger_auto_schema(request_body=UserAccountCredentialsSetupSerializer)
     def create(self, request):
@@ -50,6 +57,8 @@ class UserAccountCredentialsSetupSerializerView(viewsets.ViewSet):
         
 class VerifyOTPSerializerView(viewsets.ViewSet):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth"
     
     @swagger_auto_schema(request_body=VerifyOTPSerializer)
     def create(self, request):
@@ -62,6 +71,8 @@ class VerifyOTPSerializerView(viewsets.ViewSet):
 
 class FindAccountSerializerView(viewsets.ViewSet):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth"
     
     @swagger_auto_schema(request_body=FindAccountSerializer)
     def create(self, request):
@@ -73,6 +84,8 @@ class FindAccountSerializerView(viewsets.ViewSet):
 
 class CodeVerificationForForgotPasswordSerializersView(viewsets.ViewSet):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth"
     
     @swagger_auto_schema(request_body=CodeVerificationForForgotPasswordSerializers)
     def create(self, request):
@@ -85,6 +98,8 @@ class CodeVerificationForForgotPasswordSerializersView(viewsets.ViewSet):
 
 class ResetPasswordSerializersView(viewsets.ViewSet):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth"
     
     @swagger_auto_schema(request_body=ResetPasswordSerializers)
     def create(self, request):
@@ -97,6 +112,8 @@ class ResetPasswordSerializersView(viewsets.ViewSet):
 
 class EmailFingerprintVerificationSerializersView(viewsets.ViewSet):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth"
     
     @swagger_auto_schema(request_body=EmailFingerprintVerificationSerializers)
     def create(self, request):
