@@ -9,7 +9,7 @@ import {
   Modal,
   Dimensions,
 } from "react-native";
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
@@ -37,6 +37,8 @@ const myProfile = require("@/src/assets/images/myPP.png");
 
 const isGeneral = (t: any) => t.mutual === true || (t.i_sent === true && t.they_sent === true);
 
+const firstName = (u: any) => String(u.name ?? u.username ?? "User").split(" ")[0];
+
 const Chats: FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const [threads, setThreads] = useState<any[]>([]);
@@ -46,13 +48,33 @@ const Chats: FC = () => {
   const [uploadingStory, setUploadingStory] = useState(false);
   const [tab, setTab] = useState<"general" | "requests">("general");
   const [loading, setLoading] = useState(true);
+  const [banner, setBanner] = useState<any | null>(null);
+  const lastSeen = useRef<Record<number, string>>({});
+  const bannerTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { data: profileData } = useProfile();
   const myPic = (profileData as any)?.basic_info?.profile_picture ?? "";
   const myProfileId = (profileData as any)?.profile?.profileid ?? "";
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (silent = false) => {
     try {
-      setThreads(await fetchConversations());
+      const list = await fetchConversations();
+      setThreads(list);
+      if (silent) {
+        list.forEach((t: any) => {
+          const key = `${t.last_at ?? ""}|${t.last_text ?? ""}`;
+          const prev = lastSeen.current[t.id];
+          if (prev !== undefined && prev !== key && t.last_by_me === false && t.last_text) {
+            setBanner(t);
+            if (bannerTimer.current) clearTimeout(bannerTimer.current);
+            bannerTimer.current = setTimeout(() => setBanner(null), 4500);
+          }
+          lastSeen.current[t.id] = key;
+        });
+      } else {
+        list.forEach((t: any) => {
+          lastSeen.current[t.id] = `${t.last_at ?? ""}|${t.last_text ?? ""}`;
+        });
+      }
     } catch {}
     try {
       setMutual(await fetchMutual());
@@ -66,6 +88,11 @@ const Chats: FC = () => {
   useFocusEffect(
     useCallback(() => {
       load();
+      const timer = setInterval(() => load(true), 15000);
+      return () => {
+        clearInterval(timer);
+        if (bannerTimer.current) clearTimeout(bannerTimer.current);
+      };
     }, [load])
   );
 
@@ -96,8 +123,8 @@ const Chats: FC = () => {
     navigation.navigate("Conversation", { threadId: thread.id });
   };
 
-  const general = threads.filter(isGeneral);
-  const requests = threads.filter((t) => !isGeneral(t));
+  const general = threads.filter(isGeneral).sort((a: any, b: any) => String(b.last_at ?? "") > String(a.last_at ?? "") ? 1 : -1);
+  const requests = threads.filter((t) => !isGeneral(t)).sort((a: any, b: any) => String(b.last_at ?? "") > String(a.last_at ?? "") ? 1 : -1);
   const shown = tab === "general" ? general : requests;
 
   if (loading) {
@@ -113,9 +140,31 @@ const Chats: FC = () => {
       <StatusBar hidden={false} />
       <View className="flex-1 w-full bg-background p-screen">
         <MainScreenName text="Messages" />
+        {banner ? (
+          <TouchableOpacity
+            onPress={() => {
+              setBanner(null);
+              openConversation(banner);
+            }}
+            className="flex-row items-center gap-mid bg-[#ECEBFF] border border-primaryblue rounded-2xl px-4 py-3 mb-2"
+          >
+            <Image
+              source={{ uri: banner.other_pic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg" }}
+              style={{ width: 44, height: 44, borderRadius: 22 }}
+            />
+            <View className="flex-1">
+              <Text className="font-Poppinsmedium text-dark text-subheading" numberOfLines={1}>
+                {banner.other_name} sent you a message
+              </Text>
+              <Text className="font-Poppinsregular text-dark text-description" numberOfLines={1}>
+                {banner.last_text}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ) : null}
         <View className="mt-large gap-mid">
           <Title text="People you've followed" />
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 4, gap: 12 }}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={true} contentContainerStyle={{ paddingHorizontal: 4, gap: 12 }}>
             <TouchableOpacity
               className="items-center"
               onPress={() => {
@@ -157,6 +206,7 @@ const Chats: FC = () => {
             </TouchableOpacity>
             {mutual.map((u: any) => {
               const story = storyFor(u.profileid);
+              const label = firstName(u);
               return (
                 <TouchableOpacity
                   key={u.profileid}
@@ -180,7 +230,7 @@ const Chats: FC = () => {
                       style={{ width: BORDER_SIZE, height: BORDER_SIZE, borderRadius: BORDER_SIZE / 2 }}
                     />
                   )}
-                  <SubTitle text={u.name ?? u.username} />
+                  <SubTitle text={label} />
                 </TouchableOpacity>
               );
             })}
@@ -220,7 +270,13 @@ const Chats: FC = () => {
                 />
                 <View className="flex-1">
                   <Text className="font-Poppinsmedium text-dark">{t.other_name}</Text>
-                  <Description text={t.last_text || "No messages yet"} />
+                  {t.unread > 0 ? (
+                    <Text className="font-Poppinsmedium text-primaryred text-description" numberOfLines={1}>
+                      {t.last_text || "New message"}
+                    </Text>
+                  ) : (
+                    <Description text={t.last_text || "No messages yet"} />
+                  )}
                 </View>
                 {tab === "requests" ? <Ionicons name="mail-unread-outline" size={20} color="#FF000E" /> : null}
               </TouchableOpacity>

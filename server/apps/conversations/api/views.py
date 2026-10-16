@@ -18,7 +18,7 @@ class ConversationView(viewsets.ViewSet):
     def list(self, request):
         threads = Thread.objects.filter(
             Q(member_a=request.user) | Q(member_b=request.user)
-        ).order_by("-updated_at")[:50]
+        )[:50]
         out = []
         for t in threads:
             other = t.member_b if t.member_a_id == request.user.id else t.member_a
@@ -26,6 +26,7 @@ class ConversationView(viewsets.ViewSet):
             mutual = FollowService().is_mutual(request.user, other)
             i_sent = t.messages.filter(message_user=request.user).exists()
             they_sent = t.messages.exclude(message_user=request.user).exists()
+            unread = t.messages.exclude(message_user=request.user).filter(seen=False).count()
             try:
                 other_profile = other.profile
                 other_profileid = other_profile.profileid
@@ -35,6 +36,7 @@ class ConversationView(viewsets.ViewSet):
                 other_pic = other.profile.basic_info.profile_picture
             except Exception:
                 other_pic = ""
+            last_at = last.created_date if last else t.updated_at
             out.append(
                 {
                     "id": t.id,
@@ -43,13 +45,16 @@ class ConversationView(viewsets.ViewSet):
                     "other_pic": other_pic,
                     "other_name": other.first_name or other.username,
                     "last_text": last.text if last else "",
-                    "last_at": last.created_date if last else t.updated_at,
+                    "last_at": last_at,
+                    "last_by_me": bool(last and last.message_user_id == request.user.id),
+                    "unread": unread,
                     "mutual": mutual,
                     "i_sent": i_sent,
                     "they_sent": they_sent,
                     "can_message": bool(mutual or not i_sent),
                 }
             )
+        out.sort(key=lambda x: str(x["last_at"] or ""), reverse=True)
         return Response({"message": "Conversations.", "data": out})
 
     def create(self, request):
@@ -120,7 +125,7 @@ class MessageView(viewsets.ViewSet):
         msg = Messages.objects.create(
             thread=thread, message_user=request.user, message_type="Text", text=text
         )
-        Thread.objects.filter(id=thread.id).update()
+        thread.save(update_fields=["updated_at"])
         if not mutual:
             try:
                 from apps.notifications.models.entities import Notification

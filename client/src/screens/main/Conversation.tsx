@@ -76,7 +76,11 @@ const Conversation: FC = () => {
   const [sendError, setSendError] = useState("");
   const [loading, setLoading] = useState(true);
   const [myId, setMyId] = useState<number | null>(null);
+  const [typingName, setTypingName] = useState("");
   const ws = useRef<WebSocket | null>(null);
+  const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const typingSent = useRef(false);
+  const typingCooldown = useRef(0);
   const { data: profileData } = useProfile();
   const profileUserId = Number((profileData as any)?.profile?.userid ?? NaN);
 
@@ -119,19 +123,64 @@ const Conversation: FC = () => {
         const base = (process.env.EXPO_PUBLIC_DJANGO_DEVELOPMENT_SERVER_URL ?? "").replace(/^http/, "ws");
         const query = token ? `?token=${encodeURIComponent(token)}` : "";
         ws.current = new WebSocket(`${base}/ws/chat/${threadId}/${query}`);
+        ws.current.onopen = () => {
+          try {
+            ws.current?.send(JSON.stringify({ mark_seen: true }));
+          } catch {}
+        };
         ws.current.onmessage = (e) => {
           try {
             const data = JSON.parse(e.data);
+            if (data?.kind === "typing") {
+              if (Number(data.user_id) !== myId) {
+                setTypingName(data.typing ? data.name || "User" : "");
+                if (typingTimer.current) clearTimeout(typingTimer.current);
+                if (data.typing) {
+                  typingTimer.current = setTimeout(() => setTypingName(""), 3500);
+                }
+              }
+              return;
+            }
+            if (data?.kind === "seen") {
+              if (Number(data.user_id) !== myId) {
+                setMessages((m) => m.map((x: any) => (Number(x.message_user) === myId ? { ...x, seen: true } : x)));
+              }
+              return;
+            }
             if (data?.id) {
               setMessages((m) => (m.some((x: any) => x.id === data.id) ? m : [...m, data]));
+              if (Number(data.message_user) !== myId) {
+                try {
+                  ws.current?.send(JSON.stringify({ mark_seen: true }));
+                } catch {}
+              }
             }
           } catch {}
         };
       } catch {}
     };
     connect();
-    return () => ws.current?.close();
-  }, [threadId]);
+    return () => {
+      if (typingTimer.current) clearTimeout(typingTimer.current);
+      ws.current?.close();
+    };
+  }, [threadId, myId]);
+
+  const sendTyping = (typing: boolean) => {
+    try {
+      const now = Date.now();
+      if (typing && typingSent.current && now - typingCooldown.current < 2500) return;
+      typingSent.current = typing;
+      if (typing) typingCooldown.current = now;
+      ws.current?.send(JSON.stringify({ typing }));
+    } catch {}
+  };
+
+  const handleDraft = (text: string) => {
+    setDraft(text);
+    if (text.trim()) sendTyping(true);
+    else sendTyping(false);
+  };
 
   const handleSend = async () => {
     if (!thread || !draft.trim()) return;
@@ -142,6 +191,7 @@ const Conversation: FC = () => {
     const text = draft.trim();
     setDraft("");
     setSendError("");
+    sendTyping(false);
     try {
       const saved = await sendMessage(thread.id, text);
       if (saved?.id) {
@@ -237,6 +287,11 @@ const Conversation: FC = () => {
           </Text>
         </TouchableOpacity>
       </View>
+      {typingName ? (
+        <Text className="font-Poppinsregular text-primaryblue text-description px-screen py-1">
+          {typingName} is typing...
+        </Text>
+      ) : null}
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1" keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
         <FlatList
           data={data}
@@ -257,7 +312,8 @@ const Conversation: FC = () => {
         <View className="flex-row gap-mid items-center px-screen py-3 border-t border-darkvariant/10">
           <TextInput
             value={draft}
-            onChangeText={setDraft}
+            onChangeText={handleDraft}
+            onBlur={() => sendTyping(false)}
             placeholder="Message"
             editable={thread?.can_message !== false}
             className="flex-1 border border-darkvariant/30 rounded-2xl px-4 py-3 font-Poppinsregular"
