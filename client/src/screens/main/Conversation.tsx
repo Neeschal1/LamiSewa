@@ -18,6 +18,7 @@ import { NavigationProps } from "@/src/components/componentsType";
 import { fetchConversations, fetchMessages, sendMessage } from "@/src/services/chat/chat";
 import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
 import { getAccessTokens } from "@/src/storage/SecureTokens";
+import { useProfile } from "@/src/profile/ProfileProvider";
 import { jwtDecode } from "jwt-decode";
 
 const fmtTime = (iso: string) => {
@@ -76,15 +77,21 @@ const Conversation: FC = () => {
   const [loading, setLoading] = useState(true);
   const [myId, setMyId] = useState<number | null>(null);
   const ws = useRef<WebSocket | null>(null);
+  const { data: profileData } = useProfile();
+  const profileUserId = Number((profileData as any)?.profile?.userid ?? NaN);
 
   const load = useCallback(async () => {
-    try {
-      const token = await getAccessTokens();
-      if (token) {
-        const payload = jwtDecode<{ user_id?: number }>(token);
-        if (payload.user_id) setMyId(payload.user_id);
-      }
-    } catch {}
+    if (Number.isFinite(profileUserId)) {
+      setMyId(profileUserId);
+    } else {
+      try {
+        const token = await getAccessTokens();
+        if (token) {
+          const payload = jwtDecode<{ user_id?: number }>(token);
+          if (payload.user_id) setMyId(Number(payload.user_id));
+        }
+      } catch {}
+    }
     try {
       const list = await fetchConversations();
       const found = list.find((t: any) => t.id === threadId) ?? null;
@@ -97,7 +104,7 @@ const Conversation: FC = () => {
       setMessages([]);
     }
     setLoading(false);
-  }, [threadId]);
+  }, [threadId, profileUserId]);
 
   useFocusEffect(
     useCallback(() => {
@@ -161,7 +168,7 @@ const Conversation: FC = () => {
   const renderItem = ({ item, index }: { item: any; index: number }) => {
     const next = data[index + 1];
     const showDay = !next || !sameDay(item.created_date, next.created_date);
-    const isMine = myId !== null && item.message_user === myId;
+    const isMine = myId !== null && Number(item.message_user) === myId;
     return (
       <View>
         {showDay ? (
