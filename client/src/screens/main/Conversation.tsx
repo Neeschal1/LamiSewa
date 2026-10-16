@@ -162,7 +162,7 @@ const Conversation: FC = () => {
         ) : null}
         {isMine ? (
           <View className="flex-row justify-end mb-2">
-            <View className="bg-primaryblue rounded-2xl rounded-br-sm px-3 py-2" style={{ maxWidth: "78%" }}>
+            <View className="bg-primaryred rounded-2xl rounded-br-sm px-3 py-2" style={{ maxWidth: "78%" }}>
               <Text className="font-Poppinsregular text-white text-subheading">{item.text}</Text>
               <View className="flex-row justify-end items-center gap-1 mt-1">
                 <Text className="font-Poppinsregular text-white/80" style={{ fontSize: 10 }}>
@@ -176,18 +176,18 @@ const Conversation: FC = () => {
           </View>
         ) : (
           <View className="flex-row items-end mb-2 gap-2">
-            <View className="bg-[#ECEBFF] rounded-2xl rounded-bl-sm px-3 py-2" style={{ maxWidth: "70%" }}>
-              <Text className="font-Poppinsregular text-dark text-subheading">{item.text}</Text>
-              <Text className="font-Poppinsregular text-darkvariant mt-1" style={{ fontSize: 10 }}>
-                {fmtTime(item.created_date)}
-              </Text>
-            </View>
             <TouchableOpacity onPress={openProfile}>
               <Image
                 source={{ uri: thread?.other_pic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg" }}
                 style={{ width: 30, height: 30, borderRadius: 15 }}
               />
             </TouchableOpacity>
+            <View className="bg-[#ECEBFF] rounded-2xl rounded-bl-sm px-3 py-2" style={{ maxWidth: "70%" }}>
+              <Text className="font-Poppinsregular text-dark text-subheading">{item.text}</Text>
+              <Text className="font-Poppinsregular text-darkvariant mt-1" style={{ fontSize: 10 }}>
+                {fmtTime(item.created_date)}
+              </Text>
+            </View>
           </View>
         )}
       </View>
@@ -203,7 +203,7 @@ const Conversation: FC = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={["top", "bottom"]}>
+    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <StatusBar hidden={false} />
       <View className="flex-row items-center gap-mid px-screen py-3 border-b border-darkvariant/10">
         <TouchableOpacity onPress={() => navigation.goBack()} className="w-10 h-10 items-center justify-center">
@@ -219,7 +219,7 @@ const Conversation: FC = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1" keyboardVerticalOffset={0}>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1" keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
         <FlatList
           data={data}
           inverted

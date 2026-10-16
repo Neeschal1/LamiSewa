@@ -16,12 +16,18 @@ const same = (a: any, b: any) => {
   return String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
 };
 
+const displayValue = (v: any) => {
+  if (v === null || v === undefined || String(v).trim() === "") return "-";
+  if (String(v).trim() === "That's Me") return "Myself";
+  return String(v);
+};
+
 const MatchRow = ({ label, mine, theirs }: { label: string; mine: any; theirs: any }) => (
   <View className="flex-row justify-between w-full py-2 border-b border-darkvariant/10">
-    <Text className="font-Poppinsregular text-descriptiveText text-description">{label}</Text>
+    <Text className="font-Poppinsregular text-dark text-description">{label}</Text>
     <View className="flex-row items-center gap-small flex-1 ml-4 justify-end">
       <Text className="font-Poppinsmedium text-dark text-description text-right">
-        {theirs ? String(theirs) : "-"}
+        {displayValue(theirs)}
       </Text>
       {same(mine, theirs) ? <Ionicons name="heart" size={16} color="#22C55E" /> : null}
     </View>
@@ -94,8 +100,8 @@ const MemberProfile: FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
-      <StatusBar hidden />
+    <SafeAreaView className="flex-1 bg-background" edges={["bottom"]}>
+      <StatusBar translucent backgroundColor="transparent" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <ImageBackground source={{ uri: cover }} style={{ width, height: height * 0.22 }} resizeMode="cover">
           <TouchableOpacity onPress={() => navigation.goBack()} className="mt-12 ml-4 w-11 h-11 rounded-full bg-black/50 items-center justify-center">
@@ -108,7 +114,7 @@ const MemberProfile: FC = () => {
             <View className="flex-1">
               <Text className="font-Poppinssemibold text-dark text-[22px]">{name}</Text>
               {basic?.nickname ? (
-                <Text className="font-Poppinsregular text-darkvariant text-description">@{basic.nickname}</Text>
+                <Text className="font-Poppinsregular text-dark text-description">@{basic.nickname}</Text>
               ) : null}
               {typeof p?.score === "number" ? (
                 <Text className="font-Poppinsmedium text-primaryblue">{Math.round(p.score * 100)}% match</Text>
@@ -117,7 +123,7 @@ const MemberProfile: FC = () => {
           </View>
           {basic?.bio ? (
             <View className="mt-3">
-              <Describe text={basic.bio} />
+              <Text className="font-Poppinsregular text-dark text-description">{basic.bio}</Text>
             </View>
           ) : null}
           {!checking && !isMutual ? (
