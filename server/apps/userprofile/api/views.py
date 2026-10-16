@@ -3,6 +3,7 @@ from apps.userprofile.models.entities import *
 from .serializers import *
 from rest_framework import viewsets, status, validators
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from apps.userprofile.models.entities import *
 from apps.userprofile.services.userprofile import UserProfileService
@@ -391,5 +392,55 @@ class ProfileSearchView(viewsets.ViewSet):
         status_code = result.pop("status", 200)
         return Response(
             {"message": "Search results.", "data": result["results"]},
+            status=status.HTTP_200_OK,
+        )
+
+
+class OwnProfileUpdateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        from apps.userprofile.services.profile_update import OwnProfileUpdate
+
+        result = OwnProfileUpdate().update(request)
+        status_code = result.pop("status", 200)
+        if "error" in result:
+            return Response({"message": result["error"]}, status=status_code)
+        return Response(
+            {"message": "Profile updated.", "data": result},
+            status=status.HTTP_200_OK,
+        )
+
+    def patch(self, request):
+        return self.put(request)
+
+
+class MemberDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, profileid):
+        from apps.userprofile.models.entities import UserProfile
+
+        try:
+            profile = UserProfile.objects.get(profileid=profileid)
+        except UserProfile.DoesNotExist:
+            return Response({"message": "Profile not found."}, status=status.HTTP_404_NOT_FOUND)
+        if profile.userid_id == request.user.id:
+            return Response({"message": "Use your own profile endpoint."}, status=status.HTTP_400_BAD_REQUEST)
+        basic, personal, additional, career, hobbies, featured = SemanticMatcher()._profile_payload(profile)
+        return Response(
+            {
+                "message": "Member profile.",
+                "data": {
+                    "profileid": profile.profileid,
+                    "username": profile.username,
+                    "basic_info": basic,
+                    "personal_info": personal,
+                    "additional_info": additional,
+                    "career_info": career,
+                    "hobbies": hobbies,
+                    "featured_images": featured,
+                },
+            },
             status=status.HTTP_200_OK,
         )

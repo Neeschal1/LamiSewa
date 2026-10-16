@@ -24,14 +24,10 @@ import {
   Describe,
   toastConfig,
 } from "@/src/components/systemComponentsLayout";
-import { DummyUsers } from "@/src/utils/DummyData";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { NavigationProps } from "@/src/components/componentsType";
-import {
-  fetchSemanticMatches,
-  fetchSubscriptionStatus,
-} from "@/src/services/payments/subscription";
+import { fetchSemanticMatches } from "@/src/services/payments/subscription";
 import { followUser } from "@/src/services/privacy/follow";
 
 const star = require("@/src/assets/icons/star.png");
@@ -59,56 +55,54 @@ const toCardFromMatch = (m: any): Card => ({
   score: m?.score,
 });
 
-const toCardFromDummy = (d: any): Card => ({
-  name: d?.basicInfo?.nickname || d?.basicInfo?.fullname || "Member",
-  city: d?.personalInfo?.current_city || "",
-  pic: d?.basicInfo?.profile_picture || "",
-  hobbies: Array.isArray(d?.hobbies) ? d.hobbies.slice(0, 5).map((h: any) => h.hobby) : [],
-  raw: d,
-});
-
 const Home: FC = () => {
   const [index, setIndex] = useState<number>(0);
   const [nearYou, setNearYou] = useState<boolean>(false);
-  const [cards, setCards] = useState<Card[]>(() => DummyUsers.map(toCardFromDummy));
+  const [cards, setCards] = useState<Card[]>([]);
   const [loadingMatches, setLoadingMatches] = useState<boolean>(true);
   const [semanticMode, setSemanticMode] = useState<boolean>(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(1);
 
   const navigation = useNavigation<NavigationProps>();
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const sub = await fetchSubscriptionStatus();
-        if (sub?.is_subscribed) {
-          try {
-            const matches = await fetchSemanticMatches();
-            const filtered = Array.isArray(matches)
-              ? matches.filter((m: any) => typeof m?.score !== "number" || m.score >= MIN_SCORE)
-              : [];
-            if (filtered.length > 0) {
-              setCards(filtered.map(toCardFromMatch));
-              setSemanticMode(true);
-              setIndex(0);
-              return;
-            }
-          } catch (e) {
-            console.log("Semantic matches unavailable, using suggestions:", e);
-          }
-        }
-        setCards(DummyUsers.map(toCardFromDummy));
-        setSemanticMode(false);
-      } catch (e) {
-        console.log("Subscription check failed, using suggestions:", e);
-        setCards(DummyUsers.map(toCardFromDummy));
-      } finally {
-        setLoadingMatches(false);
+  const loadMatches = useCallback(async () => {
+    setLoadingMatches(true);
+    setNotice(null);
+    try {
+      const matches = await fetchSemanticMatches();
+      const filtered = Array.isArray(matches)
+        ? matches.filter((m: any) => typeof m?.score !== "number" || m.score >= MIN_SCORE)
+        : [];
+      if (filtered.length > 0) {
+        setCards(filtered.map(toCardFromMatch));
+        setSemanticMode(true);
+        setIndex(0);
+      } else {
+        setCards([]);
+        setSemanticMode(true);
+        setNotice("No close matches yet. Complete your profile fully to improve matching.");
       }
-    };
-    load();
+    } catch (e: any) {
+      const status = e?.response?.status;
+      if (status === 402) {
+        setNotice("An active subscription is required to view recommended matches.");
+      } else if (status === 404) {
+        setNotice("Complete your profile first to get recommended matches.");
+      } else {
+        setNotice("Could not load matches. Check your connection and retry.");
+      }
+      setCards([]);
+      setSemanticMode(false);
+    } finally {
+      setLoadingMatches(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadMatches();
+  }, [loadMatches]);
 
   const card = useMemo(() => cards[index % Math.max(cards.length, 1)], [cards, index]);
 
@@ -200,10 +194,23 @@ const Home: FC = () => {
     setNearYou(false);
   };
 
-  if (loadingMatches || !card) {
+  if (loadingMatches) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (!card) {
+    return (
+      <View className="flex-1 w-full items-center justify-center bg-background p-screen gap-mid">
+        <StatusBar translucent hidden={false} />
+        <Heading text="Recommended" />
+        <Describe text={notice ?? "No close matches yet."} />
+        <TouchableOpacity onPress={loadMatches} className="bg-primaryred px-8 py-3 rounded-2xl mt-2">
+          <Text className="font-Poppinsmedium text-background">Retry</Text>
+        </TouchableOpacity>
       </View>
     );
   }

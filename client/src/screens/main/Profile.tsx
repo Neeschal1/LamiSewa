@@ -33,6 +33,42 @@ import { useNavigation } from "expo-router";
 import { useAuth } from "@/src/auth/AuthContext";
 import { useProfile } from "@/src/profile/ProfileProvider";
 import { fetchFollowers, fetchFollowing } from "@/src/services/privacy/follow";
+import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
+
+const FollowRow = ({
+  title,
+  emptyText,
+  users,
+  onOpen,
+}: {
+  title: string;
+  emptyText: string;
+  users: any[];
+  onOpen: (u: any) => void;
+}) => (
+  <View className="flex w-full items-start p-screen">
+    <Description text={title} />
+    {users.length === 0 ? (
+      <SubTitle text={emptyText} />
+    ) : (
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-2">
+        <View className="flex-row gap-mid">
+          {users.map((u: any) => (
+            <TouchableOpacity key={u.profileid} onPress={() => onOpen(u)} className="items-center w-20">
+              <Image
+                source={{ uri: u.pic || "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg" }}
+                style={{ width: 64, height: 64, borderRadius: 32 }}
+              />
+              <Text numberOfLines={1} className="font-Poppinsregular text-dark text-description mt-1">
+                {u.name ?? u.username}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    )}
+  </View>
+);
 
 type OthersScreen =
   | "PrivacyPolicy"
@@ -164,6 +200,14 @@ const Profile: FC = () => {
   const [following, setFollowing] = useState<any[]>([]);
 
   const navigation = useNavigation<NavigationProps>();
+
+  const openMember = async (u: any) => {
+    if (!u?.profileid) return;
+    try {
+      const full = await fetchMemberProfile(u.profileid);
+      navigation.navigate("UserDetails", { profile: full });
+    } catch {}
+  };
 
   const handleLogOut = async () => {
     await logout();
@@ -367,6 +411,9 @@ useEffect(() => {
             </View>
           ) : null}
         </View>
+
+        <FollowRow title="Followers" emptyText="No followers" users={followers} onOpen={openMember} />
+        <FollowRow title="Following" emptyText="No following" users={following} onOpen={openMember} />
 
         <View className="flex w-full items-start p-screen">
           <Description text="Account" />

@@ -11,6 +11,8 @@ export const API = {
     },
     PROFILE: {
         USERPROFILE: "/profiles/userprofile/",
+        ME: "/profiles/me/",
+        MEMBER: "/profiles/members/",
         COMPLETEPROFILE: "/profiles/user-profile/complete-profile/",
         MATCHES: "/profiles/matches/",
         SEARCH: "/profiles/search/",

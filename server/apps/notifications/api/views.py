@@ -27,18 +27,40 @@ class NotificationView(viewsets.ViewSet):
     def create(self, request):
         if not request.user.is_staff:
             return Response({"message": "Admin only."}, status=status.HTTP_403_FORBIDDEN)
-        recipient_id = request.data.get("recipient")
+        recipient = request.data.get("recipient")
         title = (request.data.get("title") or "").strip()
         body = (request.data.get("body") or "").strip()
-        if not recipient_id or not title:
+        if not recipient or not title:
             return Response({"message": "recipient and title required."}, status=status.HTTP_400_BAD_REQUEST)
+        kind = request.data.get("kind", "announcement")
+        payload_data = request.data.get("data", {})
+        if isinstance(recipient, str) and recipient.lower() == "all":
+            from django.contrib.auth.models import User
+
+            ids = list(User.objects.filter(is_active=True).values_list("id", flat=True))
+            items = [
+                Notification(
+                    recipient_id=uid,
+                    actor=request.user,
+                    kind=kind,
+                    title=title[:120],
+                    body=body,
+                    data=payload_data,
+                )
+                for uid in ids
+            ]
+            Notification.objects.bulk_create(items, batch_size=500)
+            return Response(
+                {"message": f"Broadcast to {len(items)} users.", "data": {"count": len(items)}},
+                status=status.HTTP_201_CREATED,
+            )
         item = Notification.objects.create(
-            recipient_id=recipient_id,
+            recipient_id=recipient,
             actor=request.user,
-            kind=request.data.get("kind", "announcement"),
+            kind=kind,
             title=title[:120],
             body=body,
-            data=request.data.get("data", {}),
+            data=payload_data,
         )
         return Response(
             {"message": "Posted.", "data": NotificationSerializer(item).data},

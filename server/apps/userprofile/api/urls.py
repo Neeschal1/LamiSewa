@@ -20,5 +20,7 @@ router.register('matches', SemanticMatchView, basename="semanticmatches")
 router.register('search', ProfileSearchView, basename="profilesearch")
 
 urlpatterns = [
+    path('me/', OwnProfileUpdateAPIView.as_view(), name="own-profile-update"),
+    path('members/<str:profileid>/', MemberDetailAPIView.as_view(), name="member-detail"),
     path('', include(router.urls))
 ]
