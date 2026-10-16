@@ -21,6 +21,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { NavigationProps } from "@/src/components/componentsType";
 import { fetchNotifications, markAllNotificationsRead, markNotificationRead } from "@/src/services/notifications/notifications";
 import { fetchMemberProfile } from "@/src/services/profile/updateProfile";
+import { useInbox } from "@/src/notifications/InboxProvider";
 
 const lamisewaLogo = require("@/src/assets/images/vectorLogo.png");
 const FALLBACK_PIC = "https://i.pinimg.com/736x/ff/14/a0/ff14a0b3a565567f03f47147f50b64e8.jpg";
@@ -31,6 +32,7 @@ const Notification: FC = () => {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { event } = useInbox();
 
   const load = useCallback(async () => {
     try {
@@ -47,6 +49,12 @@ const Notification: FC = () => {
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => {
+    if (!event) return;
+    if (!["message", "follow", "announcement"].includes(event.ntype)) return;
+    load();
+  }, [event, load]);
 
   const openItem = async (n: any) => {
     try {
