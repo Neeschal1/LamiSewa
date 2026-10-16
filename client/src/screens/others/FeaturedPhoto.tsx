@@ -62,29 +62,41 @@ const FeaturedPhoto = () => {
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      quality: 0.8,
-    });
+    let result;
+    try {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        quality: 0.8,
+      });
+    } catch {
+      setError(true);
+      setErrorMessage("Could not open gallery. Try again.");
+      return;
+    }
 
     if (result.canceled) return;
     setLoading(true);
 
-    const uri = result.assets[0].uri;
-    const url = await UploadImages(uri);
+    try {
+      const uri = result.assets[0].uri;
+      const url = await UploadImages(uri);
 
-    if (url) {
-      setImages((prev) => {
-        const updated = [...prev];
-        updated[index] = url;
-        return updated;
-      });
-    } else {
+      if (url) {
+        setImages((prev) => {
+          const updated = [...prev];
+          updated[index] = url;
+          return updated;
+        });
+      } else {
+        setError(true);
+        setErrorMessage("Upload failed. Check your connection and try again.");
+      }
+    } catch {
       setError(true);
       setErrorMessage("Upload failed. Check your connection and try again.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleSave = async () => {
@@ -111,7 +123,14 @@ const FeaturedPhoto = () => {
       console.log("Images to send to server: ", images);
       const imgdetail = await CreateUsersFeaturedPhoto(imageObject);
       if(imgdetail.status === 201){
-        await refreshProfile();
+        const fresh = await refreshProfile();
+        const urls = Array.isArray((fresh as any)?.featured_urls) ? (fresh as any).featured_urls : [];
+        if (urls.length === 0) {
+          setError(true);
+          setErrorMessage("Saved, but the server returned no photos. Restart the server, then pull down on your profile to refresh.");
+          setLoading(false);
+          return;
+        }
         navigation.goBack()
       }
       setLoading(false)
